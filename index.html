@@ -10,43 +10,43 @@
             --card: #ffffff; --text: #2d3436; --secondary: #636e72; --accent: #6c5ce7; --border: #edf2f7;
         }
 
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.4; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.4; }
         .container { max-width: 1100px; margin: auto; }
 
         /* Header */
-        .header-main { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; gap: 15px; }
-        h1 { color: var(--accent); font-size: 2.2rem; margin: 0; letter-spacing: -1px; text-align: center; flex: 2; }
+        .header-main { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; gap: 10px; flex-wrap: wrap; }
+        h1 { color: var(--accent); font-size: 2rem; margin: 0; letter-spacing: -1px; text-align: center; flex: 1; min-width: 200px; }
         
-        .btn-sync-head { background: var(--card); border: 2px solid var(--border); padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--secondary); transition: all 0.2s; white-space: nowrap; }
-        .btn-sync-head:hover { border-color: var(--accent); color: var(--accent); }
-        .sync-status { font-weight: bold; margin-left: 5px; }
+        .sync-btn { background: var(--card); border: 2px solid var(--border); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--secondary); transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+        .sync-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #ccc; display: inline-block; }
+        .status-ok { background: var(--success); box-shadow: 0 0 5px var(--success); }
+        .status-error { background: var(--urgent); box-shadow: 0 0 5px var(--urgent); }
 
         /* Formulaire */
         .task-form { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; align-items: flex-end; }
         .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
         .form-group.small { flex: 0.6; }
         .form-group label { font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; color: var(--secondary); text-transform: uppercase; }
-        input, select { padding: 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 0.9rem; transition: all 0.2s; font-family: inherit; }
-        input:focus { border-color: var(--accent); outline: none; background: #fff; }
-        button.add-btn { background: var(--accent); color: white; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; height: 42px; transition: all 0.2s; }
-        button.add-btn:hover { background: #5a49d1; }
+        input, select { padding: 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: inherit; }
+        input:focus { border-color: var(--accent); outline: none; }
+        .add-btn { background: var(--accent); color: white; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; height: 42px; }
 
         /* Tableaux */
         .card-table { background: var(--card); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 30px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { background: #fdfdfd; padding: 12px 15px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--secondary); cursor: pointer; border-bottom: 2px solid var(--border); }
-        td { padding: 10px 15px; border-bottom: 1px solid var(--border); font-size: 0.9rem; overflow: hidden; word-wrap: break-word; vertical-align: middle; }
+        th { background: #fdfdfd; padding: 12px 15px; text-align: left; font-size: 0.7rem; text-transform: uppercase; color: var(--secondary); cursor: pointer; border-bottom: 2px solid var(--border); }
+        td { padding: 10px 15px; border-bottom: 1px solid var(--border); font-size: 0.9rem; vertical-align: middle; word-wrap: break-word; }
         
-        .col-check { width: 45px; text-align: center; }
-        .col-project { width: 130px; }
-        .col-priority { width: 160px; }
-        .col-date { width: 120px; }
+        .col-check { width: 40px; text-align: center; }
+        .col-project { width: 120px; }
+        .col-priority { width: 150px; }
+        .col-date { width: 110px; }
 
-        .editable { cursor: pointer; }
-        .editable:hover { background: #fcfaff; }
-        .editing-input { width: 100%; box-sizing: border-box; padding: 6px; border: 2px solid var(--accent); border-radius: 6px; }
+        .editable { cursor: pointer; border-radius: 4px; padding: 4px; transition: 0.2s; }
+        .editable:hover { background: #f0edff; }
+        .editing-input { width: 100%; padding: 6px; border: 2px solid var(--accent); border-radius: 6px; font-family: inherit; }
 
-        /* Badges */
         .badge { padding: 4px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 800; display: inline-block; }
         .b-both { background: #ffe3e3; color: #e74c3c; }
         .b-urgent { background: #fff4e6; color: #d35400; }
@@ -57,37 +57,36 @@
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 40px; }
         .quadrant { background: var(--card); padding: 15px; border-radius: 12px; min-height: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-top: 5px solid #ccc; }
         .q-both { border-color: var(--urgent); } .q-important { border-color: var(--accent); } .q-urgent { border-color: var(--important); } .q-none { border-color: #bdc3c7; }
-        .matrix-item { background: #fff; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 0.85rem; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: grab; }
+        .matrix-item { background: #fff; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 0.85rem; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
 
-        /* Archives (Ouverture Smooth) */
-        .archive-section { margin-top: 40px; margin-bottom: 50px; }
-        .archive-toggle { display: flex; justify-content: space-between; align-items: center; background: var(--card); border: 1px solid var(--border); padding: 12px 20px; border-radius: 12px; cursor: pointer; }
+        /* Archives Smooth */
+        .archive-section { margin-top: 20px; }
+        .archive-toggle { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 12px 20px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); }
         .archive-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease; overflow: hidden; }
         .archive-content.open { grid-template-rows: 1fr; }
-        .archive-inner { min-height: 0; }
+        .archive-inner { min-height: 0; padding-top: 15px; }
 
-        .sync-panel { background: #f1f2f6; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 0.85rem; }
-
-        @media (max-width: 768px) {
-            .header-main { flex-direction: column; }
-            .matrix-grid { grid-template-columns: 1fr; }
-            .task-form { flex-direction: column; align-items: stretch; }
-        }
+        @media (max-width: 768px) { .matrix-grid { grid-template-columns: 1fr; } .task-form { flex-direction: column; align-items: stretch; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header-main">
-        <button class="btn-sync-head" onclick="setupSync()">☁️ <span id="cloudStatus">?</span></button>
+        <button class="sync-btn" onclick="setupSync()" title="Configurer la synchronisation">
+            <span id="syncDot" class="status-dot"></span> ☁️ Synchro
+        </button>
         <h1>🎯 TOUT DOUX</h1>
-        <button class="btn-sync-head" onclick="forceSync()" title="Synchroniser maintenant">🔄 Synchro</button>
+        <div style="display:flex; gap:5px">
+            <button class="sync-btn" onclick="pullFromCloud()" title="Récupérer du Cloud">📥 Charger</button>
+            <button class="sync-btn" onclick="pushToCloud()" title="Envoyer au Cloud">📤 Sauver</button>
+        </div>
     </div>
 
     <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
         <div class="form-group">
             <label>Tâche</label>
-            <input type="text" id="taskTitle" placeholder="Quelle est la mission ?">
+            <input type="text" id="taskTitle" placeholder="Faire quoi ?">
         </div>
         <div class="form-group small">
             <label>Projet</label>
@@ -125,25 +124,21 @@
     </div>
 
     <div class="matrix-grid">
-        <div class="quadrant q-both" id="drop-both" ondrop="drop(event)" ondragover="ev=event;ev.preventDefault()"><h3>🔥 FAIRE</h3><div id="m-both"></div></div>
-        <div class="quadrant q-important" id="drop-important" ondrop="drop(event)" ondragover="ev=event;ev.preventDefault()"><h3>📅 PLANIFIER</h3><div id="m-important"></div></div>
-        <div class="quadrant q-urgent" id="drop-urgent" ondrop="drop(event)" ondragover="ev=event;ev.preventDefault()"><h3>⚡ DÉLÉGUER</h3><div id="m-urgent"></div></div>
-        <div class="quadrant q-none" id="drop-none" ondrop="drop(event)" ondragover="ev=event;ev.preventDefault()"><h3>🗑️ ÉLIMINER</h3><div id="m-none"></div></div>
+        <div class="quadrant q-both" id="drop-both" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>🔥 FAIRE</h3><div id="m-both"></div></div>
+        <div class="quadrant q-important" id="drop-important" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>📅 PLANIFIER</h3><div id="m-important"></div></div>
+        <div class="quadrant q-urgent" id="drop-urgent" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>⚡ DÉLÉGUER</h3><div id="m-urgent"></div></div>
+        <div class="quadrant q-none" id="drop-none" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>🗑️ ÉLIMINER</h3><div id="m-none"></div></div>
     </div>
 
     <div class="archive-section">
         <div class="archive-toggle" onclick="toggleArchive()">
-            <span style="font-weight: 700; color: var(--secondary);">📦 ARCHIVES</span>
+            <span style="font-weight: 700; color: var(--secondary);">📦 ARCHIVES (Code : <span id="codeTag">---</span>)</span>
             <span id="archiveChevron">▼</span>
         </div>
         <div class="archive-content" id="archiveContent">
             <div class="archive-inner">
-                <div class="sync-panel">
-                    <strong>Code de Synchro actuel :</strong> <code id="syncCodeDisplay">Aucun</code><br>
-                    <small>Utilisez ce même code sur tous vos appareils.</small>
-                </div>
-                <button class="btn-sync-head" style="color:red; border-color:#fab1a0" onclick="cleanArchives()">🧹 Nettoyer (+14j)</button>
-                <div class="card-table" style="margin-top:15px">
+                <button class="sync-btn" style="color:red; margin-bottom:10px" onclick="cleanArchives()">🧹 Nettoyer +14j</button>
+                <div class="card-table">
                     <table><tbody id="archiveBody"></tbody></table>
                 </div>
             </div>
@@ -164,89 +159,74 @@
         none: { label: '🗑️ Aucun', weight: 0, class: 'b-none' }
     };
 
-    // --- SYNCHRONISATION NOUVELLE VERSION ---
-    // Utilise KeyValue.xyz (Service gratuit, simple et robuste)
+    // --- SYNCHRONISATION ROBUSTE ---
+    function setSyncStatus(status) {
+        const dot = document.getElementById('syncDot');
+        dot.className = 'status-dot ' + (status === 'ok' ? 'status-ok' : status === 'error' ? 'status-error' : '');
+    }
+
     async function pushToCloud() {
         if (!syncKey) return;
-        setStatus("⏳");
+        setSyncStatus('loading');
         try {
-            await fetch(`https://keyvalue.xyz/v1/${syncKey}`, {
-                method: 'POST', // KeyValue utilise POST pour créer/écraser
-                headers: { 'Content-Type': 'application/json' },
+            const res = await fetch(`https://api.keyvalue.xyz/v1/${syncKey}`, {
+                method: 'POST',
                 body: JSON.stringify({ tasks, archives })
             });
-            setStatus("✅");
-        } catch (e) { 
-            console.error(e);
-            setStatus("❌"); 
-        }
+            if (res.ok) setSyncStatus('ok');
+            else throw new Error();
+        } catch (e) { setSyncStatus('error'); }
     }
 
-    async function pullFromCloud(showConfirm = false) {
+    async function pullFromCloud() {
         if (!syncKey) return;
-        setStatus("⏳");
+        setSyncStatus('loading');
         try {
-            const res = await fetch(`https://keyvalue.xyz/v1/${syncKey}`);
+            const res = await fetch(`https://api.keyvalue.xyz/v1/${syncKey}`);
             if (res.ok) {
                 const data = await res.json();
-                if (showConfirm && !confirm("Données trouvées sur le cloud. Écraser votre liste locale ?")) return setStatus("✅");
-                
                 tasks = data.tasks || [];
                 archives = data.archives || [];
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                localStorage.setItem('archives', JSON.stringify(archives));
-                updateUI();
-                setStatus("✅");
-            } else if (res.status === 404) {
-                // Si le code est nouveau, on pousse les données locales
-                pushToCloud();
-            }
-        } catch (e) { 
-            setStatus("❌"); 
-        }
-    }
-
-    function setStatus(icon) {
-        document.getElementById('cloudStatus').textContent = icon;
+                saveLocally();
+                setSyncStatus('ok');
+            } else throw new Error();
+        } catch (e) { setSyncStatus('error'); }
     }
 
     function setupSync() {
-        const input = prompt("Entrez votre code secret unique (ex: mon-code-perso-123) :", syncKey || "");
+        const input = prompt("Choisissez un code secret unique (ex: mon-nom-2025) :", syncKey || "");
         if (input) {
-            syncKey = input.trim().replace(/[^a-zA-Z0-9-]/g, ""); // Nettoyage du code
+            syncKey = input.trim().replace(/\s+/g, '-').toLowerCase();
             localStorage.setItem('toutDouxSyncKey', syncKey);
-            pullFromCloud(true);
+            document.getElementById('codeTag').textContent = syncKey;
+            pullFromCloud();
         }
     }
 
-    function forceSync() {
-        if (!syncKey) return setupSync();
-        pullFromCloud();
-    }
-
-    // --- FONCTIONS CLASSIQUES ---
-    function save() {
+    // --- LOGIQUE CORE ---
+    function saveLocally() {
         localStorage.setItem('tasks', JSON.stringify(tasks));
         localStorage.setItem('archives', JSON.stringify(archives));
         updateUI();
-        pushToCloud(); // Sauvegarde auto vers le cloud
     }
 
-    function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ""; }
+    function save() {
+        saveLocally();
+        pushToCloud();
+    }
 
     function addTask() {
         const titleEl = document.getElementById('taskTitle');
         if (!titleEl.value.trim()) return;
         tasks.push({
             id: Date.now(),
-            title: capitalize(titleEl.value.trim()),
+            title: titleEl.value.trim().charAt(0).toUpperCase() + titleEl.value.trim().slice(1),
             project: document.getElementById('taskProject').value.trim().toUpperCase() || '♲',
             priority: document.getElementById('taskPriority').value,
             date: document.getElementById('taskDate').value,
             createdAt: Date.now()
         });
-        titleEl.value = ''; document.getElementById('taskProject').value = ''; 
-        save();
+        titleEl.value = ''; document.getElementById('taskProject').value = ''; save();
     }
 
     function drop(ev) {
@@ -274,9 +254,10 @@
         input.className = 'editing-input';
         element.innerHTML = ''; element.appendChild(input); input.focus();
         input.onblur = () => { 
-            let val = input.value;
-            if (field === 'project') val = val.toUpperCase() || '♲';
-            task[field] = val || originalValue; 
+            let v = input.value;
+            if (field === 'project') v = v.toUpperCase() || '♲';
+            if (field === 'title') v = v.charAt(0).toUpperCase() + v.slice(1);
+            task[field] = v || originalValue; 
             save(); 
         };
         input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); if(e.key === 'Escape') updateUI(); };
@@ -284,7 +265,7 @@
 
     function toggleArchive() {
         const isOpen = document.getElementById('archiveContent').classList.toggle('open');
-        document.getElementById('archiveChevron').style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        document.getElementById('archiveChevron').style.transform = isOpen ? 'rotate(180deg)' : '';
     }
 
     function toggleComplete(id) {
@@ -325,13 +306,13 @@
             const el = document.getElementById(`m-${p}`);
             if (el) el.innerHTML = '';
         });
-        document.getElementById('syncCodeDisplay').textContent = syncKey || "Aucun";
+        document.getElementById('codeTag').textContent = syncKey || "---";
 
         tasks.forEach(task => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td>
-                <td class="editable" onclick="startEdit(this, ${task.id}, 'title', 'text')">${task.title}</td>
+                <td class="editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong>${task.title}</strong></td>
                 <td class="editable" style="color:var(--accent); font-weight:bold" onclick="startEdit(this, ${task.id}, 'project', 'text')">${task.project}</td>
                 <td class="editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"><span class="badge ${PRIORITY_MAP[task.priority].class}">${PRIORITY_MAP[task.priority].label}</span></td>
                 <td class="editable" style="font-size:0.8rem" onclick="startEdit(this, ${task.id}, 'date', 'date')">${task.date || '-'}</td>
@@ -341,28 +322,25 @@
             const mContainer = document.getElementById(`m-${task.priority}`);
             if (mContainer) {
                 const mItem = document.createElement('div');
-                mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; 
+                mItem.className = 'matrix-item'; mItem.draggable = true;
                 mItem.ondragstart = (e) => e.dataTransfer.setData("taskId", task.id);
                 mItem.innerHTML = `<span><strong>${task.title}</strong><br><small style="color:var(--accent)">#${task.project}</small></span>
-                                <input type="checkbox" onclick="toggleComplete(${task.id})">`;
+                                   <input type="checkbox" onclick="toggleComplete(${task.id})">`;
                 mContainer.appendChild(mItem);
             }
         });
 
         archives.slice().reverse().forEach(task => {
             const row = document.createElement('tr');
-            row.className = 'archive-row'; row.style.opacity = '0.5';
+            row.style.opacity = '0.5';
             row.innerHTML = `<td class="col-check">✅</td><td colspan="3" style="text-decoration:line-through">${task.title} <small>(#${task.project})</small></td>
                              <td style="text-align:right"><button onclick="restoreTask(${task.id})" style="font-size:0.7rem; cursor:pointer">Restaurer</button></td>`;
             archiveBody.appendChild(row);
         });
     }
 
-    // Initialisation
-    window.onload = () => {
-        if (syncKey) pullFromCloud();
-        updateUI();
-    };
+    if (syncKey) pullFromCloud();
+    updateUI();
 </script>
 </body>
 </html>

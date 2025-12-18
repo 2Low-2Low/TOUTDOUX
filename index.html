@@ -99,11 +99,11 @@
         .col-check { width: 50px; text-align: center; border-left: 1px solid var(--border); border-top-left-radius: 18px; border-bottom-left-radius: 18px; }
         .col-task { width: 280px; } 
         .col-project { width: 110px; }
-        td.col-project { font-weight: bold; color: var(--accent); }
+        td.col-project { font-weight: bold; }
         .col-priority { width: 160px; }
         .col-status { width: 130px; }
         .col-date { width: 120px; border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; font-size: 0.85rem; color: var(--secondary); }
-        .editable:hover { background: #fafaf5; cursor: pointer; border-radius: 8px; color: var(--accent); }
+        .editable:hover { background: #fafaf5; cursor: pointer; border-radius: 8px; }
         input[type="checkbox"] { width: 20px; height: 20px; border-radius: 6px; cursor: pointer; accent-color: var(--accent); }
 
         .badge { padding: 6px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; display: inline-block; border: 1px solid rgba(0,0,0,0.05); text-transform: uppercase; }
@@ -149,7 +149,7 @@
         .matrix-item { background: #fff; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; width: 100%; box-shadow: 2px 2px 8px rgba(0,0,0,0.02); cursor: grab; }
         .matrix-item-content { flex: 1; padding-right: 15px; word-wrap: break-word; overflow: hidden; pointer-events: none; }
         .matrix-item-content strong { display: block; font-size: 0.95rem; color: var(--text); }
-        .matrix-item-content small { color: var(--secondary); font-weight: 600; font-size: 0.75rem; }
+        .matrix-item-content small { font-weight: 600; font-size: 0.75rem; }
 
         /* OH WOW (ARCHIVES) */
         .archive-toggle { 
@@ -163,53 +163,25 @@
         .archive-content { display: none; margin-bottom: 60px; }
         .archive-today-bg { background-color: #f2f9f2 !important; opacity: 1 !important; border-color: #e2ede2 !important; }
 
-        /* --- MOBILE VERSION ÉLÉGANTE (3 NIVEAUX) --- */
+        /* --- MOBILE VERSION 3 NIVEAUX --- */
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             .mobile-sort-bar { display: flex; }
             thead { display: none; }
             table, tbody, tr, td { display: block; width: 100% !important; }
-            
             tr { 
                 background: white; border-radius: 22px; padding: 20px; 
                 margin-bottom: 15px; box-shadow: 0 4px 15px rgba(139, 126, 116, 0.06); 
                 position: relative; border: 1px solid var(--border);
             }
-            
             td { border: none !important; padding: 0 !important; background: transparent !important; }
-            
-            /* NIVEAU 1 : NOM + CASE À COCHER */
-            td.col-check { 
-                position: absolute; top: 20px; right: 20px; width: 25px !important; 
-            }
-            td.col-task { 
-                padding-right: 45px !important; 
-                font-size: 1.25rem; font-weight: bold; 
-                font-family: 'Playfair Display', serif;
-                margin-bottom: 6px; color: var(--text);
-            }
-            
-            /* NIVEAU 2 : PROJET */
-            td.col-project { 
-                display: block !important; margin-bottom: 10px;
-                color: var(--accent); font-weight: 800; font-size: 0.85rem;
-                letter-spacing: 0.5px;
-            }
-            
-            /* NIVEAU 3 : PRIORITÉ / ÉTAT / TEMPS */
-            td.col-priority, td.col-status, td.col-date {
-                display: inline-block !important; width: auto !important;
-                font-size: 0.75rem; color: var(--secondary); font-weight: 600;
-            }
-
-            /* Séparateurs Slaches élégants */
+            td.col-check { position: absolute; top: 20px; right: 20px; width: 25px !important; }
+            td.col-task { padding-right: 45px !important; font-size: 1.25rem; font-weight: bold; font-family: 'Playfair Display', serif; margin-bottom: 6px; color: var(--text); }
+            td.col-project { display: block !important; margin-bottom: 10px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.5px; }
+            td.col-priority, td.col-status, td.col-date { display: inline-block !important; width: auto !important; font-size: 0.75rem; color: var(--secondary); font-weight: 600; }
             td.col-priority:after { content: " / "; margin: 0 8px; color: #dcd7cc; font-weight: 400; }
-            /* On n'affiche le slash après l'état que si l'état n'est pas vide */
             td.col-status:not(:empty):after { content: " / "; margin: 0 8px; color: #dcd7cc; font-weight: 400; }
-
-            /* On retire les labels :before par défaut */
             td:before { content: none !important; }
-
             .matrix-grid, .matrix-grid-triple { grid-template-columns: 1fr; }
         }
     </style>
@@ -348,6 +320,9 @@
         'IMPACT': { label: '🎯 Impact', class: 's-imp' },
         'FACILE': { label: '✨ Facile', class: 's-fac' }
     };
+
+    // Palette Ghibli pour les projets (Sombre pour lisibilité sur blanc)
+    const GHIBLI_PALETTE = ['#2c3e50', '#a64435', '#2d5a27', '#6d4c7d', '#7e4a35', '#22577a'];
 
     const saveLocally = () => {
         localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -517,9 +492,14 @@
         ['both', 'important', 'urgent', 'none'].forEach(p => { if(document.getElementById(`m-p-${p}`)) document.getElementById(`m-p-${p}`).innerHTML = ''; });
         ['URGENCE', 'IMPACT', 'FACILE'].forEach(s => { if(document.getElementById(`m-s-${s}`)) document.getElementById(`m-s-${s}`).innerHTML = ''; });
         
-        document.querySelectorAll('.sort-pill').forEach(pill => {
-            pill.classList.toggle('active', pill.id === `pill-${currentSort.key}`);
-        });
+        document.querySelectorAll('.sort-pill').forEach(pill => { pill.classList.toggle('active', pill.id === `pill-${currentSort.key}`); });
+
+        // Calcul des couleurs de projet pour les tâches actives
+        const activeProjects = [...new Set(tasks.map(t => t.project))].filter(p => p !== '☕︎').sort();
+        const projectColorMap = {};
+        activeProjects.forEach((p, i) => { projectColorMap[p] = GHIBLI_PALETTE[i % GHIBLI_PALETTE.length]; });
+
+        const getProjColor = (p) => (p === '☕︎') ? 'var(--accent)' : (projectColorMap[p] || 'var(--accent)');
 
         const now = new Date();
         const startOfWorkDay = new Date(now);
@@ -531,6 +511,8 @@
             const row = document.createElement('tr');
             const s = STATUS_MAP[task.status] || STATUS_MAP['NONE'];
             const p = PRIORITY_MAP[task.priority] || PRIORITY_MAP['none'];
+            const color = getProjColor(task.project);
+
             row.innerHTML = `
                 <td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td>
                 <td class="col-task editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong></strong></td>
@@ -541,6 +523,7 @@
             `;
             row.querySelector('strong').textContent = task.title;
             row.cells[2].textContent = task.project;
+            row.cells[2].style.color = color;
             if(s.label) row.cells[4].innerHTML = `<span class="badge ${s.class}">${s.label}</span>`;
             row.cells[5].textContent = task.date || '-';
             todoBody.appendChild(row);
@@ -550,7 +533,9 @@
                 mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; mItem.ondragstart = drag;
                 mItem.innerHTML = `<div class="matrix-item-content"><strong></strong><small></small></div><input type="checkbox" onclick="toggleComplete(${task.id})">`;
                 mItem.querySelector('strong').textContent = task.title;
-                mItem.querySelector('small').textContent = task.project;
+                const sm = mItem.querySelector('small');
+                sm.textContent = task.project;
+                sm.style.color = color;
                 return mItem;
             };
 

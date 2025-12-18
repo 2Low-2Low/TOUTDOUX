@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOUT DOUX - Gestionnaire de Tâches</title>
+    <title>TOUT DOUX CLOUD</title>
     <style>
         :root {
             --urgent: #ff4d4d; --important: #ff9f43; --success: #2ecc71; --bg: #f8f9fa;
@@ -13,32 +13,13 @@
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.4; }
         .container { max-width: 1100px; margin: auto; }
 
-        /* Header avec Export/Import autour du titre */
-        .header-main {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            gap: 15px;
-        }
+        /* Header */
+        .header-main { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; gap: 15px; }
         h1 { color: var(--accent); font-size: 2.2rem; margin: 0; letter-spacing: -1px; text-align: center; flex: 2; }
         
-        .btn-sync-head {
-            background: var(--card);
-            border: 2px solid var(--border);
-            padding: 8px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--secondary);
-            transition: all 0.2s;
-            white-space: nowrap;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .btn-sync-head:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
-
-        h2 { color: var(--secondary); margin-top: 30px; border-left: 5px solid var(--accent); padding-left: 15px; font-size: 1.2rem; }
+        .btn-sync-head { background: var(--card); border: 2px solid var(--border); padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--secondary); transition: all 0.2s; white-space: nowrap; }
+        .btn-sync-head:hover { border-color: var(--accent); color: var(--accent); }
+        .sync-status { font-size: 1.2rem; margin-left: 5px; vertical-align: middle; }
 
         /* Formulaire */
         .task-form { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; align-items: flex-end; }
@@ -46,9 +27,9 @@
         .form-group.small { flex: 0.6; }
         .form-group label { font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; color: var(--secondary); text-transform: uppercase; }
         input, select { padding: 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 0.9rem; transition: all 0.2s; font-family: inherit; }
-        input:focus, select:focus { border-color: var(--accent); outline: none; background: #fff; }
+        input:focus { border-color: var(--accent); outline: none; background: #fff; }
         button.add-btn { background: var(--accent); color: white; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; height: 42px; transition: all 0.2s; }
-        button.add-btn:hover { background: #5a49d1; transform: translateY(-1px); }
+        button.add-btn:hover { background: #5a49d1; }
 
         /* Tableaux */
         .card-table { background: var(--card); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 30px; }
@@ -74,39 +55,21 @@
 
         /* Matrice */
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 40px; }
-        .quadrant { background: var(--card); padding: 15px; border-radius: 12px; min-height: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-top: 5px solid #ccc; transition: background 0.2s; }
-        .drag-over { background: #f0edff !important; border-style: dashed; }
+        .quadrant { background: var(--card); padding: 15px; border-radius: 12px; min-height: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-top: 5px solid #ccc; }
         .q-both { border-color: var(--urgent); } .q-important { border-color: var(--accent); } .q-urgent { border-color: var(--important); } .q-none { border-color: #bdc3c7; }
-        .quadrant h3 { margin: 0 0 10px 0; font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; pointer-events: none; }
         .matrix-item { background: #fff; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 0.85rem; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: grab; }
 
         /* Archives (Ouverture Smooth) */
         .archive-section { margin-top: 40px; margin-bottom: 50px; }
-        .archive-toggle { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: var(--card); border: 1px solid var(--border);
-            padding: 12px 20px; border-radius: 12px; cursor: pointer; 
-            transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-        .archive-toggle:hover { background: #fdfdfd; border-color: var(--accent); }
-        
-        /* Animation magique pour la hauteur auto */
-        .archive-content { 
-            display: grid; 
-            grid-template-rows: 0fr; 
-            transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-            overflow: hidden; 
-        }
+        .archive-toggle { display: flex; justify-content: space-between; align-items: center; background: var(--card); border: 1px solid var(--border); padding: 12px 20px; border-radius: 12px; cursor: pointer; }
+        .archive-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease; overflow: hidden; }
         .archive-content.open { grid-template-rows: 1fr; }
         .archive-inner { min-height: 0; }
 
-        .archive-controls { display: flex; align-items: center; gap: 15px; padding: 15px 0; }
-        .btn-clean { border: 1px solid #fab1a0; color: #d63031; background: none; padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; }
-        .btn-clean:hover { background: #fff5f5; }
+        .sync-panel { background: #f1f2f6; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 0.85rem; }
 
         @media (max-width: 768px) {
-            .header-main { flex-direction: column; gap: 10px; }
-            h1 { order: -1; }
+            .header-main { flex-direction: column; }
             .matrix-grid { grid-template-columns: 1fr; }
             .task-form { flex-direction: column; align-items: stretch; }
         }
@@ -116,9 +79,11 @@
 
 <div class="container">
     <div class="header-main">
-        <button class="btn-sync-head" onclick="exportData()">📤 Export</button>
+        <button class="btn-sync-head" onclick="setupSync()">☁️ Synchro <span id="cloudStatus" class="sync-status">⚪</span></button>
         <h1>🎯 TOUT DOUX</h1>
-        <button class="btn-sync-head" onclick="importData()">📥 Import</button>
+        <div style="width:100px; display:flex; justify-content:flex-end;">
+            <button class="btn-sync-head" onclick="exportData()" title="Sauvegarde manuelle">📤</button>
+        </div>
     </div>
 
     <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
@@ -161,26 +126,26 @@
         </table>
     </div>
 
-    <h2>📊 Matrice d'Eisenhower</h2>
     <div class="matrix-grid">
-        <div class="quadrant q-both" id="drop-both" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🔥 FAIRE</h3><div id="m-both"></div></div>
-        <div class="quadrant q-important" id="drop-important" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>📅 PLANIFIER</h3><div id="m-important"></div></div>
-        <div class="quadrant q-urgent" id="drop-urgent" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>⚡ DÉLÉGUER</h3><div id="m-urgent"></div></div>
-        <div class="quadrant q-none" id="drop-none" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🗑️ ÉLIMINER</h3><div id="m-none"></div></div>
+        <div class="quadrant q-both" id="drop-both" ondrop="drop(event)" ondragover="ev=event;ev.preventDefault()"><h3>🔥 FAIRE</h3><div id="m-both"></div></div>
+        <div class="quadrant q-important" id="drop-important" ondrop="drop(event)" ondragover="ev=event;ev.preventDefault()"><h3>📅 PLANIFIER</h3><div id="m-important"></div></div>
+        <div class="quadrant q-urgent" id="drop-urgent" ondrop="drop(event)" ondragover="ev=event;ev.preventDefault()"><h3>⚡ DÉLÉGUER</h3><div id="m-urgent"></div></div>
+        <div class="quadrant q-none" id="drop-none" ondrop="drop(event)" ondragover="ev=event;ev.preventDefault()"><h3>🗑️ ÉLIMINER</h3><div id="m-none"></div></div>
     </div>
 
     <div class="archive-section">
         <div class="archive-toggle" onclick="toggleArchive()">
             <span style="font-weight: 700; color: var(--secondary);">📦 ARCHIVES</span>
-            <span id="archiveChevron" style="font-size: 0.8rem; transition: transform 0.3s">▼</span>
+            <span id="archiveChevron">▼</span>
         </div>
         <div class="archive-content" id="archiveContent">
             <div class="archive-inner">
-                <div class="archive-controls">
-                    <span style="font-size: 0.8rem; color: var(--secondary)">Gérer vos anciennes tâches :</span>
-                    <button class="btn-clean" onclick="cleanArchives()">🧹 Nettoyer (+14j)</button>
+                <div class="sync-panel">
+                    <strong>Code de Synchro actuel :</strong> <code id="syncCodeDisplay">Aucun</code><br>
+                    <small>Utilisez ce code sur vos autres appareils pour retrouver vos tâches.</small>
                 </div>
-                <div class="card-table">
+                <button class="btn-sync-head" style="color:red; border-color:#fab1a0" onclick="cleanArchives()">🧹 Nettoyer (+14j)</button>
+                <div class="card-table" style="margin-top:15px">
                     <table><tbody id="archiveBody"></tbody></table>
                 </div>
             </div>
@@ -191,6 +156,7 @@
 <script>
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let archives = JSON.parse(localStorage.getItem('archives')) || [];
+    let syncKey = localStorage.getItem('toutDouxSyncKey') || null;
     let currentSort = { key: 'createdAt', desc: true };
 
     const PRIORITY_MAP = {
@@ -200,62 +166,81 @@
         none: { label: '🗑️ Aucun', weight: 0, class: 'b-none' }
     };
 
+    // --- SYNCHRONISATION CLOUD ---
+    const KVDB_BUCKET = "td_v1_" + (window.location.hostname || "local");
+
+    async function pushToCloud() {
+        if (!syncKey) return;
+        document.getElementById('cloudStatus').textContent = "⏳";
+        try {
+            await fetch(`https://kvdb.io/6EAtp8p266R762oD9P19vA/${syncKey}`, {
+                method: 'POST',
+                body: JSON.stringify({ tasks, archives })
+            });
+            document.getElementById('cloudStatus').textContent = "🟢";
+        } catch (e) { document.getElementById('cloudStatus').textContent = "🔴"; }
+    }
+
+    async function pullFromCloud() {
+        if (!syncKey) return;
+        document.getElementById('cloudStatus').textContent = "⏳";
+        try {
+            const res = await fetch(`https://kvdb.io/6EAtp8p266R762oD9P19vA/${syncKey}`);
+            if (res.ok) {
+                const data = await res.json();
+                tasks = data.tasks || [];
+                archives = data.archives || [];
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                localStorage.setItem('archives', JSON.stringify(archives));
+                updateUI();
+            }
+            document.getElementById('cloudStatus').textContent = "🟢";
+        } catch (e) { document.getElementById('cloudStatus').textContent = "🔴"; }
+    }
+
+    function setupSync() {
+        const input = prompt("Entrez votre code secret (ex: mon-nom-99) ou laissez vide pour en créer un nouveau :", syncKey || "");
+        if (input !== null) {
+            const newKey = input.trim() || ("td-" + Math.random().toString(36).substring(2, 9));
+            syncKey = newKey;
+            localStorage.setItem('toutDouxSyncKey', syncKey);
+            document.getElementById('syncCodeDisplay').textContent = syncKey;
+            pullFromCloud();
+        }
+    }
+
+    // --- FONCTIONS CLASSIQUES ---
     function save() {
         localStorage.setItem('tasks', JSON.stringify(tasks));
         localStorage.setItem('archives', JSON.stringify(archives));
         updateUI();
-    }
-
-    function exportData() {
-        const data = JSON.stringify({ tasks, archives });
-        navigator.clipboard.writeText(data).then(() => alert("Données copiées !"));
-    }
-
-    function importData() {
-        const data = prompt("Collez vos données ici :");
-        if (data) {
-            try {
-                const parsed = JSON.parse(data);
-                if (confirm("Écraser les données actuelles ?")) {
-                    tasks = parsed.tasks; archives = parsed.archives; save();
-                }
-            } catch (e) { alert("Code invalide."); }
-        }
+        pushToCloud();
     }
 
     function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ""; }
 
     function addTask() {
         const titleEl = document.getElementById('taskTitle');
-        const projectEl = document.getElementById('taskProject');
-        const priorityEl = document.getElementById('taskPriority');
-        const dateEl = document.getElementById('taskDate');
         if (!titleEl.value.trim()) return;
         tasks.push({
             id: Date.now(),
             title: capitalize(titleEl.value.trim()),
-            project: projectEl.value.trim().toUpperCase() || '♲',
-            priority: priorityEl.value,
-            date: dateEl.value,
+            project: document.getElementById('taskProject').value.trim().toUpperCase() || '♲',
+            priority: document.getElementById('taskPriority').value,
+            date: document.getElementById('taskDate').value,
             createdAt: Date.now()
         });
-        titleEl.value = ''; projectEl.value = ''; dateEl.value = '';
+        titleEl.value = ''; document.getElementById('taskProject').value = ''; 
         save();
     }
 
-    // --- Drag & Drop ---
-    function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
-    function dragLeave(ev) { ev.currentTarget.classList.remove('drag-over'); }
-    function drag(ev) { ev.dataTransfer.setData("taskId", ev.target.dataset.id); }
     function drop(ev) {
-        ev.preventDefault(); ev.currentTarget.classList.remove('drag-over');
+        ev.preventDefault();
         const taskId = parseInt(ev.dataTransfer.getData("taskId"));
-        const newPriority = ev.currentTarget.id.replace('drop-', '');
         const task = tasks.find(t => t.id === taskId);
-        if (task) { task.priority = newPriority; save(); }
+        if (task) { task.priority = ev.currentTarget.id.replace('drop-', ''); save(); }
     }
 
-    // --- Edition Inline ---
     function startEdit(element, taskId, field, type) {
         if (element.querySelector('input, select')) return;
         const task = tasks.find(t => t.id === taskId);
@@ -273,23 +258,13 @@
         }
         input.className = 'editing-input';
         element.innerHTML = ''; element.appendChild(input); input.focus();
-        const finish = (cancel = false) => {
-            if (!cancel) {
-                let val = input.value;
-                if (field === 'project') val = val.toUpperCase() || '♲';
-                if (field === 'title') val = capitalize(val) || originalValue;
-                task[field] = val; save();
-            } else updateUI();
-        };
-        input.onblur = () => finish();
-        input.onkeydown = (e) => { if(e.key === 'Enter') finish(); if(e.key === 'Escape') finish(true); };
+        input.onblur = () => { task[field] = (field==='project' ? input.value.toUpperCase() : input.value) || originalValue; save(); };
+        input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); if(e.key === 'Escape') updateUI(); };
     }
 
     function toggleArchive() {
-        const content = document.getElementById('archiveContent');
-        const chevron = document.getElementById('archiveChevron');
-        const isOpen = content.classList.toggle('open');
-        chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        const isOpen = document.getElementById('archiveContent').classList.toggle('open');
+        document.getElementById('archiveChevron').style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
     }
 
     function toggleComplete(id) {
@@ -308,10 +283,7 @@
 
     function cleanArchives() {
         const limit = Date.now() - (14 * 24 * 60 * 60 * 1000);
-        const count = archives.filter(t => t.completedAt < limit).length;
-        if (count > 0 && confirm(`Supprimer ${count} anciennes tâches ?`)) {
-            archives = archives.filter(t => t.completedAt >= limit); save();
-        }
+        archives = archives.filter(t => t.completedAt >= limit); save();
     }
 
     function sortTable(key) {
@@ -330,6 +302,7 @@
         const archiveBody = document.getElementById('archiveBody');
         todoBody.innerHTML = ''; archiveBody.innerHTML = '';
         ['both', 'important', 'urgent', 'none'].forEach(p => document.getElementById(`m-${p}`).innerHTML = '');
+        document.getElementById('syncCodeDisplay').textContent = syncKey || "Aucun";
 
         tasks.forEach(task => {
             const row = document.createElement('tr');
@@ -344,7 +317,8 @@
 
             const mContainer = document.getElementById(`m-${task.priority}`);
             const mItem = document.createElement('div');
-            mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; mItem.ondragstart = drag;
+            mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; 
+            mItem.ondragstart = (e) => e.dataTransfer.setData("taskId", task.id);
             mItem.innerHTML = `<span><strong>${task.title}</strong><br><small style="color:var(--accent)">#${task.project}</small></span>
                                <input type="checkbox" onclick="toggleComplete(${task.id})">`;
             mContainer.appendChild(mItem);
@@ -358,6 +332,9 @@
             archiveBody.appendChild(row);
         });
     }
+
+    // Initialisation
+    if (syncKey) pullFromCloud();
     updateUI();
 </script>
 </body>

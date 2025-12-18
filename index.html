@@ -3,25 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOUT DOUX CLOUD</title>
+    <title>TOUT DOUX CLOUD V3</title>
     <style>
         :root {
             --urgent: #ff4d4d; --important: #ff9f43; --success: #2ecc71; --bg: #f8f9fa;
             --card: #ffffff; --text: #2d3436; --secondary: #636e72; --accent: #6c5ce7; --border: #edf2f7;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.4; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.4; }
         .container { max-width: 1100px; margin: auto; }
 
-        /* Header */
+        /* Header & Sync */
         .header-main { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; gap: 10px; flex-wrap: wrap; }
         h1 { color: var(--accent); font-size: 2rem; margin: 0; letter-spacing: -1px; text-align: center; flex: 1; min-width: 200px; }
         
-        .sync-btn { background: var(--card); border: 2px solid var(--border); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--secondary); transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+        .sync-btn { background: var(--card); border: 2px solid var(--border); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--secondary); transition: 0.2s; display: flex; align-items: center; gap: 8px; }
         .sync-btn:hover { border-color: var(--accent); color: var(--accent); }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #ccc; display: inline-block; }
-        .status-ok { background: var(--success); box-shadow: 0 0 5px var(--success); }
-        .status-error { background: var(--urgent); box-shadow: 0 0 5px var(--urgent); }
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #ccc; display: inline-block; }
+        .status-ok { background: var(--success); box-shadow: 0 0 8px var(--success); }
+        .status-error { background: var(--urgent); box-shadow: 0 0 8px var(--urgent); }
+        .status-loading { background: #3498db; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
         /* Formulaire */
         .task-form { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; align-items: flex-end; }
@@ -29,22 +31,22 @@
         .form-group.small { flex: 0.6; }
         .form-group label { font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; color: var(--secondary); text-transform: uppercase; }
         input, select { padding: 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: inherit; }
-        input:focus { border-color: var(--accent); outline: none; }
-        .add-btn { background: var(--accent); color: white; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; height: 42px; }
+        .add-btn { background: var(--accent); color: white; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; height: 42px; transition: 0.3s; }
+        .add-btn:hover { background: #5a49d1; transform: translateY(-1px); }
 
         /* Tableaux */
         .card-table { background: var(--card); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 30px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th { background: #fdfdfd; padding: 12px 15px; text-align: left; font-size: 0.7rem; text-transform: uppercase; color: var(--secondary); cursor: pointer; border-bottom: 2px solid var(--border); }
-        td { padding: 10px 15px; border-bottom: 1px solid var(--border); font-size: 0.9rem; vertical-align: middle; word-wrap: break-word; }
+        td { padding: 10px 15px; border-bottom: 1px solid var(--border); font-size: 0.95rem; vertical-align: middle; word-wrap: break-word; }
         
         .col-check { width: 40px; text-align: center; }
-        .col-project { width: 120px; }
+        .col-project { width: 110px; }
         .col-priority { width: 150px; }
         .col-date { width: 110px; }
 
-        .editable { cursor: pointer; border-radius: 4px; padding: 4px; transition: 0.2s; }
-        .editable:hover { background: #f0edff; }
+        .editable { cursor: pointer; transition: 0.2s; border-bottom: 1px dashed transparent; }
+        .editable:hover { background: #f0edff; border-bottom-color: var(--accent); }
         .editing-input { width: 100%; padding: 6px; border: 2px solid var(--accent); border-radius: 6px; font-family: inherit; }
 
         .badge { padding: 4px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 800; display: inline-block; }
@@ -60,7 +62,7 @@
         .matrix-item { background: #fff; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 0.85rem; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: grab; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
 
         /* Archives Smooth */
-        .archive-section { margin-top: 20px; }
+        .archive-section { margin-top: 20px; margin-bottom: 50px; }
         .archive-toggle { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 12px 20px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); }
         .archive-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease; overflow: hidden; }
         .archive-content.open { grid-template-rows: 1fr; }
@@ -73,16 +75,17 @@
 
 <div class="container">
     <div class="header-main">
-        <button class="sync-btn" onclick="setupSync()" title="Configurer la synchronisation">
+        <button class="sync-btn" onclick="setupSync()" id="syncMainBtn">
             <span id="syncDot" class="status-dot"></span> ☁️ Synchro
         </button>
         <h1>🎯 TOUT DOUX</h1>
         <div style="display:flex; gap:5px">
-            <button class="sync-btn" onclick="pullFromCloud()" title="Récupérer du Cloud">📥 Charger</button>
-            <button class="sync-btn" onclick="pushToCloud()" title="Envoyer au Cloud">📤 Sauver</button>
+            <button class="sync-btn" onclick="pullFromCloud()" title="Récupérer">📥 Charger</button>
+            <button class="sync-btn" onclick="pushToCloud()" title="Sauvegarder">📤 Sauver</button>
         </div>
     </div>
 
+    <!-- FORMULAIRE -->
     <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
         <div class="form-group">
             <label>Tâche</label>
@@ -108,6 +111,7 @@
         <button class="add-btn" onclick="addTask()">Ajouter</button>
     </div>
 
+    <!-- TODO LIST -->
     <div class="card-table">
         <table>
             <thead>
@@ -123,6 +127,7 @@
         </table>
     </div>
 
+    <!-- MATRICE -->
     <div class="matrix-grid">
         <div class="quadrant q-both" id="drop-both" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>🔥 FAIRE</h3><div id="m-both"></div></div>
         <div class="quadrant q-important" id="drop-important" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>📅 PLANIFIER</h3><div id="m-important"></div></div>
@@ -130,217 +135,5 @@
         <div class="quadrant q-none" id="drop-none" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>🗑️ ÉLIMINER</h3><div id="m-none"></div></div>
     </div>
 
-    <div class="archive-section">
-        <div class="archive-toggle" onclick="toggleArchive()">
-            <span style="font-weight: 700; color: var(--secondary);">📦 ARCHIVES (Code : <span id="codeTag">---</span>)</span>
-            <span id="archiveChevron">▼</span>
-        </div>
-        <div class="archive-content" id="archiveContent">
-            <div class="archive-inner">
-                <button class="sync-btn" style="color:red; margin-bottom:10px" onclick="cleanArchives()">🧹 Nettoyer +14j</button>
-                <div class="card-table">
-                    <table><tbody id="archiveBody"></tbody></table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let archives = JSON.parse(localStorage.getItem('archives')) || [];
-    let syncKey = localStorage.getItem('toutDouxSyncKey') || null;
-    let currentSort = { key: 'createdAt', desc: true };
-
-    const PRIORITY_MAP = {
-        both: { label: '🔥 Urgent & Imp.', weight: 3, class: 'b-both' },
-        urgent: { label: '⚡ Urgent', weight: 2, class: 'b-urgent' },
-        important: { label: '📅 Important', weight: 1, class: 'b-important' },
-        none: { label: '🗑️ Aucun', weight: 0, class: 'b-none' }
-    };
-
-    // --- SYNCHRONISATION ROBUSTE ---
-    function setSyncStatus(status) {
-        const dot = document.getElementById('syncDot');
-        dot.className = 'status-dot ' + (status === 'ok' ? 'status-ok' : status === 'error' ? 'status-error' : '');
-    }
-
-    async function pushToCloud() {
-        if (!syncKey) return;
-        setSyncStatus('loading');
-        try {
-            const res = await fetch(`https://api.keyvalue.xyz/v1/${syncKey}`, {
-                method: 'POST',
-                body: JSON.stringify({ tasks, archives })
-            });
-            if (res.ok) setSyncStatus('ok');
-            else throw new Error();
-        } catch (e) { setSyncStatus('error'); }
-    }
-
-    async function pullFromCloud() {
-        if (!syncKey) return;
-        setSyncStatus('loading');
-        try {
-            const res = await fetch(`https://api.keyvalue.xyz/v1/${syncKey}`);
-            if (res.ok) {
-                const data = await res.json();
-                tasks = data.tasks || [];
-                archives = data.archives || [];
-                saveLocally();
-                setSyncStatus('ok');
-            } else throw new Error();
-        } catch (e) { setSyncStatus('error'); }
-    }
-
-    function setupSync() {
-        const input = prompt("Choisissez un code secret unique (ex: mon-nom-2025) :", syncKey || "");
-        if (input) {
-            syncKey = input.trim().replace(/\s+/g, '-').toLowerCase();
-            localStorage.setItem('toutDouxSyncKey', syncKey);
-            document.getElementById('codeTag').textContent = syncKey;
-            pullFromCloud();
-        }
-    }
-
-    // --- LOGIQUE CORE ---
-    function saveLocally() {
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        localStorage.setItem('archives', JSON.stringify(archives));
-        updateUI();
-    }
-
-    function save() {
-        saveLocally();
-        pushToCloud();
-    }
-
-    function addTask() {
-        const titleEl = document.getElementById('taskTitle');
-        if (!titleEl.value.trim()) return;
-        tasks.push({
-            id: Date.now(),
-            title: titleEl.value.trim().charAt(0).toUpperCase() + titleEl.value.trim().slice(1),
-            project: document.getElementById('taskProject').value.trim().toUpperCase() || '♲',
-            priority: document.getElementById('taskPriority').value,
-            date: document.getElementById('taskDate').value,
-            createdAt: Date.now()
-        });
-        titleEl.value = ''; document.getElementById('taskProject').value = ''; save();
-    }
-
-    function drop(ev) {
-        ev.preventDefault();
-        const taskId = parseInt(ev.dataTransfer.getData("taskId"));
-        const task = tasks.find(t => t.id === taskId);
-        if (task) { task.priority = ev.currentTarget.id.replace('drop-', ''); save(); }
-    }
-
-    function startEdit(element, taskId, field, type) {
-        if (element.querySelector('input, select')) return;
-        const task = tasks.find(t => t.id === taskId);
-        const originalValue = task[field];
-        let input;
-        if (type === 'select') {
-            input = document.createElement('select');
-            for (const [val, opt] of Object.entries(PRIORITY_MAP)) {
-                const o = document.createElement('option'); o.value = val; o.textContent = opt.label;
-                if (val === originalValue) o.selected = true;
-                input.appendChild(o);
-            }
-        } else {
-            input = document.createElement('input'); input.type = type; input.value = originalValue;
-        }
-        input.className = 'editing-input';
-        element.innerHTML = ''; element.appendChild(input); input.focus();
-        input.onblur = () => { 
-            let v = input.value;
-            if (field === 'project') v = v.toUpperCase() || '♲';
-            if (field === 'title') v = v.charAt(0).toUpperCase() + v.slice(1);
-            task[field] = v || originalValue; 
-            save(); 
-        };
-        input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); if(e.key === 'Escape') updateUI(); };
-    }
-
-    function toggleArchive() {
-        const isOpen = document.getElementById('archiveContent').classList.toggle('open');
-        document.getElementById('archiveChevron').style.transform = isOpen ? 'rotate(180deg)' : '';
-    }
-
-    function toggleComplete(id) {
-        const idx = tasks.findIndex(t => t.id === id);
-        if (idx > -1) {
-            const task = tasks.splice(idx, 1)[0];
-            task.completedAt = Date.now();
-            archives.push(task); save();
-        }
-    }
-
-    function restoreTask(id) {
-        const idx = archives.findIndex(t => t.id === id);
-        if (idx > -1) { tasks.push(archives.splice(idx, 1)[0]); save(); }
-    }
-
-    function cleanArchives() {
-        const limit = Date.now() - (14 * 24 * 60 * 60 * 1000);
-        archives = archives.filter(t => t.completedAt >= limit); save();
-    }
-
-    function sortTable(key) {
-        if (currentSort.key === key) currentSort.desc = !currentSort.desc;
-        else { currentSort.key = key; currentSort.desc = false; }
-        tasks.sort((a, b) => {
-            let vA = a[key] || '', vB = b[key] || '';
-            if (key === 'priority') { vA = PRIORITY_MAP[a.priority].weight; vB = PRIORITY_MAP[b.priority].weight; }
-            return vA < vB ? (currentSort.desc ? 1 : -1) : (currentSort.desc ? -1 : 1);
-        });
-        updateUI();
-    }
-
-    function updateUI() {
-        const todoBody = document.getElementById('todoBody');
-        const archiveBody = document.getElementById('archiveBody');
-        todoBody.innerHTML = ''; archiveBody.innerHTML = '';
-        ['both', 'important', 'urgent', 'none'].forEach(p => {
-            const el = document.getElementById(`m-${p}`);
-            if (el) el.innerHTML = '';
-        });
-        document.getElementById('codeTag').textContent = syncKey || "---";
-
-        tasks.forEach(task => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td>
-                <td class="editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong>${task.title}</strong></td>
-                <td class="editable" style="color:var(--accent); font-weight:bold" onclick="startEdit(this, ${task.id}, 'project', 'text')">${task.project}</td>
-                <td class="editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"><span class="badge ${PRIORITY_MAP[task.priority].class}">${PRIORITY_MAP[task.priority].label}</span></td>
-                <td class="editable" style="font-size:0.8rem" onclick="startEdit(this, ${task.id}, 'date', 'date')">${task.date || '-'}</td>
-            `;
-            todoBody.appendChild(row);
-
-            const mContainer = document.getElementById(`m-${task.priority}`);
-            if (mContainer) {
-                const mItem = document.createElement('div');
-                mItem.className = 'matrix-item'; mItem.draggable = true;
-                mItem.ondragstart = (e) => e.dataTransfer.setData("taskId", task.id);
-                mItem.innerHTML = `<span><strong>${task.title}</strong><br><small style="color:var(--accent)">#${task.project}</small></span>
-                                   <input type="checkbox" onclick="toggleComplete(${task.id})">`;
-                mContainer.appendChild(mItem);
-            }
-        });
-
-        archives.slice().reverse().forEach(task => {
-            const row = document.createElement('tr');
-            row.style.opacity = '0.5';
-            row.innerHTML = `<td class="col-check">✅</td><td colspan="3" style="text-decoration:line-through">${task.title} <small>(#${task.project})</small></td>
-                             <td style="text-align:right"><button onclick="restoreTask(${task.id})" style="font-size:0.7rem; cursor:pointer">Restaurer</button></td>`;
-            archiveBody.appendChild(row);
-        });
-    }
-
-    if (syncKey) pullFromCloud();
-    updateUI();
-</script>
-</body>
-</html>
+    <!-- ARCHIVES -->
+    <div class="archive-s

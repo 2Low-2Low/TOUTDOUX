@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOUT DOUX - Gestionnaire de Tâches</title>
+    <style>
+        :root {
+            --urgent: #ff4d4d;
+            --important: #ff9f43;
+            --success: #2ecc71;
+            --info: #3498db;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --text: #2d3436;
+            --secondary: #636e72;
+            --accent: #6c5ce7;
+            --border: #edf2f7;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.4;
+        }
+
+        .container { max-width: 1100px; margin: auto; }
+        h1 { text-align: center; color: var(--accent); font-size: 2.2rem; margin-bottom: 20px; letter-spacing: -1px; }
+        h2 { color: var(--secondary); margin-top: 30px; border-left: 5px solid var(--accent); padding-left: 15px; font-size: 1.2rem; cursor: pointer; user-select: none; }
+
+        /* Formulaire */
+        .task-form {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 30px;
+            align-items: flex-end;
+        }
+
+        .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
+        .form-group.small { flex: 0.6; }
+        .form-group label { font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; color: var(--secondary); text-transform: uppercase; }
+        
+        input, select { 
+            padding: 10px; border: 2px solid var(--border); border-radius: 8px; 
+            font-size: 0.9rem; transition: all 0.2s; font-family: inherit;
+        }
+        input:focus, select:focus { border-color: var(--accent); outline: none; background: #fff; }
+        
+        button.add-btn { 
+            background: var(--accent); color: white; border: none; padding: 0 25px; 
+            border-radius: 8px; cursor: pointer; font-weight: bold; height: 42px; transition: all 0.2s;
+        }
+        button.add-btn:hover { background: #5a49d1; transform: translateY(-1px); }
+
+        /* Tableaux */
+        .card-table {
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th { 
+            background: #fdfdfd; padding: 12px 15px; text-align: left; 
+            font-size: 0.75rem; text-transform: uppercase; color: var(--secondary); 
+            cursor: pointer; border-bottom: 2px solid var(--border);
+        }
+        th:hover { color: var(--accent); background: #f1f2f6; }
+        
+        td { 
+            padding: 10px 15px; border-bottom: 1px solid var(--border); 
+            font-size: 0.9rem; overflow: hidden; word-wrap: break-word; vertical-align: middle;
+        }
+        
+        .col-check { width: 45px; text-align: center; }
+        .col-task { width: auto; }
+        .col-project { width: 130px; }
+        .col-priority { width: 160px; }
+        .col-date { width: 120px; }
+
+        .task-title-cell { white-space: pre-wrap; font-weight: 500; cursor: text; line-height: 1.3; }
+        .editable { cursor: pointer; }
+        .editable:hover { background: #fcfaff; }
+        
+        .editing-input { 
+            width: 100%; box-sizing: border-box; padding: 6px; 
+            font-size: 0.9rem; border: 2px solid var(--accent); 
+            border-radius: 6px; font-family: inherit;
+        }
+
+        /* Badges */
+        .badge { padding: 4px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 800; display: inline-block; }
+        .b-both { background: #ffe3e3; color: #e74c3c; }
+        .b-urgent { background: #fff4e6; color: #d35400; }
+        .b-important { background: #e3f2fd; color: #0984e3; }
+        .b-none { background: #f1f2f6; color: #7f8c8d; }
+
+        /* Matrice Drag & Drop */
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 40px; }
+        .quadrant {
+            background: var(--card); padding: 15px; border-radius: 12px; min-height: 120px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-top: 5px solid #ccc;
+            transition: background 0.2s;
+        }
+        .drag-over { background: #f0edff !important; border-style: dashed; }
+        
+        .q-both { border-color: var(--urgent); }
+        .q-important { border-color: var(--accent); }
+        .q-urgent { border-color: var(--important); }
+        .q-none { border-color: #bdc3c7; }
+        
+        .quadrant h3 { margin: 0 0 10px 0; font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; pointer-events: none; }
+        
+        .matrix-item {
+            background: #fff; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px;
+            font-size: 0.85rem; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); cursor: grab;
+        }
+        .matrix-item:active { cursor: grabbing; }
+
+        /* Archives Accordéon */
+        .archive-section { margin-top: 20px; }
+        .archive-toggle { display: flex; justify-content: space-between; align-items: center; background: #eee; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
+        .archive-toggle:hover { background: #e5e5e5; }
+        .archive-content { display: none; margin-top: 10px; }
+        .archive-content.open { display: block; }
+        
+        .archive-row { opacity: 0.6; font-size: 0.85rem; background: #fafafa; }
+        .archive-row td { text-decoration: line-through; }
+
+        @media (max-width: 768px) {
+            .matrix-grid { grid-template-columns: 1fr; }
+            .task-form { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎯 TOUT DOUX</h1>
+
+    <!-- FORMULAIRE -->
+    <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
+        <div class="form-group">
+            <label>Tâche</label>
+            <input type="text" id="taskTitle" placeholder="Quelle est la mission ?">
+        </div>
+        <div class="form-group small">
+            <label>Projet</label>
+            <input type="text" id="taskProject" placeholder="NOM DU PROJET" oninput="this.value = this.value.toUpperCase()">
+        </div>
+        <div class="form-group">
+            <label>Priorité</label>
+            <select id="taskPriority">
+                <option value="both">🔥 Urgent & Important</option>
+                <option value="urgent">⚡ Urgent</option>
+                <option value="important">📅 Important</option>
+                <option value="none" selected>🗑️ Aucun</option>
+            </select>
+        </div>
+        <div class="form-group small">
+            <label>Deadline</label>
+            <input type="date" id="taskDate">
+        </div>
+        <button class="add-btn" onclick="addTask()">Ajouter</button>
+    </div>
+
+    <!-- TABLEAU TODO -->
+    <div class="card-table">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-check"></th>
+                    <th class="col-task" onclick="sortTable('createdAt')">Tâche ↕</th>
+                    <th class="col-project" onclick="sortTable('project')">Projet ↕</th>
+                    <th class="col-priority" onclick="sortTable('priority')">Priorité ↕</th>
+                    <th class="col-date" onclick="sortTable('date')">Deadline ↕</th>
+                </tr>
+            </thead>
+            <tbody id="todoBody"></tbody>
+        </table>
+    </div>
+
+    <!-- MATRICE -->
+    <h2>📊 Matrice d'Eisenhower</h2>
+    <div class="matrix-grid">
+        <div class="quadrant q-both" id="drop-both" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+            <h3>🔥 FAIRE</h3><div id="m-both"></div>
+        </div>
+        <div class="quadrant q-important" id="drop-important" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+            <h3>📅 PLANIFIER</h3><div id="m-important"></div>
+        </div>
+        <div class="quadrant q-urgent" id="drop-urgent" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+            <h3>⚡ DÉLÉGUER</h3><div id="m-urgent"></div>
+        </div>
+        <div class="quadrant q-none" id="drop-none" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+            <h3>🗑️ ÉLIMINER</h3><div id="m-none"></div>
+        </div>
+    </div>
+
+    <!-- ARCHIVES ACCORDÉON -->
+    <div class="archive-section">
+        <div class="archive-toggle" onclick="toggleArchive()">
+            <span style="font-weight: bold; color: var(--secondary);">📦 ARCHIVES</span>
+            <div>
+                <button class="btn-clean" onclick="event.stopPropagation(); cleanArchives()" style="margin-right: 15px; background:none; border:1px solid #ccc; cursor:pointer; padding:2px 8px; border-radius:4px">🧹 Nettoyer (+14j)</button>
+                <span id="archiveChevron">▼</span>
+            </div>
+        </div>
+        <div class="archive-content" id="archiveContent">
+            <div class="card-table">
+                <table>
+                    <tbody id="archiveBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let archives = JSON.parse(localStorage.getItem('archives')) || [];
+    let currentSort = { key: 'createdAt', desc: true };
+
+    const PRIORITY_MAP = {
+        both: { label: '🔥 Urgent & Imp.', weight: 3, class: 'b-both' },
+        urgent: { label: '⚡ Urgent', weight: 2, class: 'b-urgent' },
+        important: { label: '📅 Important', weight: 1, class: 'b-important' },
+        none: { label: '🗑️ Aucun', weight: 0, class: 'b-none' }
+    };
+
+    // --- Helpers ---
+    function save() {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('archives', JSON.stringify(archives));
+        updateUI();
+    }
+
+    function capitalize(str) {
+        if (!str) return "";
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // --- Actions ---
+    function addTask() {
+        const titleEl = document.getElementById('taskTitle');
+        const projectEl = document.getElementById('taskProject');
+        const priorityEl = document.getElementById('taskPriority');
+        const dateEl = document.getElementById('taskDate');
+
+        if (!titleEl.value.trim()) return;
+
+        tasks.push({
+            id: Date.now(),
+            title: capitalize(titleEl.value.trim()),
+            project: projectEl.value.trim().toUpperCase() || '♲',
+            priority: priorityEl.value,
+            date: dateEl.value,
+            createdAt: Date.now()
+        });
+
+        titleEl.value = ''; projectEl.value = ''; dateEl.value = '';
+        save();
+    }
+
+    // --- Drag & Drop Matrix ---
+    function allowDrop(ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.add('drag-over');
+    }
+
+    function dragLeave(ev) {
+        ev.currentTarget.classList.remove('drag-over');
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("taskId", ev.target.dataset.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.remove('drag-over');
+        const taskId = parseInt(ev.dataTransfer.getData("taskId"));
+        const newPriority = ev.currentTarget.id.replace('drop-', '');
+        
+        const task = tasks.find(t => t.id === taskId);
+        if (task) {
+            task.priority = newPriority;
+            save();
+        }
+    }
+
+    // --- Edition Inline ---
+    function startEdit(element, taskId, field, type) {
+        if (element.querySelector('input, select')) return;
+        const task = tasks.find(t => t.id === taskId);
+        const originalValue = task[field];
+        
+        let input;
+        if (type === 'select') {
+            input = document.createElement('select');
+            for (const [val, opt] of Object.entries(PRIORITY_MAP)) {
+                const o = document.createElement('option');
+                o.value = val; o.textContent = opt.label;
+                if (val === originalValue) o.selected = true;
+                input.appendChild(o);
+            }
+        } else {
+            input = document.createElement('input');
+            input.type = type;
+            input.value = originalValue;
+        }
+
+        input.className = 'editing-input';
+        element.innerHTML = '';
+        element.appendChild(input);
+        input.focus();
+
+        const finish = (cancel = false) => {
+            if (!cancel) {
+                let val = input.value;
+                if (field === 'project') val = val.toUpperCase() || '♲';
+                if (field === 'title') val = capitalize(val) || originalValue;
+                task[field] = val;
+                save();
+            } else updateUI();
+        };
+
+        input.onblur = () => finish();
+        input.onkeydown = (e) => { if(e.key === 'Enter') finish(); if(e.key === 'Escape') finish(true); };
+    }
+
+    // --- Archives Accordéon ---
+    function toggleArchive() {
+        const content = document.getElementById('archiveContent');
+        const chevron = document.getElementById('archiveChevron');
+        content.classList.toggle('open');
+        chevron.textContent = content.classList.contains('open') ? '▲' : '▼';
+    }
+
+    function toggleComplete(id) {
+        const idx = tasks.findIndex(t => t.id === id);
+        if (idx > -1) {
+            const task = tasks.splice(idx, 1)[0];
+            task.completedAt = Date.now();
+            archives.push(task);
+            save();
+        }
+    }
+
+    function restoreTask(id) {
+        const idx = archives.findIndex(t => t.id === id);
+        if (idx > -1) {
+            tasks.push(archives.splice(idx, 1)[0]);
+            save();
+        }
+    }
+
+    function cleanArchives() {
+        const limit = Date.now() - (14 * 24 * 60 * 60 * 1000);
+        const count = archives.filter(t => t.completedAt < limit).length;
+        if (count > 0 && confirm(`Supprimer ${count} anciennes tâches ?`)) {
+            archives = archives.filter(t => t.completedAt >= limit);
+            save();
+        }
+    }
+
+    // --- Tri ---
+    function sortTable(key) {
+        if (currentSort.key === key) currentSort.desc = !currentSort.desc;
+        else { currentSort.key = key; currentSort.desc = false; }
+        tasks.sort((a, b) => {
+            let vA = a[key] || '', vB = b[key] || '';
+            if (key === 'priority') { vA = PRIORITY_MAP[a.priority].weight; vB = PRIORITY_MAP[b.priority].weight; }
+            return vA < vB ? (currentSort.desc ? 1 : -1) : (currentSort.desc ? -1 : 1);
+        });
+        updateUI();
+    }
+
+    // --- Rendu UI ---
+    function updateUI() {
+        const todoBody = document.getElementById('todoBody');
+        const archiveBody = document.getElementById('archiveBody');
+        todoBody.innerHTML = ''; archiveBody.innerHTML = '';
+        ['both', 'important', 'urgent', 'none'].forEach(p => document.getElementById(`m-${p}`).innerHTML = '');
+
+        tasks.forEach(task => {
+            // Ligne Liste
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td>
+                <td class="task-title-cell editable" onclick="startEdit(this, ${task.id}, 'title', 'text')">${task.title}</td>
+                <td class="editable" style="color:var(--accent); font-weight:bold" onclick="startEdit(this, ${task.id}, 'project', 'text')">${task.project}</td>
+                <td class="editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"><span class="badge ${PRIORITY_MAP[task.priority].class}">${PRIORITY_MAP[task.priority].label}</span></td>
+                <td class="editable" style="font-size:0.8rem" onclick="startEdit(this, ${task.id}, 'date', 'date')">${task.date || '-'}</td>
+            `;
+            todoBody.appendChild(row);
+
+            // Item Matrice
+            const mContainer = document.getElementById(`m-${task.priority}`);
+            const mItem = document.createElement('div');
+            mItem.className = 'matrix-item';
+            mItem.draggable = true;
+            mItem.dataset.id = task.id;
+            mItem.ondragstart = drag;
+            mItem.innerHTML = `<span><strong>${task.title}</strong><br><small style="color:var(--accent)">#${task.project}</small></span>
+                               <input type="checkbox" onclick="toggleComplete(${task.id})">`;
+            mContainer.appendChild(mItem);
+        });
+
+        archives.slice().reverse().forEach(task => {
+            const row = document.createElement('tr');
+            row.className = 'archive-row';
+            row.innerHTML = `<td class="col-check">✅</td><td colspan="3">${task.title} <small>(#${task.project})</small></td>
+                             <td style="text-align:right"><button onclick="restoreTask(${task.id})" style="font-size:0.7rem; cursor:pointer">Restaurer</button></td>`;
+            archiveBody.appendChild(row);
+        });
+    }
+
+    updateUI();
+</script>
+
+</body>
+</html>

@@ -81,6 +81,12 @@
         .add-btn { background: var(--urgent-both); color: white; border: none; height: 50px; padding: 0 30px; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 0px #c45643; }
         .add-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0px #c45643; }
 
+        /* BARRE DE TRI MOBILE (Cachée sur PC) */
+        .mobile-sort-bar { display: none; overflow-x: auto; gap: 10px; padding: 5px 0 20px; scrollbar-width: none; }
+        .mobile-sort-bar::-webkit-scrollbar { display: none; }
+        .sort-pill { background: white; border: 1px solid var(--border); padding: 8px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; color: var(--secondary); white-space: nowrap; cursor: pointer; }
+        .sort-pill.active { background: var(--accent); color: white; border-color: var(--accent); }
+
         /* TABLEAU */
         .card-table { margin-bottom: 40px; overflow-x: auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 12px; table-layout: fixed; }
@@ -155,13 +161,12 @@
         }
         .archive-toggle:hover { background-color: #fafaf5; }
         .archive-toggle.is-open { background-color: #f5f0e6; border-color: var(--important-only); }
-        
         .archive-content { display: none; margin-bottom: 60px; }
-        
         .archive-today-bg { background-color: #f2f9f2 !important; opacity: 1 !important; border-color: #e2ede2 !important; }
 
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
+            .mobile-sort-bar { display: flex; } /* Affiche les boutons de tri sur tel */
             thead { display: none; }
             table, tbody, tr, td { display: block; width: 100% !important; }
             tr { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(139, 126, 116, 0.05); position: relative; border: 1px solid var(--border); }
@@ -225,6 +230,15 @@
             <input type="date" id="taskDate">
         </div>
         <button class="add-btn" onclick="addTask()">Ajouter</button>
+    </div>
+
+    <!-- BARRE DE TRI MOBILE (S'affiche uniquement sur tel) -->
+    <div class="mobile-sort-bar">
+        <div class="sort-pill" id="pill-createdAt" onclick="sortTable('createdAt')">Note ↕</div>
+        <div class="sort-pill" id="pill-project" onclick="sortTable('project')">Projet ↕</div>
+        <div class="sort-pill" id="pill-priority" onclick="sortTable('priority')">Priorité ↕</div>
+        <div class="sort-pill" id="pill-status" onclick="sortTable('status')">État ↕</div>
+        <div class="sort-pill" id="pill-date" onclick="sortTable('date')">Temps ↕</div>
     </div>
 
     <div class="card-table">
@@ -458,15 +472,9 @@
         const content = document.getElementById('archiveContent');
         const chevron = document.getElementById('archiveChevron');
         const isHidden = content.style.display === 'none' || content.style.display === '';
-        
         content.style.display = isHidden ? 'block' : 'none';
         chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
-        
-        if (isHidden) {
-            toggle.classList.add('is-open');
-        } else {
-            toggle.classList.remove('is-open');
-        }
+        if (isHidden) toggle.classList.add('is-open'); else toggle.classList.remove('is-open');
     }
 
     function updateUI() {
@@ -477,6 +485,11 @@
         ['both', 'important', 'urgent', 'none'].forEach(p => { if(document.getElementById(`m-p-${p}`)) document.getElementById(`m-p-${p}`).innerHTML = ''; });
         ['URGENCE', 'IMPACT', 'FACILE'].forEach(s => { if(document.getElementById(`m-s-${s}`)) document.getElementById(`m-s-${s}`).innerHTML = ''; });
         
+        // Mise à jour visuelle des pilules de tri mobile
+        document.querySelectorAll('.sort-pill').forEach(pill => {
+            pill.classList.toggle('active', pill.id === `pill-${currentSort.key}`);
+        });
+
         const now = new Date();
         const startOfWorkDay = new Date(now);
         if (now.getHours() < 5) startOfWorkDay.setDate(now.getDate() - 1);

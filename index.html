@@ -99,7 +99,7 @@
         .col-check { width: 50px; text-align: center; border-left: 1px solid var(--border); border-top-left-radius: 18px; border-bottom-left-radius: 18px; }
         .col-task { width: 280px; } 
         .col-project { width: 110px; }
-        td.col-project { font-weight: bold; }
+        td.col-project { font-weight: bold; color: var(--accent); }
         .col-priority { width: 160px; }
         .col-status { width: 130px; }
         .col-date { width: 120px; border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; font-size: 0.85rem; color: var(--secondary); }
@@ -163,7 +163,7 @@
         .archive-content { display: none; margin-bottom: 60px; }
         .archive-today-bg { background-color: #f2f9f2 !important; opacity: 1 !important; border-color: #e2ede2 !important; }
 
-        /* --- MEDIA QUERIES MOBILE VERSION ÉPURÉE --- */
+        /* --- MOBILE VERSION ÉLÉGANTE (3 NIVEAUX) --- */
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             .mobile-sort-bar { display: flex; }
@@ -171,44 +171,44 @@
             table, tbody, tr, td { display: block; width: 100% !important; }
             
             tr { 
-                background: white; border-radius: 20px; padding: 15px; 
-                margin-bottom: 12px; box-shadow: 0 4px 10px rgba(139, 126, 116, 0.05); 
+                background: white; border-radius: 22px; padding: 20px; 
+                margin-bottom: 15px; box-shadow: 0 4px 15px rgba(139, 126, 116, 0.06); 
                 position: relative; border: 1px solid var(--border);
-                display: flex; flex-direction: column;
             }
             
             td { border: none !important; padding: 0 !important; background: transparent !important; }
             
-            /* LIGNE 1 : TITRE ET CHECKBOX */
+            /* NIVEAU 1 : NOM + CASE À COCHER */
             td.col-check { 
-                order: 1; position: absolute; top: 15px; right: 15px; width: 30px !important; 
+                position: absolute; top: 20px; right: 20px; width: 25px !important; 
             }
             td.col-task { 
-                order: 2; padding-right: 45px !important; 
-                font-size: 1.15rem; font-weight: bold; font-family: 'Playfair Display', serif;
-                margin-bottom: 4px;
+                padding-right: 45px !important; 
+                font-size: 1.25rem; font-weight: bold; 
+                font-family: 'Playfair Display', serif;
+                margin-bottom: 6px; color: var(--text);
             }
             
-            /* LIGNE 2 : PROJET */
+            /* NIVEAU 2 : PROJET */
             td.col-project { 
-                order: 3; display: block !important; margin-bottom: 8px;
-                color: var(--accent); font-weight: 700; font-size: 0.8rem;
+                display: block !important; margin-bottom: 10px;
+                color: var(--accent); font-weight: 800; font-size: 0.85rem;
+                letter-spacing: 0.5px;
             }
             
-            /* LIGNE 3 : META (PRIORITÉ / ÉTAT / DATE) */
+            /* NIVEAU 3 : PRIORITÉ / ÉTAT / TEMPS */
             td.col-priority, td.col-status, td.col-date {
                 display: inline-block !important; width: auto !important;
-                font-size: 0.75rem; color: var(--secondary); order: 4;
+                font-size: 0.75rem; color: var(--secondary); font-weight: 600;
             }
 
-            /* On ajoute les slashes de séparation */
-            td.col-priority:after { content: " / "; margin: 0 6px; color: #ddd; }
-            td.col-status:not(:empty):after { content: " / "; margin: 0 6px; color: #ddd; }
+            /* Séparateurs Slaches élégants */
+            td.col-priority:after { content: " / "; margin: 0 8px; color: #dcd7cc; font-weight: 400; }
+            /* On n'affiche le slash après l'état que si l'état n'est pas vide */
+            td.col-status:not(:empty):after { content: " / "; margin: 0 8px; color: #dcd7cc; font-weight: 400; }
 
-            /* On cache les labels génériques */
-            td.col-project:before, td.col-date:before, td.col-priority:before, td.col-status:before { 
-                content: none !important; 
-            }
+            /* On retire les labels :before par défaut */
+            td:before { content: none !important; }
 
             .matrix-grid, .matrix-grid-triple { grid-template-columns: 1fr; }
         }

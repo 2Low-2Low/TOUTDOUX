@@ -81,7 +81,7 @@
         .add-btn { background: var(--urgent-both); color: white; border: none; height: 50px; padding: 0 30px; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 0px #c45643; }
         .add-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0px #c45643; }
 
-        /* BARRE DE TRI MOBILE (Cachée sur PC) */
+        /* BARRE DE TRI MOBILE */
         .mobile-sort-bar { display: none; overflow-x: auto; gap: 10px; padding: 5px 0 20px; scrollbar-width: none; }
         .mobile-sort-bar::-webkit-scrollbar { display: none; }
         .sort-pill { background: white; border: 1px solid var(--border); padding: 8px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; color: var(--secondary); white-space: nowrap; cursor: pointer; }
@@ -119,7 +119,7 @@
         .cat-separator::before, .cat-separator::after { content: ''; flex: 1; border-bottom: 1.5px solid #d4cdc1; margin: 0 40px; }
         .cat-icon { font-size: 2.5rem; color: var(--text); line-height: 1; filter: opacity(0.7); }
 
-        /* NAVIGATION MATRICE (DOTS) */
+        /* NAVIGATION MATRICE */
         .matrix-nav { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
         .nav-dot { width: 12px; height: 12px; border-radius: 50%; background: #d4cdc1; cursor: pointer; transition: 0.3s; border: 2px solid transparent; }
         .nav-dot.active { background: var(--accent); transform: scale(1.3); border-color: #fff; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
@@ -128,7 +128,6 @@
         .matrix-window { width: 100%; overflow: hidden; margin-bottom: 50px; }
         .matrix-track { display: flex; transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1); width: 200%; }
         .matrix-view { width: 50%; padding: 0 5px; }
-
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         .matrix-grid-triple { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
 
@@ -164,19 +163,46 @@
         .archive-content { display: none; margin-bottom: 60px; }
         .archive-today-bg { background-color: #f2f9f2 !important; opacity: 1 !important; border-color: #e2ede2 !important; }
 
+        /* --- MEDIA QUERIES MOBILE COMPACT --- */
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
-            .mobile-sort-bar { display: flex; } /* Affiche les boutons de tri sur tel */
+            .mobile-sort-bar { display: flex; }
             thead { display: none; }
             table, tbody, tr, td { display: block; width: 100% !important; }
-            tr { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(139, 126, 116, 0.05); position: relative; border: 1px solid var(--border); }
-            td { border: none !important; padding: 5px 0 !important; }
-            td.col-check { position: absolute; top: 20px; right: 20px; width: auto !important; }
-            td:nth-child(2) { font-size: 1.2rem; font-weight: bold; padding-right: 50px !important; font-family: 'Playfair Display', serif; }
-            td.col-project:before { content: "Projet: "; font-weight: bold; font-size: 0.75rem; color: var(--secondary); }
-            td.col-priority:before { content: "Priorité: "; font-weight: bold; font-size: 0.75rem; color: var(--secondary); }
-            td.col-status:before { content: "État: "; font-weight: bold; font-size: 0.75rem; color: var(--secondary); }
-            td.col-date:before { content: "Deadline: "; font-weight: bold; font-size: 0.75rem; color: var(--secondary); }
+            
+            tr { 
+                background: white; border-radius: 20px; padding: 15px; 
+                margin-bottom: 12px; box-shadow: 0 4px 10px rgba(139, 126, 116, 0.05); 
+                position: relative; border: 1px solid var(--border);
+                display: flex; flex-direction: column;
+            }
+            
+            td { border: none !important; padding: 0 !important; background: transparent !important; }
+            
+            /* Ligne 1 : Titre + Checkbox */
+            td.col-check { 
+                order: 1; position: absolute; top: 15px; right: 15px; width: 30px !important; 
+            }
+            td.col-task { 
+                order: 2; padding-right: 45px !important; margin-bottom: 10px;
+                font-size: 1.15rem; font-weight: bold; font-family: 'Playfair Display', serif;
+            }
+            
+            /* Ligne 2 : Métadonnées groupées */
+            td.col-project, td.col-priority, td.col-status, td.col-date {
+                display: inline-block !important; width: auto !important;
+                margin-right: 8px; margin-bottom: 5px; order: 3;
+            }
+            
+            /* On cache les labels :before pour gagner de la place */
+            td.col-project:before, td.col-date:before, td.col-priority:before, td.col-status:before { 
+                content: none !important; 
+            }
+            
+            /* Petit style spécifique pour les infos secondaires */
+            td.col-project { color: var(--accent); font-size: 0.8rem; background: #f4f7f4 !important; padding: 3px 8px !important; border-radius: 8px; }
+            td.col-date { color: var(--secondary); font-size: 0.75rem; font-style: italic; }
+
             .matrix-grid, .matrix-grid-triple { grid-template-columns: 1fr; }
         }
     </style>
@@ -232,7 +258,6 @@
         <button class="add-btn" onclick="addTask()">Ajouter</button>
     </div>
 
-    <!-- BARRE DE TRI MOBILE (S'affiche uniquement sur tel) -->
     <div class="mobile-sort-bar">
         <div class="sort-pill" id="pill-createdAt" onclick="sortTable('createdAt')">Note ↕</div>
         <div class="sort-pill" id="pill-project" onclick="sortTable('project')">Projet ↕</div>
@@ -485,7 +510,6 @@
         ['both', 'important', 'urgent', 'none'].forEach(p => { if(document.getElementById(`m-p-${p}`)) document.getElementById(`m-p-${p}`).innerHTML = ''; });
         ['URGENCE', 'IMPACT', 'FACILE'].forEach(s => { if(document.getElementById(`m-s-${s}`)) document.getElementById(`m-s-${s}`).innerHTML = ''; });
         
-        // Mise à jour visuelle des pilules de tri mobile
         document.querySelectorAll('.sort-pill').forEach(pill => {
             pill.classList.toggle('active', pill.id === `pill-${currentSort.key}`);
         });

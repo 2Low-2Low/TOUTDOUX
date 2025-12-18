@@ -163,7 +163,7 @@
         .archive-content { display: none; margin-bottom: 60px; }
         .archive-today-bg { background-color: #f2f9f2 !important; opacity: 1 !important; border-color: #e2ede2 !important; }
 
-        /* --- MEDIA QUERIES MOBILE COMPACT --- */
+        /* --- MEDIA QUERIES MOBILE VERSION ÉPURÉE --- */
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             .mobile-sort-bar { display: flex; }
@@ -179,29 +179,36 @@
             
             td { border: none !important; padding: 0 !important; background: transparent !important; }
             
-            /* Ligne 1 : Titre + Checkbox */
+            /* LIGNE 1 : TITRE ET CHECKBOX */
             td.col-check { 
                 order: 1; position: absolute; top: 15px; right: 15px; width: 30px !important; 
             }
             td.col-task { 
-                order: 2; padding-right: 45px !important; margin-bottom: 10px;
+                order: 2; padding-right: 45px !important; 
                 font-size: 1.15rem; font-weight: bold; font-family: 'Playfair Display', serif;
+                margin-bottom: 4px;
             }
             
-            /* Ligne 2 : Métadonnées groupées */
-            td.col-project, td.col-priority, td.col-status, td.col-date {
+            /* LIGNE 2 : PROJET */
+            td.col-project { 
+                order: 3; display: block !important; margin-bottom: 8px;
+                color: var(--accent); font-weight: 700; font-size: 0.8rem;
+            }
+            
+            /* LIGNE 3 : META (PRIORITÉ / ÉTAT / DATE) */
+            td.col-priority, td.col-status, td.col-date {
                 display: inline-block !important; width: auto !important;
-                margin-right: 8px; margin-bottom: 5px; order: 3;
+                font-size: 0.75rem; color: var(--secondary); order: 4;
             }
-            
-            /* On cache les labels :before pour gagner de la place */
+
+            /* On ajoute les slashes de séparation */
+            td.col-priority:after { content: " / "; margin: 0 6px; color: #ddd; }
+            td.col-status:not(:empty):after { content: " / "; margin: 0 6px; color: #ddd; }
+
+            /* On cache les labels génériques */
             td.col-project:before, td.col-date:before, td.col-priority:before, td.col-status:before { 
                 content: none !important; 
             }
-            
-            /* Petit style spécifique pour les infos secondaires */
-            td.col-project { color: var(--accent); font-size: 0.8rem; background: #f4f7f4 !important; padding: 3px 8px !important; border-radius: 8px; }
-            td.col-date { color: var(--secondary); font-size: 0.75rem; font-style: italic; }
 
             .matrix-grid, .matrix-grid-triple { grid-template-columns: 1fr; }
         }

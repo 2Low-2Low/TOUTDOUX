@@ -3,43 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOUTDOUX CLOUD V4</title>
+    <title>TOUT DOUX GITHUB SYNC</title>
     <style>
         :root {
             --urgent: #ff4d4d; --important: #ff9f43; --success: #2ecc71; --bg: #f8f9fa;
             --card: #ffffff; --text: #2d3436; --secondary: #636e72; --accent: #6c5ce7; --border: #edf2f7;
         }
-
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.4; }
         .container { max-width: 1100px; margin: auto; }
 
-        /* Header avec Synchro */
-        .header-main { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; gap: 10px; flex-wrap: wrap; }
-        h1 { color: var(--accent); font-size: 2.2rem; margin: 0; letter-spacing: -1px; text-align: center; flex: 2; }
-        
-        .sync-block { display: flex; align-items: center; gap: 10px; background: var(--card); padding: 5px 15px; border-radius: 12px; border: 2px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .sync-info { font-size: 0.75rem; color: var(--secondary); display: flex; flex-direction: column; }
-        .sync-code-val { font-weight: bold; color: var(--accent); }
-        
-        .btn-action { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: 0.2s; }
-        .btn-action:hover { background: #5a49d1; }
-        .btn-sync-icon { background: none; border: none; font-size: 1.4rem; cursor: pointer; padding: 0; line-height: 1; }
+        /* GitHub Sync Header */
+        .sync-bar { display: flex; align-items: center; justify-content: space-between; background: #24292e; color: white; padding: 10px 20px; border-radius: 12px; margin-bottom: 25px; gap: 10px; flex-wrap: wrap; }
+        .sync-btn { background: #2ea44f; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.2s; }
+        .sync-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .sync-btn.load { background: #0366d6; }
+        .status-light { width: 10px; height: 10px; border-radius: 50%; background: #666; display: inline-block; transition: 0.3s; }
+        .status-on { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
 
-        /* Status Dot */
-        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; background: #ccc; margin-right: 5px; }
-        .dot-green { background: var(--success); box-shadow: 0 0 5px var(--success); }
-        .dot-red { background: var(--urgent); box-shadow: 0 0 5px var(--urgent); }
-        .dot-blue { background: #3498db; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.3; } }
-
-        /* Formulaire */
+        /* UI Elements */
+        .header-main { text-align: center; margin-bottom: 20px; }
+        h1 { color: var(--accent); font-size: 2.2rem; margin: 0; letter-spacing: -1px; }
+        
         .task-form { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; align-items: flex-end; }
         .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
         .form-group.small { flex: 0.6; }
         .form-group label { font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; color: var(--secondary); text-transform: uppercase; }
         input, select { padding: 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: inherit; }
-        
-        /* Tableaux */
+        input:focus { border-color: var(--accent); outline: none; }
+        .add-btn { background: var(--accent); color: white; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; height: 42px; }
+
         .card-table { background: var(--card); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 30px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th { background: #fdfdfd; padding: 12px 15px; text-align: left; font-size: 0.7rem; text-transform: uppercase; color: var(--secondary); cursor: pointer; border-bottom: 2px solid var(--border); }
@@ -50,6 +42,8 @@
         .col-date { width: 110px; }
 
         .editable:hover { background: #f0edff; cursor: pointer; border-radius: 4px; }
+        .editing-input { width: 100%; padding: 6px; border: 2px solid var(--accent); border-radius: 6px; font-family: inherit; font-size: 0.95rem; }
+
         .badge { padding: 4px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 800; display: inline-block; }
         .b-both { background: #ffe3e3; color: #e74c3c; } .b-urgent { background: #fff4e6; color: #d35400; }
         .b-important { background: #e3f2fd; color: #0984e3; } .b-none { background: #f1f2f6; color: #7f8c8d; }
@@ -66,174 +60,35 @@
         .archive-content.open { grid-template-rows: 1fr; }
         .archive-inner { min-height: 0; padding-top: 15px; }
 
-        @media (max-width: 768px) { .header-main { flex-direction: column; } .matrix-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .matrix-grid { grid-template-columns: 1fr; } .task-form { flex-direction: column; align-items: stretch; } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-main">
-        <div class="sync-block">
-            <button class="btn-sync-icon" onclick="setupSync()" title="Changer de code">☁️</button>
-            <div class="sync-info">
-                <span>Statut: <span id="syncDot" class="dot"></span></span>
-                <span class="sync-code-val" id="codeDisplay" onclick="setupSync()" style="cursor:pointer">Cliquer pour lier</span>
-            </div>
-            <button class="btn-action" onclick="forceSync()">Sync 🔄</button>
+    <!-- BARRE DE SYNCHRO GITHUB -->
+    <div class="sync-bar">
+        <div style="display:flex; align-items:center; gap:10px">
+            <span id="statusLight" class="status-light"></span>
+            <span style="font-size: 0.8rem; font-weight: bold;">GITHUB SYNC</span>
         </div>
+        <div style="display:flex; gap:10px">
+            <button class="sync-btn load" onclick="githubPull()">📥 Charger</button>
+            <button class="sync-btn" onclick="githubPush()">📤 Sauver sur GitHub</button>
+            <button onclick="configGitHub()" style="background:none; border:none; color:white; cursor:pointer; font-size:1.2rem">⚙️</button>
+        </div>
+    </div>
+
+    <div class="header-main">
         <h1>🎯 TOUT DOUX</h1>
-        <div style="width: 150px"></div> <!-- Équilibre visuel -->
     </div>
 
     <!-- FORMULAIRE -->
     <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
         <div class="form-group">
             <label>Tâche</label>
-            <input type="text" id="taskTitle" placeholder="Faire quoi ?">
+            <input type="text" id="taskTitle" placeholder="Quelle est la mission ?">
         </div>
         <div class="form-group small">
             <label>Projet</label>
-            <input type="text" id="taskProject" placeholder="PROJET" oninput="this.value = this.value.toUpperCase()">
-        </div>
-        <div class="form-group">
-            <label>Priorité</label>
-            <select id="taskPriority">
-                <option value="both">🔥 Urgent & Important</option>
-                <option value="urgent">⚡ Urgent</option>
-                <option value="important">📅 Important</option>
-                <option value="none" selected>🗑️ Aucun</option>
-            </select>
-        </div>
-        <div class="form-group small">
-            <label>Deadline</label>
-            <input type="date" id="taskDate">
-        </div>
-        <button class="btn-action" onclick="addTask()" style="height: 42px; padding: 0 20px">Ajouter</button>
-    </div>
-
-    <!-- TODO LIST -->
-    <div class="card-table">
-        <table>
-            <thead>
-                <tr>
-                    <th class="col-check"></th>
-                    <th onclick="sortTable('createdAt')">Tâche ↕</th>
-                    <th class="col-project" onclick="sortTable('project')">Projet ↕</th>
-                    <th class="col-priority" onclick="sortTable('priority')">Priorité ↕</th>
-                    <th class="col-date" onclick="sortTable('date')">Deadline ↕</th>
-                </tr>
-            </thead>
-            <tbody id="todoBody"></tbody>
-        </table>
-    </div>
-
-    <!-- MATRICE -->
-    <div class="matrix-grid">
-        <div class="quadrant q-both" id="drop-both" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>🔥 FAIRE</h3><div id="m-both"></div></div>
-        <div class="quadrant q-important" id="drop-important" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>📅 PLANIFIER</h3><div id="m-important"></div></div>
-        <div class="quadrant q-urgent" id="drop-urgent" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>⚡ DÉLÉGUER</h3><div id="m-urgent"></div></div>
-        <div class="quadrant q-none" id="drop-none" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>🗑️ ÉLIMINER</h3><div id="m-none"></div></div>
-    </div>
-
-    <!-- ARCHIVES -->
-    <div class="archive-section">
-        <div class="archive-toggle" onclick="toggleArchive()">
-            <span style="font-weight: 700; color: var(--secondary);">📦 ARCHIVES</span>
-            <span id="archiveChevron">▼</span>
-        </div>
-        <div class="archive-content" id="archiveContent">
-            <div class="archive-inner">
-                <button class="btn-action" style="background:#ff4d4d; margin-bottom:10px" onclick="cleanArchives()">🧹 Nettoyer +14j</button>
-                <div class="card-table">
-                    <table><tbody id="archiveBody"></tbody></table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let archives = JSON.parse(localStorage.getItem('archives')) || [];
-    let syncKey = localStorage.getItem('toutDouxSyncKey') || null;
-
-    const PRIORITY_MAP = {
-        both: { label: '🔥 Urgent & Imp.', weight: 3, class: 'b-both' },
-        urgent: { label: '⚡ Urgent', weight: 2, class: 'b-urgent' },
-        important: { label: '📅 Important', weight: 1, class: 'b-important' },
-        none: { label: '🗑️ Aucun', weight: 0, class: 'b-none' }
-    };
-
-    // --- SYNCHRONISATION ---
-    function updateStatus(colorClass) {
-        const dot = document.getElementById('syncDot');
-        dot.className = 'dot ' + (colorClass ? 'dot-' + colorClass : '');
-    }
-
-    async function pushToCloud() {
-        if (!syncKey) return;
-        updateStatus('blue');
-        try {
-            await fetch(`https://kvstore.de/api/key-value/${syncKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tasks, archives })
-            });
-            updateStatus('green');
-        } catch (e) { updateStatus('red'); }
-    }
-
-    async function pullFromCloud(isInitial = false) {
-        if (!syncKey) return;
-        updateStatus('blue');
-        try {
-            const res = await fetch(`https://kvstore.de/api/key-value/${syncKey}`);
-            if (res.ok) {
-                const data = await res.json();
-                if (data && data.tasks) {
-                    if (isInitial && tasks.length > 0 && !confirm("Données trouvées en ligne. Écraser votre liste actuelle ?")) {
-                        updateStatus('green');
-                        return;
-                    }
-                    tasks = data.tasks;
-                    archives = data.archives || [];
-                    saveLocally();
-                }
-                updateStatus('green');
-            } else { updateStatus('green'); } // 404 = Nouveau code, pas grave
-        } catch (e) { updateStatus('red'); }
-    }
-
-    function setupSync() {
-        const input = prompt("ENTREZ VOTRE CODE SECRET (ex: marc-99) :", syncKey || "");
-        if (input) {
-            syncKey = input.trim().toLowerCase().replace(/\s+/g, '-');
-            localStorage.setItem('toutDouxSyncKey', syncKey);
-            document.getElementById('codeDisplay').textContent = syncKey;
-            pullFromCloud(true);
-        }
-    }
-
-    function forceSync() {
-        if (!syncKey) return setupSync();
-        pullFromCloud();
-    }
-
-    // --- LOGIQUE CORE ---
-    function saveLocally() {
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        localStorage.setItem('archives', JSON.stringify(archives));
-        updateUI();
-    }
-
-    function save() {
-        saveLocally();
-        if (syncKey) pushToCloud();
-    }
-
-    function addTask() {
-        const titleEl = document.getElementById('taskTitle');
-        if (!titleEl.value.trim()) return;
-        tasks.push({
-            id: Date.now(),
-            title: title
+            <input type="text" id="taskProject" placeholder="PROJET" on

@@ -19,7 +19,7 @@
         
         .btn-sync-head { background: var(--card); border: 2px solid var(--border); padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--secondary); transition: all 0.2s; white-space: nowrap; }
         .btn-sync-head:hover { border-color: var(--accent); color: var(--accent); }
-        .sync-status { font-size: 1.2rem; margin-left: 5px; vertical-align: middle; }
+        .sync-status { font-weight: bold; margin-left: 5px; }
 
         /* Formulaire */
         .task-form { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; align-items: flex-end; }
@@ -79,11 +79,9 @@
 
 <div class="container">
     <div class="header-main">
-        <button class="btn-sync-head" onclick="setupSync()">☁️ Synchro <span id="cloudStatus" class="sync-status">⚪</span></button>
+        <button class="btn-sync-head" onclick="setupSync()">☁️ <span id="cloudStatus">?</span></button>
         <h1>🎯 TOUT DOUX</h1>
-        <div style="width:100px; display:flex; justify-content:flex-end;">
-            <button class="btn-sync-head" onclick="exportData()" title="Sauvegarde manuelle">📤</button>
-        </div>
+        <button class="btn-sync-head" onclick="forceSync()" title="Synchroniser maintenant">🔄 Synchro</button>
     </div>
 
     <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
@@ -142,7 +140,7 @@
             <div class="archive-inner">
                 <div class="sync-panel">
                     <strong>Code de Synchro actuel :</strong> <code id="syncCodeDisplay">Aucun</code><br>
-                    <small>Utilisez ce code sur vos autres appareils pour retrouver vos tâches.</small>
+                    <small>Utilisez ce même code sur tous vos appareils.</small>
                 </div>
                 <button class="btn-sync-head" style="color:red; border-color:#fab1a0" onclick="cleanArchives()">🧹 Nettoyer (+14j)</button>
                 <div class="card-table" style="margin-top:15px">
@@ -166,47 +164,64 @@
         none: { label: '🗑️ Aucun', weight: 0, class: 'b-none' }
     };
 
-    // --- SYNCHRONISATION CLOUD ---
-    const KVDB_BUCKET = "td_v1_" + (window.location.hostname || "local");
-
+    // --- SYNCHRONISATION NOUVELLE VERSION ---
+    // Utilise KeyValue.xyz (Service gratuit, simple et robuste)
     async function pushToCloud() {
         if (!syncKey) return;
-        document.getElementById('cloudStatus').textContent = "⏳";
+        setStatus("⏳");
         try {
-            await fetch(`https://kvdb.io/6EAtp8p266R762oD9P19vA/${syncKey}`, {
-                method: 'POST',
+            await fetch(`https://keyvalue.xyz/v1/${syncKey}`, {
+                method: 'POST', // KeyValue utilise POST pour créer/écraser
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tasks, archives })
             });
-            document.getElementById('cloudStatus').textContent = "🟢";
-        } catch (e) { document.getElementById('cloudStatus').textContent = "🔴"; }
+            setStatus("✅");
+        } catch (e) { 
+            console.error(e);
+            setStatus("❌"); 
+        }
     }
 
-    async function pullFromCloud() {
+    async function pullFromCloud(showConfirm = false) {
         if (!syncKey) return;
-        document.getElementById('cloudStatus').textContent = "⏳";
+        setStatus("⏳");
         try {
-            const res = await fetch(`https://kvdb.io/6EAtp8p266R762oD9P19vA/${syncKey}`);
+            const res = await fetch(`https://keyvalue.xyz/v1/${syncKey}`);
             if (res.ok) {
                 const data = await res.json();
+                if (showConfirm && !confirm("Données trouvées sur le cloud. Écraser votre liste locale ?")) return setStatus("✅");
+                
                 tasks = data.tasks || [];
                 archives = data.archives || [];
                 localStorage.setItem('tasks', JSON.stringify(tasks));
                 localStorage.setItem('archives', JSON.stringify(archives));
                 updateUI();
+                setStatus("✅");
+            } else if (res.status === 404) {
+                // Si le code est nouveau, on pousse les données locales
+                pushToCloud();
             }
-            document.getElementById('cloudStatus').textContent = "🟢";
-        } catch (e) { document.getElementById('cloudStatus').textContent = "🔴"; }
+        } catch (e) { 
+            setStatus("❌"); 
+        }
+    }
+
+    function setStatus(icon) {
+        document.getElementById('cloudStatus').textContent = icon;
     }
 
     function setupSync() {
-        const input = prompt("Entrez votre code secret (ex: mon-nom-99) ou laissez vide pour en créer un nouveau :", syncKey || "");
-        if (input !== null) {
-            const newKey = input.trim() || ("td-" + Math.random().toString(36).substring(2, 9));
-            syncKey = newKey;
+        const input = prompt("Entrez votre code secret unique (ex: mon-code-perso-123) :", syncKey || "");
+        if (input) {
+            syncKey = input.trim().replace(/[^a-zA-Z0-9-]/g, ""); // Nettoyage du code
             localStorage.setItem('toutDouxSyncKey', syncKey);
-            document.getElementById('syncCodeDisplay').textContent = syncKey;
-            pullFromCloud();
+            pullFromCloud(true);
         }
+    }
+
+    function forceSync() {
+        if (!syncKey) return setupSync();
+        pullFromCloud();
     }
 
     // --- FONCTIONS CLASSIQUES ---
@@ -214,7 +229,7 @@
         localStorage.setItem('tasks', JSON.stringify(tasks));
         localStorage.setItem('archives', JSON.stringify(archives));
         updateUI();
-        pushToCloud();
+        pushToCloud(); // Sauvegarde auto vers le cloud
     }
 
     function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ""; }
@@ -258,7 +273,12 @@
         }
         input.className = 'editing-input';
         element.innerHTML = ''; element.appendChild(input); input.focus();
-        input.onblur = () => { task[field] = (field==='project' ? input.value.toUpperCase() : input.value) || originalValue; save(); };
+        input.onblur = () => { 
+            let val = input.value;
+            if (field === 'project') val = val.toUpperCase() || '♲';
+            task[field] = val || originalValue; 
+            save(); 
+        };
         input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); if(e.key === 'Escape') updateUI(); };
     }
 
@@ -301,7 +321,10 @@
         const todoBody = document.getElementById('todoBody');
         const archiveBody = document.getElementById('archiveBody');
         todoBody.innerHTML = ''; archiveBody.innerHTML = '';
-        ['both', 'important', 'urgent', 'none'].forEach(p => document.getElementById(`m-${p}`).innerHTML = '');
+        ['both', 'important', 'urgent', 'none'].forEach(p => {
+            const el = document.getElementById(`m-${p}`);
+            if (el) el.innerHTML = '';
+        });
         document.getElementById('syncCodeDisplay').textContent = syncKey || "Aucun";
 
         tasks.forEach(task => {
@@ -316,12 +339,14 @@
             todoBody.appendChild(row);
 
             const mContainer = document.getElementById(`m-${task.priority}`);
-            const mItem = document.createElement('div');
-            mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; 
-            mItem.ondragstart = (e) => e.dataTransfer.setData("taskId", task.id);
-            mItem.innerHTML = `<span><strong>${task.title}</strong><br><small style="color:var(--accent)">#${task.project}</small></span>
-                               <input type="checkbox" onclick="toggleComplete(${task.id})">`;
-            mContainer.appendChild(mItem);
+            if (mContainer) {
+                const mItem = document.createElement('div');
+                mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; 
+                mItem.ondragstart = (e) => e.dataTransfer.setData("taskId", task.id);
+                mItem.innerHTML = `<span><strong>${task.title}</strong><br><small style="color:var(--accent)">#${task.project}</small></span>
+                                <input type="checkbox" onclick="toggleComplete(${task.id})">`;
+                mContainer.appendChild(mItem);
+            }
         });
 
         archives.slice().reverse().forEach(task => {
@@ -334,8 +359,10 @@
     }
 
     // Initialisation
-    if (syncKey) pullFromCloud();
-    updateUI();
+    window.onload = () => {
+        if (syncKey) pullFromCloud();
+        updateUI();
+    };
 </script>
 </body>
 </html>

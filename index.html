@@ -2,101 +2,169 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOUT DOUX GITHUB SYNC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TOUT DOUX - PRO & MOBILE</title>
     <style>
         :root {
             --urgent: #ff4d4d; --important: #ff9f43; --success: #2ecc71; --bg: #f8f9fa;
-            --card: #ffffff; --text: #2d3436; --secondary: #636e72; --accent: #6c5ce7; --border: #edf2f7;
+            --card: #ffffff; --text: #2d3436; --secondary: #636e72; --accent: #6c5ce7; --border: #dfe6e9;
+            --header-bg: #f1f4f8;
         }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.4; }
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background-color: var(--bg); color: var(--text); 
+            margin: 0; padding: 10px; line-height: 1.4;
+            padding-top: 70px;
+        }
+        
         .container { max-width: 1100px; margin: auto; }
 
-        /* GitHub Sync Header */
-        .sync-bar { display: flex; align-items: center; justify-content: space-between; background: #24292e; color: white; padding: 10px 20px; border-radius: 12px; margin-bottom: 25px; gap: 10px; flex-wrap: wrap; }
-        .sync-btn { background: #2ea44f; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.2s; }
-        .sync-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        .sync-btn.load { background: #0366d6; }
-        .status-light { width: 10px; height: 10px; border-radius: 50%; background: #666; display: inline-block; transition: 0.3s; }
-        .status-on { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+        /* BARRE GITHUB FIXE */
+        .sync-bar { 
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between; 
+            background: #2d3436; color: white; padding: 10px 15px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .sync-btn { 
+            background: #2ea44f; color: white; border: none; padding: 8px 12px; 
+            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.8rem; 
+        }
+        .sync-btn.load { background: #0984e3; }
+        .status-light { width: 10px; height: 10px; border-radius: 50%; background: #636e72; display: inline-block; }
+        .status-on { background: #55efc4; box-shadow: 0 0 8px #55efc4; }
 
-        /* UI Elements */
-        .header-main { text-align: center; margin-bottom: 20px; }
-        h1 { color: var(--accent); font-size: 2.2rem; margin: 0; letter-spacing: -1px; }
+        h1 { text-align: center; color: var(--accent); font-size: 2.2rem; margin: 20px 0; letter-spacing: -1px; }
+
+        /* FORMULAIRE */
+        .task-form { 
+            background: var(--card); padding: 20px; border-radius: 18px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; 
+            gap: 15px; margin-bottom: 25px; align-items: flex-end; 
+        }
+        .form-group { display: flex; flex-direction: column; flex: 1; min-width: 200px; }
+        .form-group.small { flex: 0.5; min-width: 120px; }
+        .form-group label { font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; color: var(--secondary); text-transform: uppercase; }
         
-        .task-form { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; align-items: flex-end; }
-        .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
-        .form-group.small { flex: 0.6; }
-        .form-group label { font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; color: var(--secondary); text-transform: uppercase; }
-        input, select { padding: 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: inherit; }
+        input, select { 
+            padding: 12px; border: 2px solid var(--border); border-radius: 10px; 
+            font-size: 1rem; background: #fff; width: 100%; transition: 0.2s;
+        }
         input:focus { border-color: var(--accent); outline: none; }
-        .add-btn { background: var(--accent); color: white; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; height: 42px; }
+        
+        .add-btn { 
+            background: var(--accent); color: white; border: none; height: 48px;
+            padding: 0 25px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem;
+        }
 
-        .card-table { background: var(--card); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 30px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { background: #fdfdfd; padding: 12px 15px; text-align: left; font-size: 0.7rem; text-transform: uppercase; color: var(--secondary); cursor: pointer; border-bottom: 2px solid var(--border); }
-        td { padding: 10px 15px; border-bottom: 1px solid var(--border); font-size: 0.95rem; vertical-align: middle; word-wrap: break-word; }
-        .col-check { width: 40px; text-align: center; }
-        .col-project { width: 110px; }
-        .col-priority { width: 150px; }
-        .col-date { width: 110px; }
+        /* TABLEAU (DESIGN ORDI) */
+        .card-table { margin-bottom: 30px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; table-layout: fixed; }
+        
+        thead { display: table-header-group; }
+        
+        /* Style Entête Amélioré */
+        thead tr { background-color: var(--header-bg); }
+        th { 
+            padding: 15px; text-align: left; font-size: 0.75rem; 
+            text-transform: uppercase; color: var(--secondary); cursor: pointer; 
+            user-select: none; border-bottom: 2px solid var(--border);
+            transition: color 0.2s;
+        }
+        th:hover { color: var(--accent); }
+        
+        /* Arrondis de l'entête */
+        th:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        th:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
 
-        .editable:hover { background: #f0edff; cursor: pointer; border-radius: 4px; }
-        .editing-input { width: 100%; padding: 6px; border: 2px solid var(--accent); border-radius: 6px; font-family: inherit; font-size: 0.95rem; }
+        tr { display: table-row; }
+        td { 
+            background: var(--card); padding: 12px 15px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            vertical-align: middle; word-wrap: break-word; font-size: 0.95rem;
+        }
+        
+        /* Largeurs fixes pour cohérence visuelle */
+        .col-check { width: 50px; text-align: center; border-left: 1px solid var(--border); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        .col-task { width: 380px; } /* Largeur fixe Tâche */
+        .col-project { width: 150px; }
+        .col-priority { width: 180px; }
+        .col-date { width: 140px; border-right: 1px solid var(--border); border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
 
-        .badge { padding: 4px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 800; display: inline-block; }
+        .editable:hover { background: #f0edff; cursor: pointer; }
+        input[type="checkbox"] { transform: scale(1.3); cursor: pointer; }
+
+        .badge { padding: 5px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; display: inline-block; white-space: nowrap; }
         .b-both { background: #ffe3e3; color: #e74c3c; } .b-urgent { background: #fff4e6; color: #d35400; }
         .b-important { background: #e3f2fd; color: #0984e3; } .b-none { background: #f1f2f6; color: #7f8c8d; }
 
-        /* Matrice */
-        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 40px; }
-        .quadrant { background: var(--card); padding: 15px; border-radius: 12px; min-height: 120px; border-top: 5px solid #ccc; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        /* MATRICE */
+        h2 { font-size: 1.4rem; color: var(--secondary); margin: 30px 0 15px 10px; border-left: 5px solid var(--accent); padding-left: 15px; }
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+        .quadrant { background: var(--card); padding: 15px; border-radius: 18px; border-top: 6px solid #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .q-both { border-color: var(--urgent); } .q-important { border-color: var(--accent); } .q-urgent { border-color: var(--important); } .q-none { border-color: #bdc3c7; }
-        .matrix-item { background: #fff; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 0.85rem; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: grab; }
+        .quadrant h3 { margin-top: 0; font-size: 0.8rem; text-transform: uppercase; color: var(--secondary); }
+        .matrix-item { 
+            background: #f8f9fa; padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; 
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; font-size: 0.85rem;
+        }
 
-        /* Archives */
-        .archive-toggle { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 12px 20px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); }
-        .archive-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease; overflow: hidden; }
-        .archive-content.open { grid-template-rows: 1fr; }
-        .archive-inner { min-height: 0; padding-top: 15px; }
+        /* ARCHIVES */
+        .archive-toggle { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; border-radius: 15px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 50px; }
 
-        @media (max-width: 768px) { .matrix-grid { grid-template-columns: 1fr; } .task-form { flex-direction: column; align-items: stretch; } }
+        /* DESIGN MOBILE */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .task-form { flex-direction: column; align-items: stretch; }
+            .add-btn { width: 100%; }
+            thead { display: none; }
+            table, tbody, tr, td { display: block; width: 100% !important; }
+            tr { 
+                background: var(--card); padding: 15px; border-radius: 18px; 
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 12px;
+                position: relative; border: 1px solid var(--border);
+            }
+            td { border: none !important; padding: 4px 0 !important; background: none; }
+            td.col-check { position: absolute; top: 15px; right: 15px; width: auto !important; }
+            td.col-task { width: 100% !important; font-size: 1.1rem; font-weight: bold; padding-right: 40px !important; }
+            td.col-project:before { content: "Projet: "; font-weight: bold; font-size: 0.7rem; color: #999; }
+            td.col-date:before { content: "Deadline: "; font-weight: bold; font-size: 0.7rem; color: #999; }
+            .matrix-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- BARRE DE SYNCHRO GITHUB -->
     <div class="sync-bar">
-        <div style="display:flex; align-items:center; gap:10px">
+        <div style="display:flex; align-items:center; gap:8px">
             <span id="statusLight" class="status-light"></span>
-            <span style="font-size: 0.8rem; font-weight: bold;">GITHUB SYNC</span>
+            <span style="font-size: 0.7rem; font-weight: bold; letter-spacing: 1px;">SYNC GITHUB</span>
         </div>
         <div style="display:flex; gap:10px">
             <button class="sync-btn load" onclick="githubPull()">📥 Charger</button>
-            <button class="sync-btn" onclick="githubPush()">📤 Sauver sur GitHub</button>
-            <button onclick="configGitHub()" style="background:none; border:none; color:white; cursor:pointer; font-size:1.2rem">⚙️</button>
+            <button class="sync-btn" onclick="githubPush()">📤 Sauver</button>
+            <button onclick="configGitHub()" style="background:none; border:none; color:white; font-size:1.3rem; cursor:pointer">⚙️</button>
         </div>
     </div>
 
-    <div class="header-main">
-        <h1>🎯 TOUT DOUX</h1>
-    </div>
+    <h1>🎯 TOUT DOUX</h1>
 
-    <!-- FORMULAIRE -->
     <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
         <div class="form-group">
             <label>Tâche</label>
-            <input type="text" id="taskTitle" placeholder="Quelle est la mission ?">
+            <input type="text" id="taskTitle" placeholder="Ex: Ranger les dossiers...">
         </div>
         <div class="form-group small">
             <label>Projet</label>
-            <input type="text" id="taskProject" placeholder="PROJET" oninput="this.value = this.value.toUpperCase()">
+            <input type="text" id="taskProject" placeholder="NOM" oninput="this.value = this.value.toUpperCase()">
         </div>
-        <div class="form-group">
+        <div class="form-group small">
             <label>Priorité</label>
             <select id="taskPriority">
-                <option value="both">🔥 Urgent & Important</option>
+                <option value="both">🔥 Urgent & Imp.</option>
                 <option value="urgent">⚡ Urgent</option>
                 <option value="important">📅 Important</option>
                 <option value="none" selected>🗑️ Aucun</option>
@@ -109,13 +177,12 @@
         <button class="add-btn" onclick="addTask()">Ajouter</button>
     </div>
 
-    <!-- TODO LIST -->
     <div class="card-table">
         <table>
             <thead>
                 <tr>
-                    <th class="col-check"></th>
-                    <th onclick="sortTable('createdAt')">Tâche ↕</th>
+                    <th class="col-check">✔</th>
+                    <th class="col-task" onclick="sortTable('createdAt')">Tâche ↕</th>
                     <th class="col-project" onclick="sortTable('project')">Projet ↕</th>
                     <th class="col-priority" onclick="sortTable('priority')">Priorité ↕</th>
                     <th class="col-date" onclick="sortTable('date')">Deadline ↕</th>
@@ -125,7 +192,7 @@
         </table>
     </div>
 
-    <!-- MATRICE -->
+    <h2>📊 Matrice d'Eisenhower</h2>
     <div class="matrix-grid">
         <div class="quadrant q-both" id="drop-both" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>🔥 FAIRE</h3><div id="m-both"></div></div>
         <div class="quadrant q-important" id="drop-important" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>📅 PLANIFIER</h3><div id="m-important"></div></div>
@@ -133,19 +200,14 @@
         <div class="quadrant q-none" id="drop-none" ondrop="drop(event)" ondragover="event.preventDefault()"><h3>🗑️ ÉLIMINER</h3><div id="m-none"></div></div>
     </div>
 
-    <!-- ARCHIVES -->
-    <div class="archive-section">
-        <div class="archive-toggle" onclick="toggleArchive()">
-            <span style="font-weight: 700; color: var(--secondary);">📦 ARCHIVES</span>
-            <span id="archiveChevron">▼</span>
-        </div>
-        <div class="archive-content" id="archiveContent">
-            <div class="archive-inner">
-                <button class="add-btn" style="background:#ff4d4d; margin-bottom:10px" onclick="cleanArchives()">🧹 Nettoyer +14j</button>
-                <div class="card-table">
-                    <table><tbody id="archiveBody"></tbody></table>
-                </div>
-            </div>
+    <div class="archive-toggle" onclick="toggleArchive()">
+        <span style="font-weight: 700; color: var(--secondary);">📦 ARCHIVES (Repo: <span id="repoTag">...</span>)</span>
+        <span id="archiveChevron">▼</span>
+    </div>
+    <div class="archive-content" id="archiveContent" style="display:none; margin-bottom: 50px;">
+        <button class="add-btn" style="background:#ff4d4d; margin-bottom:15px; width:auto" onclick="cleanArchives()">🧹 Nettoyer +14j</button>
+        <div class="card-table">
+            <table><tbody id="archiveBody"></tbody></table>
         </div>
     </div>
 </div>
@@ -153,10 +215,9 @@
 <script>
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let archives = JSON.parse(localStorage.getItem('archives')) || [];
-    
-    // Config GitHub
     let ghToken = localStorage.getItem('gh_token');
     let ghRepo = localStorage.getItem('gh_repo'); 
+    let currentSort = { key: 'createdAt', desc: true };
 
     const PRIORITY_MAP = {
         both: { label: '🔥 Urgent & Imp.', weight: 3, class: 'b-both' },
@@ -165,11 +226,9 @@
         none: { label: '🗑️ Aucun', weight: 0, class: 'b-none' }
     };
 
-    // --- SYNCHRO GITHUB ---
-
     function configGitHub() {
-        ghToken = prompt("Entre ton GitHub Token (ghp_...) :", ghToken || "");
-        ghRepo = prompt("Entre ton repo (ex: pseudo/toutdoux) :", ghRepo || "");
+        ghToken = prompt("Token GitHub (ghp_...) :", ghToken || "");
+        ghRepo = prompt("Repo (pseudo/toutdoux) :", ghRepo || "");
         if(ghToken && ghRepo) {
             localStorage.setItem('gh_token', ghToken);
             localStorage.setItem('gh_repo', ghRepo);
@@ -181,34 +240,20 @@
         if(!ghToken || !ghRepo) return configGitHub();
         const light = document.getElementById('statusLight');
         light.classList.remove('status-on');
-
         try {
-            // Récupérer le SHA actuel
             const getRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, {
                 headers: { 'Authorization': `token ${ghToken}` }
             });
             const fileData = await getRes.json();
-            const sha = fileData.sha;
-
-            // Préparer le contenu (gestion des caractères spéciaux UTF-8)
             const jsonStr = JSON.stringify({ tasks, archives });
             const content = btoa(unescape(encodeURIComponent(jsonStr)));
-
             const putRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, {
                 method: 'PUT',
                 headers: { 'Authorization': `token ${ghToken}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: "Sync Todo List",
-                    content: content,
-                    sha: sha
-                })
+                body: JSON.stringify({ message: "Sync", content: content, sha: fileData.sha })
             });
-
-            if(putRes.ok) {
-                light.classList.add('status-on');
-                alert("Sauvegardé avec succès sur GitHub !");
-            } else { alert("Erreur GitHub : Vérifie tes réglages ⚙️"); }
-        } catch (e) { alert("Erreur réseau GitHub."); }
+            if(putRes.ok) { light.classList.add('status-on'); alert("Sync réussi !"); }
+        } catch (e) { alert("Erreur GitHub !"); }
     }
 
     async function githubPull() {
@@ -221,17 +266,13 @@
             if(res.ok) {
                 const fileData = await res.json();
                 const content = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
-                if(content.tasks) {
-                    tasks = content.tasks;
-                    archives = content.archives || [];
-                    saveLocally();
-                    light.classList.add('status-on');
-                }
+                tasks = content.tasks || [];
+                archives = content.archives || [];
+                saveLocally();
+                light.classList.add('status-on');
             }
         } catch (e) { console.error("Pull failed"); }
     }
-
-    // --- CORE LOGIC ---
 
     function saveLocally() {
         localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -257,13 +298,6 @@
         });
         titleEl.value = ''; document.getElementById('taskProject').value = ''; 
         saveLocally();
-    }
-
-    function drop(ev) {
-        ev.preventDefault();
-        const taskId = parseInt(ev.dataTransfer.getData("taskId"));
-        const task = tasks.find(t => t.id === taskId);
-        if (task) { task.priority = ev.currentTarget.id.replace('drop-', ''); saveLocally(); }
     }
 
     function startEdit(element, taskId, field, type) {
@@ -292,11 +326,6 @@
         input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); };
     }
 
-    function toggleArchive() {
-        const isOpen = document.getElementById('archiveContent').classList.toggle('open');
-        document.getElementById('archiveChevron').style.transform = isOpen ? 'rotate(180deg)' : '';
-    }
-
     function toggleComplete(id) {
         const idx = tasks.findIndex(t => t.id === id);
         if (idx > -1) {
@@ -316,12 +345,39 @@
         archives = archives.filter(t => t.completedAt >= limit); saveLocally();
     }
 
+    function toggleArchive() {
+        const content = document.getElementById('archiveContent');
+        const chevron = document.getElementById('archiveChevron');
+        const isHidden = content.style.display === 'none';
+        content.style.display = isHidden ? 'block' : 'none';
+        chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+    }
+
+    // --- LOGIQUE DE TRI ---
     function sortTable(key) {
+        if (currentSort.key === key) {
+            currentSort.desc = !currentSort.desc;
+        } else {
+            currentSort.key = key;
+            currentSort.desc = false;
+        }
+
         tasks.sort((a, b) => {
-            let vA = a[key] || '', vB = b[key] || '';
-            if (key === 'priority') { vA = PRIORITY_MAP[a.priority].weight; vB = PRIORITY_MAP[b.priority].weight; }
-            return vA < vB ? 1 : -1;
+            let vA, vB;
+
+            if (key === 'priority') {
+                vA = PRIORITY_MAP[a.priority].weight;
+                vB = PRIORITY_MAP[b.priority].weight;
+            } else {
+                vA = a[key] || "";
+                vB = b[key] || "";
+            }
+
+            if (vA < vB) return currentSort.desc ? 1 : -1;
+            if (vA > vB) return currentSort.desc ? -1 : 1;
+            return 0;
         });
+
         updateUI();
     }
 
@@ -333,34 +389,32 @@
             const el = document.getElementById(`m-${p}`);
             if(el) el.innerHTML = '';
         });
-        
+        document.getElementById('repoTag').textContent = ghRepo || '...';
+
         tasks.forEach(task => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td>
-                <td class="editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong>${task.title}</strong></td>
-                <td class="editable" style="color:var(--accent); font-weight:bold" onclick="startEdit(this, ${task.id}, 'project', 'text')">${task.project}</td>
-                <td class="editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"><span class="badge ${PRIORITY_MAP[task.priority].class}">${PRIORITY_MAP[task.priority].label}</span></td>
-                <td class="editable" style="font-size:0.8rem" onclick="startEdit(this, ${task.id}, 'date', 'date')">${task.date || '-'}</td>
+                <td class="col-task editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong>${task.title}</strong></td>
+                <td class="col-project editable" onclick="startEdit(this, ${task.id}, 'project', 'text')">${task.project}</td>
+                <td class="col-priority editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"><span class="badge ${PRIORITY_MAP[task.priority].class}">${PRIORITY_MAP[task.priority].label}</span></td>
+                <td class="col-date editable" onclick="startEdit(this, ${task.id}, 'date', 'date')">${task.date || '-'}</td>
             `;
             todoBody.appendChild(row);
 
             const mContainer = document.getElementById(`m-${task.priority}`);
             if(mContainer) {
                 const mItem = document.createElement('div');
-                mItem.className = 'matrix-item'; mItem.draggable = true;
-                mItem.ondragstart = (e) => e.dataTransfer.setData("taskId", task.id);
-                mItem.innerHTML = `<span><strong>${task.title}</strong><br><small style="color:var(--accent)">#${task.project}</small></span>
-                                   <input type="checkbox" onclick="toggleComplete(${task.id})">`;
+                mItem.className = 'matrix-item'; mItem.innerHTML = `<span><strong>${task.title}</strong><br><small style="color:var(--accent)">#${task.project}</small></span>
+                <input type="checkbox" onclick="toggleComplete(${task.id})">`;
                 mContainer.appendChild(mItem);
             }
         });
 
         archives.slice().reverse().forEach(task => {
-            const row = document.createElement('tr');
-            row.style.opacity = '0.5';
-            row.innerHTML = `<td class="col-check">✅</td><td colspan="3" style="text-decoration:line-through">${task.title} <small>(#${task.project})</small></td>
-                             <td style="text-align:right"><button onclick="restoreTask(${task.id})" style="font-size:0.7rem; cursor:pointer">Restaurer</button></td>`;
+            const row = document.createElement('tr'); row.style.opacity = '0.5';
+            row.innerHTML = `<td>✅</td><td colspan="3" style="text-decoration:line-through">${task.title} <small>(#${task.project})</small></td>
+            <td style="text-align:right"><button onclick="restoreTask(${task.id})" style="font-size:0.7rem; padding: 5px; border-radius: 5px; cursor: pointer;">Restaurer</button></td>`;
             archiveBody.appendChild(row);
         });
     }

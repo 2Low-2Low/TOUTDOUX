@@ -27,7 +27,6 @@
         body { 
             font-family: 'Nunito Sans', system-ui, sans-serif; 
             background-color: var(--bg); 
-            /* Nouveau fond : Mélange de grain papier et taches d'aquarelle diffuses */
             background-image: 
                 radial-gradient(circle at 15% 15%, rgba(224, 169, 109, 0.1) 0%, transparent 40%),
                 radial-gradient(circle at 85% 85%, rgba(143, 185, 189, 0.1) 0%, transparent 40%),
@@ -40,7 +39,6 @@
         
         .container { max-width: 1100px; margin: auto; }
 
-        /* --- BARRE DE SYNCHRO GITHUB --- */
         .sync-bar { 
             position: fixed; top: 10px; left: 10px; right: 10px; z-index: 1000;
             display: flex; align-items: center; justify-content: space-between; 
@@ -67,7 +65,6 @@
             text-transform: uppercase;
         }
 
-        /* --- FORMULAIRE --- */
         .task-form { 
             background: var(--card); padding: 25px; 
             border-radius: 25px 15px 30px 20px;
@@ -104,7 +101,6 @@
         }
         .add-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0px #c45643; }
 
-        /* --- TABLEAU --- */
         .card-table { margin-bottom: 40px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 12px; table-layout: fixed; }
         
@@ -124,7 +120,6 @@
         
         th:first-child { border-left: 1px solid var(--border); border-top-left-radius: 18px; border-bottom-left-radius: 18px; }
         th:last-child { border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; }
-        
         th:hover { color: var(--accent); }
 
         td { 
@@ -153,7 +148,6 @@
         .b-important { background: #fdf5e6; color: #8b6d3f; } 
         .b-none { background: #f7f1e3; color: #84817a; }
 
-        /* --- SÉPARATEUR CHAT CRAYON --- */
         .cat-separator {
             display: flex;
             align-items: center;
@@ -168,7 +162,6 @@
         }
         .cat-icon { font-size: 2.5rem; color: var(--text); line-height: 1; filter: opacity(0.7); }
 
-        /* --- MATRICE --- */
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 50px; }
         .quadrant { 
             background: var(--card); padding: 25px; border-radius: 25px; 
@@ -201,7 +194,6 @@
         .matrix-item-content small { color: var(--secondary); font-weight: 600; font-size: 0.8rem; }
         .matrix-item input[type="checkbox"] { flex-shrink: 0; }
 
-        /* --- ARCHIVES --- */
         .archive-toggle { 
             display: flex; justify-content: space-between; align-items: center; 
             background: var(--card); padding: 20px 25px; border-radius: 20px; 
@@ -322,16 +314,48 @@
         none: { label: '🍃 Aucun', weight: 0, class: 'b-none' }
     };
 
-    function drag(ev) { ev.dataTransfer.setData("taskId", ev.target.dataset.id); }
-    function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
-    function dragLeave(ev) { ev.currentTarget.classList.remove('drag-over'); }
-    function drop(ev) {
-        ev.preventDefault();
-        ev.currentTarget.classList.remove('drag-over');
-        const taskId = parseInt(ev.dataTransfer.getData("taskId"));
-        const newPriority = ev.currentTarget.id.replace('drop-', '');
-        const task = tasks.find(t => t.id === taskId);
-        if (task) { task.priority = newPriority; saveLocally(); }
+    const saveLocally = () => {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('archives', JSON.stringify(archives));
+        updateUI();
+    };
+
+    const capitalize = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
+
+    // --- GITHUB ---
+    async function githubPush() {
+        if(!ghToken || !ghRepo) return configGitHub();
+        const light = document.getElementById('statusLight');
+        light.classList.remove('status-on');
+        try {
+            const getRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, {
+                headers: { 'Authorization': `token ${ghToken}` }
+            });
+            const fileData = await getRes.json();
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify({ tasks, archives }))));
+            const putRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${ghToken}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: "Sync", content, sha: fileData.sha })
+            });
+            if(putRes.ok) light.classList.add('status-on');
+        } catch (e) { console.error(e); }
+    }
+
+    async function githubPull() {
+        if(!ghToken || !ghRepo) return;
+        const light = document.getElementById('statusLight');
+        try {
+            const res = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json?t=${Date.now()}`, {
+                headers: { 'Authorization': `token ${ghToken}` }
+            });
+            if(res.ok) {
+                const data = await res.json();
+                const decoded = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+                tasks = decoded.tasks || []; archives = decoded.archives || [];
+                saveLocally(); light.classList.add('status-on');
+            }
+        } catch (e) { console.error("Pull failed"); }
     }
 
     function configGitHub() {
@@ -344,87 +368,20 @@
         }
     }
 
-    async function githubPush() {
-        if(!ghToken || !ghRepo) return configGitHub();
-        const light = document.getElementById('statusLight');
-        light.classList.remove('status-on');
-        try {
-            const getRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, {
-                headers: { 'Authorization': `token ${ghToken}` }
-            });
-            const fileData = await getRes.json();
-            const jsonStr = JSON.stringify({ tasks, archives });
-            const content = btoa(unescape(encodeURIComponent(jsonStr)));
-            const putRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, {
-                method: 'PUT',
-                headers: { 'Authorization': `token ${ghToken}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: "Sync", content: content, sha: fileData.sha })
-            });
-            if(putRes.ok) { light.classList.add('status-on'); }
-        } catch (e) { console.error(e); }
-    }
-
-    async function githubPull() {
-        if(!ghToken || !ghRepo) return;
-        const light = document.getElementById('statusLight');
-        try {
-            const res = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json?t=${Date.now()}`, {
-                headers: { 'Authorization': `token ${ghToken}` }
-            });
-            if(res.ok) {
-                const fileData = await res.json();
-                const content = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
-                tasks = content.tasks || []; archives = content.archives || [];
-                saveLocally(); light.classList.add('status-on');
-            }
-        } catch (e) { console.error("Pull failed"); }
-    }
-
-    function saveLocally() {
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        localStorage.setItem('archives', JSON.stringify(archives));
-        updateUI();
-    }
-
-    function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ""; }
-
+    // --- LOGIQUE TÂCHES ---
     function addTask() {
         const titleEl = document.getElementById('taskTitle');
         if (!titleEl.value.trim()) return;
         tasks.push({
             id: Date.now(),
             title: capitalize(titleEl.value.trim()),
-            project: document.getElementById('taskProject').value.trim().toUpperCase() || '♲',
+            project: document.getElementById('taskProject').value.trim().toUpperCase() || '☕︎',
             priority: document.getElementById('taskPriority').value,
             date: document.getElementById('taskDate').value,
             createdAt: Date.now()
         });
-        titleEl.value = ''; document.getElementById('taskProject').value = ''; saveLocally();
-    }
-
-    function startEdit(element, taskId, field, type) {
-        if (element.querySelector('input, select')) return;
-        const task = tasks.find(t => t.id === taskId);
-        const originalValue = task[field];
-        let input;
-        if (type === 'select') {
-            input = document.createElement('select');
-            for (const [val, opt] of Object.entries(PRIORITY_MAP)) {
-                const o = document.createElement('option'); o.value = val; o.textContent = opt.label;
-                if (val === originalValue) o.selected = true;
-                input.appendChild(o);
-            }
-        } else {
-            input = document.createElement('input'); input.type = type; input.value = originalValue;
-        }
-        element.innerHTML = ''; element.appendChild(input); input.focus();
-        input.onblur = () => { 
-            let v = input.value;
-            if (field === 'project') v = v.toUpperCase() || '♲';
-            if (field === 'title') v = capitalize(v);
-            task[field] = v || originalValue; saveLocally(); 
-        };
-        input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); };
+        titleEl.value = ''; document.getElementById('taskProject').value = ''; 
+        saveLocally();
     }
 
     function toggleComplete(id) {
@@ -446,64 +403,101 @@
         archives = archives.filter(t => t.completedAt >= limit); saveLocally();
     }
 
-    function toggleArchive() {
-        const content = document.getElementById('archiveContent');
-        const chevron = document.getElementById('archiveChevron');
-        const isHidden = content.style.display === '' || content.style.display === 'none';
-        content.style.display = isHidden ? 'block' : 'none';
-        chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+    function startEdit(element, taskId, field, type) {
+        if (element.querySelector('input, select')) return;
+        const task = tasks.find(t => t.id === taskId);
+        const originalValue = task[field];
+        const input = document.createElement(type === 'select' ? 'select' : 'input');
+        if (type !== 'select') input.type = type;
+        input.value = originalValue;
+        if (type === 'select') {
+            Object.entries(PRIORITY_MAP).forEach(([val, opt]) => {
+                input.add(new Option(opt.label, val, val === originalValue, val === originalValue));
+            });
+        }
+        element.innerHTML = ''; element.appendChild(input); input.focus();
+        const finish = () => {
+            let v = input.value;
+            if (field === 'project') v = v.toUpperCase() || '☕︎';
+            if (field === 'title') v = capitalize(v);
+            task[field] = v || originalValue; saveLocally();
+        };
+        input.onblur = finish;
+        input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); };
     }
 
     function sortTable(key) {
-        if (currentSort.key === key) currentSort.desc = !currentSort.desc;
-        else { currentSort.key = key; currentSort.desc = false; }
+        currentSort.desc = (currentSort.key === key) ? !currentSort.desc : false;
+        currentSort.key = key;
         tasks.sort((a, b) => {
             let vA = (key === 'priority') ? PRIORITY_MAP[a.priority].weight : (a[key] || "");
             let vB = (key === 'priority') ? PRIORITY_MAP[b.priority].weight : (b[key] || "");
-            if (vA < vB) return currentSort.desc ? 1 : -1;
-            if (vA > vB) return currentSort.desc ? -1 : 1;
-            return 0;
+            return currentSort.desc ? (vA < vB ? 1 : -1) : (vA > vB ? 1 : -1);
         });
         updateUI();
     }
 
+    // --- DRAG & DROP ---
+    function drag(ev) { ev.dataTransfer.setData("taskId", ev.target.dataset.id); }
+    function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
+    function dragLeave(ev) { ev.currentTarget.classList.remove('drag-over'); }
+    function drop(ev) {
+        ev.preventDefault();
+        ev.currentTarget.classList.remove('drag-over');
+        const taskId = parseInt(ev.dataTransfer.getData("taskId"));
+        const newPriority = ev.currentTarget.id.replace('drop-', '');
+        const task = tasks.find(t => t.id === taskId);
+        if (task) { task.priority = newPriority; saveLocally(); }
+    }
+
+    function toggleArchive() {
+        const content = document.getElementById('archiveContent');
+        const chevron = document.getElementById('archiveChevron');
+        const isHidden = content.style.display === 'none' || content.style.display === '';
+        content.style.display = isHidden ? 'block' : 'none';
+        chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+    }
+
+    // --- RENDER ---
     function updateUI() {
         const todoBody = document.getElementById('todoBody');
         const archiveBody = document.getElementById('archiveBody');
         todoBody.innerHTML = ''; archiveBody.innerHTML = '';
-        ['both', 'important', 'urgent', 'none'].forEach(p => { const el = document.getElementById(`m-${p}`); if(el) el.innerHTML = ''; });
+        ['both', 'important', 'urgent', 'none'].forEach(p => document.getElementById(`m-${p}`).innerHTML = '');
         document.getElementById('repoTag').textContent = ghRepo || '...';
 
         tasks.forEach(task => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td>
-                <td class="col-task editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong>${task.title}</strong></td>
-                <td class="col-project editable" onclick="startEdit(this, ${task.id}, 'project', 'text')">${task.project}</td>
-                <td class="col-priority editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"><span class="badge ${PRIORITY_MAP[task.priority].class}">${PRIORITY_MAP[task.priority].label}</span></td>
-                <td class="col-date editable" onclick="startEdit(this, ${task.id}, 'date', 'date')">${task.date || '-'}</td>
+                <td class="col-task editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong></strong></td>
+                <td class="col-project editable" onclick="startEdit(this, ${task.id}, 'project', 'text')"></td>
+                <td class="col-priority editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"></td>
+                <td class="col-date editable" onclick="startEdit(this, ${task.id}, 'date', 'date')"></td>
             `;
+            row.querySelector('strong').textContent = task.title;
+            row.cells[2].textContent = task.project;
+            row.cells[3].innerHTML = `<span class="badge ${PRIORITY_MAP[task.priority].class}">${PRIORITY_MAP[task.priority].label}</span>`;
+            row.cells[4].textContent = task.date || '-';
             todoBody.appendChild(row);
 
             const mContainer = document.getElementById(`m-${task.priority}`);
             if(mContainer) {
                 const mItem = document.createElement('div');
                 mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; mItem.ondragstart = drag;
-                mItem.innerHTML = `
-                    <div class="matrix-item-content">
-                        <strong>${task.title}</strong>
-                        <small>${task.project}</small>
-                    </div>
-                    <input type="checkbox" onclick="toggleComplete(${task.id})">
-                `;
+                mItem.innerHTML = `<div class="matrix-item-content"><strong></strong><small></small></div><input type="checkbox" onclick="toggleComplete(${task.id})">`;
+                mItem.querySelector('strong').textContent = task.title;
+                mItem.querySelector('small').textContent = task.project;
                 mContainer.appendChild(mItem);
             }
         });
 
         archives.slice().reverse().forEach(task => {
             const row = document.createElement('tr'); row.style.opacity = '0.5';
-            row.innerHTML = `<td class="col-check">✅</td><td colspan="3" style="text-decoration:line-through">${task.title} <small>(${task.project})</small></td>
+            row.innerHTML = `<td class="col-check">✅</td><td colspan="3" style="text-decoration:line-through"><span class="at"></span> <small class="ap"></small></td>
                              <td style="text-align:right"><button onclick="restoreTask(${task.id})" style="font-size:0.7rem; padding: 5px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: white;">Restaurer</button></td>`;
+            row.querySelector('.at').textContent = task.title;
+            row.querySelector('.ap').textContent = `(${task.project})`;
             archiveBody.appendChild(row);
         });
     }

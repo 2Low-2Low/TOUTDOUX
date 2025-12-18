@@ -20,6 +20,9 @@
             --accent: #6b8e6b;
             --border: #e8e2d6;
             --header-bg: #ebf0f5; 
+            --s-urgence: #d65a4a;
+            --s-impact: #5a8eb3;
+            --s-facile: #7ba37b;
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -39,19 +42,18 @@
         
         .container { max-width: 1100px; margin: auto; }
 
+        /* BARRE SYNC */
         .sync-bar { 
             position: fixed; top: 10px; left: 10px; right: 10px; z-index: 1000;
             display: flex; align-items: center; justify-content: space-between; 
             background: rgba(74, 69, 63, 0.85); backdrop-filter: blur(8px);
-            color: #fdfaf1; padding: 12px 20px; 
-            border-radius: 20px;
+            color: #fdfaf1; padding: 12px 20px; border-radius: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         .sync-btn { 
             background: var(--accent); color: white; border: none; padding: 8px 16px; 
             border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8rem; 
-            transition: all 0.3s ease;
-            font-family: 'Nunito Sans', sans-serif;
+            transition: all 0.3s ease; font-family: 'Nunito Sans', sans-serif;
         }
         .sync-btn:hover { transform: translateY(-1px); background: #7aa37a; }
         .sync-btn.load { background: var(--info); }
@@ -61,162 +63,116 @@
         h1 { 
             font-family: "Century Gothic", "Avant Garde", "Avant Garde Gothic", "ITC Avant Garde Gothic", sans-serif;
             text-align: center; color: var(--accent); font-size: 3.5rem; margin: 10px 0 30px 0; 
-            letter-spacing: 4px; font-weight: 400;
-            text-transform: uppercase;
+            letter-spacing: 4px; font-weight: 400; text-transform: uppercase;
         }
 
+        /* FORMULAIRE */
         .task-form { 
-            background: var(--card); padding: 25px; 
-            border-radius: 25px 15px 30px 20px;
+            background: var(--card); padding: 25px; border-radius: 25px 15px 30px 20px;
             box-shadow: 8px 8px 25px rgba(139, 126, 116, 0.08); 
-            display: flex; flex-wrap: wrap; 
-            gap: 20px; margin-bottom: 40px; align-items: flex-end; 
+            display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 40px; align-items: flex-end; 
             border: 1px solid var(--border);
         }
-        .form-group { display: flex; flex-direction: column; flex: 1; min-width: 200px; }
-        .form-group.small { flex: 0.5; min-width: 120px; }
-        
-        .form-group label { 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            margin-bottom: 8px; 
-            color: var(--secondary); 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            font-family: 'Nunito Sans', sans-serif;
-        }
-        
-        input, select { 
-            padding: 12px 15px; border: 2px solid var(--border); border-radius: 12px; 
-            font-size: 1rem; background: #fff; width: 100%; transition: all 0.3s ease;
-            color: var(--text); font-family: inherit;
-        }
+        .form-group { display: flex; flex-direction: column; flex: 1; min-width: 180px; }
+        .form-group.small { flex: 0.4; min-width: 110px; }
+        .form-group label { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+        input, select { padding: 12px 15px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; background: #fff; width: 100%; transition: 0.3s; color: var(--text); font-family: inherit; }
         input:focus { border-color: var(--important-only); outline: none; }
-        
-        .add-btn { 
-            background: var(--urgent-both); color: white; border: none; height: 50px;
-            padding: 0 30px; border-radius: 15px; cursor: pointer; font-weight: bold; 
-            font-size: 1rem; transition: 0.3s;
-            box-shadow: 0 4px 0px #c45643;
-        }
+        .add-btn { background: var(--urgent-both); color: white; border: none; height: 50px; padding: 0 30px; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 0px #c45643; }
         .add-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0px #c45643; }
 
-        .card-table { margin-bottom: 40px; }
+        /* TABLEAU */
+        .card-table { margin-bottom: 40px; overflow-x: auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 12px; table-layout: fixed; }
-        
-        thead tr { 
-            background-color: var(--header-bg); 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        th { 
-            padding: 15px; text-align: left; font-size: 0.9rem; 
-            text-transform: uppercase; color: var(--secondary); cursor: pointer; 
-            user-select: none; font-family: 'Playfair Display', serif;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            transition: color 0.2s;
-        }
-        
+        thead tr { background-color: var(--header-bg); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        th { padding: 15px; text-align: left; font-size: 0.85rem; text-transform: uppercase; color: var(--secondary); cursor: pointer; user-select: none; font-family: 'Playfair Display', serif; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); transition: 0.2s; }
         th:first-child { border-left: 1px solid var(--border); border-top-left-radius: 18px; border-bottom-left-radius: 18px; }
         th:last-child { border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; }
         th:hover { color: var(--accent); }
-
-        td { 
-            background: var(--card); padding: 18px 15px; 
-            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-            vertical-align: middle; word-wrap: break-word; font-size: 1rem;
-        }
-        
+        td { background: var(--card); padding: 18px 15px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); vertical-align: middle; word-wrap: break-word; font-size: 0.95rem; }
         .col-check { width: 50px; text-align: center; border-left: 1px solid var(--border); border-top-left-radius: 18px; border-bottom-left-radius: 18px; }
-        .col-task { width: 380px; } 
-        td.col-project { font-weight: bold; color: var(--accent); }
-        .col-project { width: 150px; }
-        .col-priority { width: 180px; }
-        .col-date { width: 140px; border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; font-size: 0.85rem; color: var(--secondary); }
+        .col-task { width: 280px; } 
+        .col-project { width: 110px; }
+        td.col-project { font-weight: bold; }
+        .col-priority { width: 160px; }
+        .col-status { width: 130px; }
+        .col-date { width: 120px; border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; font-size: 0.85rem; color: var(--secondary); }
+        .editable:hover { background: #fafaf5; cursor: pointer; border-radius: 8px; color: var(--accent); }
+        input[type="checkbox"] { width: 20px; height: 20px; border-radius: 6px; cursor: pointer; accent-color: var(--accent); }
 
-        .editable:hover { background: #fafaf5; cursor: pointer; border-radius: 8px; }
-        
-        input[type="checkbox"] { 
-            width: 20px; height: 20px; border-radius: 6px; cursor: pointer; 
-            accent-color: var(--accent);
-        }
-
-        .badge { padding: 6px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; display: inline-block; border: 1px solid rgba(0,0,0,0.05); }
+        .badge { padding: 6px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; display: inline-block; border: 1px solid rgba(0,0,0,0.05); text-transform: uppercase; }
         .b-both { background: #ffeaa7; color: #d35400; } 
         .b-urgent { background: #dff2e1; color: #4e6e5d; } 
         .b-important { background: #fdf5e6; color: #8b6d3f; } 
         .b-none { background: #f7f1e3; color: #84817a; }
+        .s-urg { background: #fceae8; color: var(--s-urgence); border-color: #f7d7d3; }
+        .s-imp { background: #e8f1f7; color: var(--s-impact); border-color: #d3e2ed; }
+        .s-fac { background: #edf5ed; color: var(--s-facile); border-color: #dbe8db; }
 
-        .cat-separator {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 60px 0 50px;
-        }
-        .cat-separator::before, .cat-separator::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1.5px solid #d4cdc1; 
-            margin: 0 40px;
-        }
+        .cat-separator { display: flex; align-items: center; text-align: center; margin: 60px 0 20px; }
+        .cat-separator::before, .cat-separator::after { content: ''; flex: 1; border-bottom: 1.5px solid #d4cdc1; margin: 0 40px; }
         .cat-icon { font-size: 2.5rem; color: var(--text); line-height: 1; filter: opacity(0.7); }
 
-        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 50px; }
+        /* NAVIGATION MATRICE (DOTS) */
+        .matrix-nav { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
+        .nav-dot { width: 12px; height: 12px; border-radius: 50%; background: #d4cdc1; cursor: pointer; transition: 0.3s; border: 2px solid transparent; }
+        .nav-dot.active { background: var(--accent); transform: scale(1.3); border-color: #fff; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+
+        /* SLIDER MATRICE */
+        .matrix-window { width: 100%; overflow: hidden; margin-bottom: 50px; }
+        .matrix-track { display: flex; transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1); width: 200%; }
+        .matrix-view { width: 50%; padding: 0 5px; }
+
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .matrix-grid-triple { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
+
         .quadrant { 
             background: var(--card); padding: 25px; border-radius: 25px; 
             border-top: 8px solid #ccc; box-shadow: 4px 4px 15px rgba(139, 126, 116, 0.04); 
-            min-height: 180px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            border-bottom: 2px solid var(--border);
+            min-height: 220px; transition: 0.4s; border-bottom: 2px solid var(--border);
         }
         .quadrant.drag-over { border-style: dashed; background: #f8f8f0; transform: scale(1.02); }
-        
         .q-both { border-color: var(--urgent-both); } 
         .q-important { border-color: #6c5ce7; } 
         .q-urgent { border-color: var(--urgent-only); } 
         .q-none { border-color: #bdc3c7; }
+        .q-s-urg { border-color: var(--s-urgence); }
+        .q-s-imp { border-color: var(--s-impact); }
+        .q-s-fac { border-color: var(--s-facile); }
+        .quadrant h3 { margin-top: 0; font-size: 0.9rem; text-transform: uppercase; color: var(--secondary); margin-bottom: 20px; letter-spacing: 1.5px; font-weight: 800; }
         
-        .quadrant h3 { 
-            margin-top: 0; font-size: 0.9rem; text-transform: uppercase; 
-            color: var(--secondary); margin-bottom: 20px; letter-spacing: 1.5px;
-            font-weight: 800;
-        }
-        
-        .matrix-item { 
-            background: #fff; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            border: 1px solid #eee; width: 100%; 
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.02);
-            cursor: grab;
-        }
+        .matrix-item { background: #fff; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; width: 100%; box-shadow: 2px 2px 8px rgba(0,0,0,0.02); cursor: grab; }
         .matrix-item-content { flex: 1; padding-right: 15px; word-wrap: break-word; overflow: hidden; pointer-events: none; }
-        .matrix-item-content strong { display: block; font-size: 1rem; color: var(--text); }
-        .matrix-item-content small { color: var(--secondary); font-weight: 600; font-size: 0.8rem; }
-        .matrix-item input[type="checkbox"] { flex-shrink: 0; }
+        .matrix-item-content strong { display: block; font-size: 0.95rem; color: var(--text); }
+        .matrix-item-content small { color: var(--secondary); font-weight: 600; font-size: 0.75rem; }
 
+        /* OH WOW (ARCHIVES) */
         .archive-toggle { 
             display: flex; justify-content: space-between; align-items: center; 
             background: var(--card); padding: 20px 25px; border-radius: 20px; 
             border: 1px solid var(--border); cursor: pointer; margin-bottom: 60px;
+            transition: background-color 0.4s, border-color 0.4s;
         }
+        .archive-toggle:hover { background-color: #fafaf5; }
+        .archive-toggle.is-open { background-color: #f5f0e6; border-color: var(--important-only); }
+        
         .archive-content { display: none; margin-bottom: 60px; }
+        
+        .archive-today-bg { background-color: #f2f9f2 !important; opacity: 1 !important; border-color: #e2ede2 !important; }
 
         @media (max-width: 768px) {
-            body { padding-top: 80px; }
             h1 { font-size: 2.5rem; }
             thead { display: none; }
             table, tbody, tr, td { display: block; width: 100% !important; }
-            tr { 
-                background: white; border-radius: 20px; padding: 20px; 
-                margin-bottom: 15px; box-shadow: 0 4px 10px rgba(139, 126, 116, 0.05);
-                position: relative; border: 1px solid var(--border);
-            }
+            tr { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(139, 126, 116, 0.05); position: relative; border: 1px solid var(--border); }
             td { border: none !important; padding: 5px 0 !important; }
             td.col-check { position: absolute; top: 20px; right: 20px; width: auto !important; }
             td:nth-child(2) { font-size: 1.2rem; font-weight: bold; padding-right: 50px !important; font-family: 'Playfair Display', serif; }
             td.col-project:before { content: "Projet: "; font-weight: bold; font-size: 0.75rem; color: var(--secondary); }
+            td.col-priority:before { content: "Priorité: "; font-weight: bold; font-size: 0.75rem; color: var(--secondary); }
+            td.col-status:before { content: "État: "; font-weight: bold; font-size: 0.75rem; color: var(--secondary); }
             td.col-date:before { content: "Deadline: "; font-weight: bold; font-size: 0.75rem; color: var(--secondary); }
-            .matrix-grid { grid-template-columns: 1fr; }
+            .matrix-grid, .matrix-grid-triple { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -231,7 +187,7 @@
         <div style="display:flex; gap:12px">
             <button class="sync-btn load" onclick="githubPull()">📥 Charger</button>
             <button class="sync-btn" onclick="githubPush()">📤 Sauver</button>
-            <button onclick="configGitHub()" style="background:none; border:none; color:#fdfaf1; font-size:1.4rem; cursor:pointer; opacity: 0.8">⚙️</button>
+            <button onclick="configGitHub()" style="background:none; border:none; color:#fdfaf1; font-size:1.4rem; cursor:pointer; opacity: 0.8">⚙︎</button>
         </div>
     </div>
 
@@ -256,6 +212,15 @@
             </select>
         </div>
         <div class="form-group small">
+            <label>État</label>
+            <select id="taskStatus">
+                <option value="NONE" selected>-</option>
+                <option value="URGENCE">🚨 Urgence</option>
+                <option value="IMPACT">🎯 Impact</option>
+                <option value="FACILE">✨ Facile</option>
+            </select>
+        </div>
+        <div class="form-group small">
             <label>Temps</label>
             <input type="date" id="taskDate">
         </div>
@@ -270,6 +235,7 @@
                     <th class="col-task" onclick="sortTable('createdAt')">Note ↕</th>
                     <th class="col-project" onclick="sortTable('project')">Projet ↕</th>
                     <th class="col-priority" onclick="sortTable('priority')">Priorité ↕</th>
+                    <th class="col-status" onclick="sortTable('status')">État ↕</th>
                     <th class="col-date" onclick="sortTable('date')">Temps ↕</th>
                 </tr>
             </thead>
@@ -277,23 +243,39 @@
         </table>
     </div>
 
-    <div class="cat-separator">
-        <span class="cat-icon">𓃠</span>
+    <div class="cat-separator"><span class="cat-icon">𓃠</span></div>
+
+    <div class="matrix-nav">
+        <div class="nav-dot active" onclick="switchView(0)" id="dot0"></div>
+        <div class="nav-dot" onclick="switchView(1)" id="dot1"></div>
     </div>
 
-    <div class="matrix-grid">
-        <div class="quadrant q-both" id="drop-both" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>☀️ FAIRE</h3><div id="m-both"></div></div>
-        <div class="quadrant q-important" id="drop-important" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🌱 PLANIFIER</h3><div id="m-important"></div></div>
-        <div class="quadrant q-urgent" id="drop-urgent" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🌬️ DÉLÉGUER</h3><div id="m-urgent"></div></div>
-        <div class="quadrant q-none" id="drop-none" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🍃 ÉLIMINER</h3><div id="m-none"></div></div>
+    <div class="matrix-window">
+        <div class="matrix-track" id="matrixTrack">
+            <div class="matrix-view">
+                <div class="matrix-grid">
+                    <div class="quadrant q-both" id="drop-p-both" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>☀️ FAIRE</h3><div id="m-p-both"></div></div>
+                    <div class="quadrant q-important" id="drop-p-important" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🌱 PLANIFIER</h3><div id="m-p-important"></div></div>
+                    <div class="quadrant q-urgent" id="drop-p-urgent" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🌬️ DÉLÉGUER</h3><div id="m-p-urgent"></div></div>
+                    <div class="quadrant q-none" id="drop-p-none" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🍃 ÉLIMINER</h3><div id="m-p-none"></div></div>
+                </div>
+            </div>
+            <div class="matrix-view">
+                <div class="matrix-grid-triple">
+                    <div class="quadrant q-s-urg" id="drop-s-URGENCE" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🚨 URGENCE</h3><div id="m-s-URGENCE"></div></div>
+                    <div class="quadrant q-s-imp" id="drop-s-IMPACT" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🎯 IMPACT</h3><div id="m-s-IMPACT"></div></div>
+                    <div class="quadrant q-s-fac" id="drop-s-FACILE" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>✨ FACILE</h3><div id="m-s-FACILE"></div></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="archive-toggle" onclick="toggleArchive()">
-        <span style="font-weight: 700; color: var(--secondary); font-family: 'Playfair Display', serif;">📦 ARCHIVES (Repo: <span id="repoTag">...</span>)</span>
+        <span style="font-weight: 700; color: var(--secondary); font-family: 'Playfair Display', serif;">⛩️ ... OH WOW !</span>
         <span id="archiveChevron" style="transition:0.3s">▼</span>
     </div>
     <div class="archive-content" id="archiveContent">
-        <button class="add-btn" style="background:var(--secondary); box-shadow: 0 4px 0px #5a4e46; margin-bottom:20px; width:auto" onclick="cleanArchives()">🧹 Nettoyer +14j</button>
+        <button class="add-btn" style="background:#d6cec3; box-shadow: 0 4px 0px #b8afa4; color: #766d64; margin-bottom:20px; width:auto" onclick="cleanArchives()">🧹 Nettoyer +14j</button>
         <div class="card-table">
             <table><tbody id="archiveBody"></tbody></table>
         </div>
@@ -314,6 +296,13 @@
         none: { label: '🍃 Aucun', weight: 0, class: 'b-none' }
     };
 
+    const STATUS_MAP = {
+        'NONE': { label: '', class: '' },
+        'URGENCE': { label: '🚨 Urgence', class: 's-urg' },
+        'IMPACT': { label: '🎯 Impact', class: 's-imp' },
+        'FACILE': { label: '✨ Facile', class: 's-fac' }
+    };
+
     const saveLocally = () => {
         localStorage.setItem('tasks', JSON.stringify(tasks));
         localStorage.setItem('archives', JSON.stringify(archives));
@@ -322,7 +311,12 @@
 
     const capitalize = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 
-    // --- GITHUB ---
+    function switchView(idx) {
+        document.getElementById('matrixTrack').style.transform = `translateX(-${idx * 50}%)`;
+        document.getElementById('dot0').classList.toggle('active', idx === 0);
+        document.getElementById('dot1').classList.toggle('active', idx === 1);
+    }
+
     async function githubPush() {
         if(!ghToken || !ghRepo) return configGitHub();
         const light = document.getElementById('statusLight');
@@ -359,8 +353,8 @@
     }
 
     function configGitHub() {
-        ghToken = prompt("Token GitHub (ghp_...) :", ghToken || "");
-        ghRepo = prompt("Repo (pseudo/toutdoux) :", ghRepo || "");
+        ghToken = prompt("Token GitHub :", ghToken || "");
+        ghRepo = prompt("Repo (pseudo/repo) :", ghRepo || "");
         if(ghToken && ghRepo) {
             localStorage.setItem('gh_token', ghToken);
             localStorage.setItem('gh_repo', ghRepo);
@@ -368,19 +362,21 @@
         }
     }
 
-    // --- LOGIQUE TÂCHES ---
     function addTask() {
-        const titleEl = document.getElementById('taskTitle');
-        if (!titleEl.value.trim()) return;
+        const titleVal = document.getElementById('taskTitle').value.trim();
+        if (!titleVal) return;
         tasks.push({
             id: Date.now(),
-            title: capitalize(titleEl.value.trim()),
+            title: capitalize(titleVal),
             project: document.getElementById('taskProject').value.trim().toUpperCase() || '☕︎',
+            status: document.getElementById('taskStatus').value,
             priority: document.getElementById('taskPriority').value,
             date: document.getElementById('taskDate').value,
             createdAt: Date.now()
         });
-        titleEl.value = ''; document.getElementById('taskProject').value = ''; 
+        document.getElementById('taskTitle').value = ''; 
+        document.getElementById('taskProject').value = ''; 
+        document.getElementById('taskStatus').value = 'NONE';
         saveLocally();
     }
 
@@ -411,8 +407,9 @@
         if (type !== 'select') input.type = type;
         input.value = originalValue;
         if (type === 'select') {
-            Object.entries(PRIORITY_MAP).forEach(([val, opt]) => {
-                input.add(new Option(opt.label, val, val === originalValue, val === originalValue));
+            const map = (field === 'priority') ? PRIORITY_MAP : STATUS_MAP;
+            Object.entries(map).forEach(([val, opt]) => {
+                input.add(new Option(opt.label || '-', val, val === originalValue, val === originalValue));
             });
         }
         element.innerHTML = ''; element.appendChild(input); input.focus();
@@ -437,7 +434,6 @@
         updateUI();
     }
 
-    // --- DRAG & DROP ---
     function drag(ev) { ev.dataTransfer.setData("taskId", ev.target.dataset.id); }
     function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
     function dragLeave(ev) { ev.currentTarget.classList.remove('drag-over'); }
@@ -445,57 +441,96 @@
         ev.preventDefault();
         ev.currentTarget.classList.remove('drag-over');
         const taskId = parseInt(ev.dataTransfer.getData("taskId"));
-        const newPriority = ev.currentTarget.id.replace('drop-', '');
+        const targetId = ev.currentTarget.id; 
         const task = tasks.find(t => t.id === taskId);
-        if (task) { task.priority = newPriority; saveLocally(); }
+        if (task) {
+            if (targetId.startsWith('drop-p-')) {
+                task.priority = targetId.replace('drop-p-', '');
+            } else if (targetId.startsWith('drop-s-')) {
+                task.status = targetId.replace('drop-s-', '');
+            }
+            saveLocally();
+        }
     }
 
     function toggleArchive() {
+        const toggle = document.querySelector('.archive-toggle');
         const content = document.getElementById('archiveContent');
         const chevron = document.getElementById('archiveChevron');
         const isHidden = content.style.display === 'none' || content.style.display === '';
+        
         content.style.display = isHidden ? 'block' : 'none';
         chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+        
+        if (isHidden) {
+            toggle.classList.add('is-open');
+        } else {
+            toggle.classList.remove('is-open');
+        }
     }
 
-    // --- RENDER ---
     function updateUI() {
         const todoBody = document.getElementById('todoBody');
         const archiveBody = document.getElementById('archiveBody');
         todoBody.innerHTML = ''; archiveBody.innerHTML = '';
-        ['both', 'important', 'urgent', 'none'].forEach(p => document.getElementById(`m-${p}`).innerHTML = '');
-        document.getElementById('repoTag').textContent = ghRepo || '...';
+        
+        ['both', 'important', 'urgent', 'none'].forEach(p => { if(document.getElementById(`m-p-${p}`)) document.getElementById(`m-p-${p}`).innerHTML = ''; });
+        ['URGENCE', 'IMPACT', 'FACILE'].forEach(s => { if(document.getElementById(`m-s-${s}`)) document.getElementById(`m-s-${s}`).innerHTML = ''; });
+        
+        const now = new Date();
+        const startOfWorkDay = new Date(now);
+        if (now.getHours() < 5) startOfWorkDay.setDate(now.getDate() - 1);
+        startOfWorkDay.setHours(5, 0, 0, 0);
+        const workDayThreshold = startOfWorkDay.getTime();
 
         tasks.forEach(task => {
             const row = document.createElement('tr');
+            const s = STATUS_MAP[task.status] || STATUS_MAP['NONE'];
+            const p = PRIORITY_MAP[task.priority] || PRIORITY_MAP['none'];
             row.innerHTML = `
                 <td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td>
                 <td class="col-task editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong></strong></td>
                 <td class="col-project editable" onclick="startEdit(this, ${task.id}, 'project', 'text')"></td>
-                <td class="col-priority editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"></td>
+                <td class="col-priority editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"><span class="badge ${p.class}">${p.label}</span></td>
+                <td class="col-status editable" onclick="startEdit(this, ${task.id}, 'status', 'select')"></td>
                 <td class="col-date editable" onclick="startEdit(this, ${task.id}, 'date', 'date')"></td>
             `;
             row.querySelector('strong').textContent = task.title;
             row.cells[2].textContent = task.project;
-            row.cells[3].innerHTML = `<span class="badge ${PRIORITY_MAP[task.priority].class}">${PRIORITY_MAP[task.priority].label}</span>`;
-            row.cells[4].textContent = task.date || '-';
+            if(s.label) row.cells[4].innerHTML = `<span class="badge ${s.class}">${s.label}</span>`;
+            row.cells[5].textContent = task.date || '-';
             todoBody.appendChild(row);
 
-            const mContainer = document.getElementById(`m-${task.priority}`);
-            if(mContainer) {
+            const createMatrixItem = () => {
                 const mItem = document.createElement('div');
                 mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; mItem.ondragstart = drag;
                 mItem.innerHTML = `<div class="matrix-item-content"><strong></strong><small></small></div><input type="checkbox" onclick="toggleComplete(${task.id})">`;
                 mItem.querySelector('strong').textContent = task.title;
                 mItem.querySelector('small').textContent = task.project;
-                mContainer.appendChild(mItem);
+                return mItem;
+            };
+
+            const pCont = document.getElementById(`m-p-${task.priority}`);
+            if(pCont) pCont.appendChild(createMatrixItem());
+            if(task.status !== 'NONE') {
+                const sCont = document.getElementById(`m-s-${task.status}`);
+                if(sCont) sCont.appendChild(createMatrixItem());
             }
         });
 
-        archives.slice().reverse().forEach(task => {
-            const row = document.createElement('tr'); row.style.opacity = '0.5';
-            row.innerHTML = `<td class="col-check">✅</td><td colspan="3" style="text-decoration:line-through"><span class="at"></span> <small class="ap"></small></td>
-                             <td style="text-align:right"><button onclick="restoreTask(${task.id})" style="font-size:0.7rem; padding: 5px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: white;">Restaurer</button></td>`;
+        archives.sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
+        archives.forEach(task => {
+            const row = document.createElement('tr'); 
+            const isToday = task.completedAt >= workDayThreshold;
+            if (isToday) row.className = 'archive-today-bg'; else row.style.opacity = '0.5';
+
+            row.innerHTML = `
+                <td class="col-check">✅</td>
+                <td colspan="4" style="text-decoration:line-through"><span class="at"></span> <small class="ap"></small></td>
+                <td style="text-align:right">
+                    <button onclick="restoreTask(${task.id})" style="font-size:0.7rem; padding: 5px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: white;">Restaurer</button>
+                </td>
+            `;
             row.querySelector('.at').textContent = task.title;
             row.querySelector('.ap').textContent = `(${task.project})`;
             archiveBody.appendChild(row);

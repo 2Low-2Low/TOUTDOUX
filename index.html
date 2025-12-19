@@ -23,6 +23,7 @@
             --s-urgence: #d65a4a;
             --s-impact: #5a8eb3;
             --s-facile: #7ba37b;
+            --archive-open: #f5f0e6;
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -30,14 +31,12 @@
         body { 
             font-family: 'Nunito Sans', system-ui, sans-serif; 
             background-color: var(--bg); 
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(224, 169, 109, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(143, 185, 189, 0.1) 0%, transparent 40%),
-                url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
             background-attachment: fixed;
             color: var(--text); 
             margin: 0; padding: 15px; line-height: 1.6;
             padding-top: 85px;
+            overflow-x: hidden;
         }
         
         .container { max-width: 1100px; margin: auto; }
@@ -53,9 +52,8 @@
         .sync-btn { 
             background: var(--accent); color: white; border: none; padding: 8px 16px; 
             border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8rem; 
-            transition: all 0.3s ease; font-family: 'Nunito Sans', sans-serif;
+            transition: 0.3s; font-family: 'Nunito Sans', sans-serif;
         }
-        .sync-btn:hover { transform: translateY(-1px); background: #7aa37a; }
         .sync-btn.load { background: var(--info); }
         .status-light { width: 10px; height: 10px; border-radius: 50%; background: #636e72; display: inline-block; transition: 0.3s; }
         .status-on { background: #b8e994; box-shadow: 0 0 10px #b8e994; }
@@ -64,9 +62,14 @@
             font-family: "Century Gothic", "Avant Garde", "Avant Garde Gothic", "ITC Avant Garde Gothic", sans-serif;
             text-align: center; color: var(--accent); font-size: 3.5rem; margin: 10px 0 30px 0; 
             letter-spacing: 4px; font-weight: 400; text-transform: uppercase;
+            cursor: pointer; transition: 0.3s; user-select: none;
         }
 
-        /* FORMULAIRE */
+        .main-viewport { overflow: hidden; width: 100%; }
+        .main-track { display: flex; width: 200%; transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1); }
+        .main-view { width: 50%; padding: 0 5px; }
+
+        /* FORMULAIRES */
         .task-form { 
             background: var(--card); padding: 25px; border-radius: 25px 15px 30px 20px;
             box-shadow: 8px 8px 25px rgba(139, 126, 116, 0.08); 
@@ -75,113 +78,99 @@
         }
         .form-group { display: flex; flex-direction: column; flex: 1; min-width: 180px; }
         .form-group.small { flex: 0.4; min-width: 110px; }
-        .form-group label { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
-        input, select { padding: 12px 15px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; background: #fff; width: 100%; transition: 0.3s; color: var(--text); font-family: inherit; }
-        input:focus { border-color: var(--important-only); outline: none; }
-        .add-btn { background: var(--urgent-both); color: white; border: none; height: 50px; padding: 0 30px; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 0px #c45643; }
-        .add-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0px #c45643; }
+        .form-group label { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; color: var(--secondary); text-transform: uppercase; }
+        input, select { padding: 12px 15px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; background: #fff; width: 100%; transition: 0.3s; color: var(--text); }
+        .add-btn { background: var(--urgent-both); color: white; border: none; height: 50px; padding: 0 30px; border-radius: 15px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 0px #c45643; }
 
-        /* BARRE DE TRI MOBILE */
-        .mobile-sort-bar { display: none; overflow-x: auto; gap: 10px; padding: 5px 0 20px; scrollbar-width: none; }
-        .mobile-sort-bar::-webkit-scrollbar { display: none; }
-        .sort-pill { background: white; border: 1px solid var(--border); padding: 8px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; color: var(--secondary); white-space: nowrap; cursor: pointer; }
-        .sort-pill.active { background: var(--accent); color: white; border-color: var(--accent); }
+        /* BOUTON NETTOYER */
+        .clean-btn { 
+            background:#d6cec3; box-shadow: 0 4px 0px #b8afa4; color: #766d64; 
+            border: none; padding: 12px 20px; border-radius: 15px; cursor: pointer;
+            font-weight: bold; font-size: 0.9rem; transition: 0.3s; margin-bottom: 20px;
+        }
 
-        /* TABLEAU */
-        .card-table { margin-bottom: 40px; overflow-x: auto; }
+        /* TABLEAUX */
+        .card-table { margin-bottom: 40px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 12px; table-layout: fixed; }
-        thead tr { background-color: var(--header-bg); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        th { padding: 15px; text-align: left; font-size: 0.85rem; text-transform: uppercase; color: var(--secondary); cursor: pointer; user-select: none; font-family: 'Playfair Display', serif; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); transition: 0.2s; }
-        th:first-child { border-left: 1px solid var(--border); border-top-left-radius: 18px; border-bottom-left-radius: 18px; }
-        th:last-child { border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; }
-        th:hover { color: var(--accent); }
-        td { background: var(--card); padding: 18px 15px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); vertical-align: middle; word-wrap: break-word; font-size: 0.95rem; }
+        td { background: var(--card); padding: 18px 15px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); vertical-align: middle; word-wrap: break-word; }
         .col-check { width: 50px; text-align: center; border-left: 1px solid var(--border); border-top-left-radius: 18px; border-bottom-left-radius: 18px; }
-        .col-task { width: 280px; } 
-        .col-project { width: 110px; }
-        td.col-project { font-weight: bold; }
-        .col-priority { width: 160px; }
-        .col-status { width: 130px; }
-        .col-date { width: 120px; border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; font-size: 0.85rem; color: var(--secondary); }
+        .col-task { width: auto; font-size: 0.95rem; } 
+        .col-project { width: 120px; font-weight: 800; }
+        .col-priority { width: 150px; }
+        .col-status { width: 130px; border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; }
         .editable:hover { background: #fafaf5; cursor: pointer; border-radius: 8px; }
-        input[type="checkbox"] { width: 20px; height: 20px; border-radius: 6px; cursor: pointer; accent-color: var(--accent); }
 
-        .badge { padding: 6px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; display: inline-block; border: 1px solid rgba(0,0,0,0.05); text-transform: uppercase; }
-        .b-both { background: #ffeaa7; color: #d35400; } 
-        .b-urgent { background: #dff2e1; color: #4e6e5d; } 
-        .b-important { background: #fdf5e6; color: #8b6d3f; } 
-        .b-none { background: #f7f1e3; color: #84817a; }
-        .s-urg { background: #fceae8; color: var(--s-urgence); border-color: #f7d7d3; }
-        .s-imp { background: #e8f1f7; color: var(--s-impact); border-color: #d3e2ed; }
-        .s-fac { background: #edf5ed; color: var(--s-facile); border-color: #dbe8db; }
-
-        .cat-separator { display: flex; align-items: center; text-align: center; margin: 60px 0 20px; }
-        .cat-separator::before, .cat-separator::after { content: ''; flex: 1; border-bottom: 1.5px solid #d4cdc1; margin: 0 40px; }
-        .cat-icon { font-size: 2.5rem; color: var(--text); line-height: 1; filter: opacity(0.7); }
-
-        /* NAVIGATION MATRICE */
-        .matrix-nav { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
-        .nav-dot { width: 12px; height: 12px; border-radius: 50%; background: #d4cdc1; cursor: pointer; transition: 0.3s; border: 2px solid transparent; }
-        .nav-dot.active { background: var(--accent); transform: scale(1.3); border-color: #fff; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-
-        /* SLIDER MATRICE */
-        .matrix-window { width: 100%; overflow: hidden; margin-bottom: 50px; }
-        .matrix-track { display: flex; transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1); width: 200%; }
-        .matrix-view { width: 50%; padding: 0 5px; }
-        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .matrix-grid-triple { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
-
-        .quadrant { 
-            background: var(--card); padding: 25px; border-radius: 25px; 
-            border-top: 8px solid #ccc; box-shadow: 4px 4px 15px rgba(139, 126, 116, 0.04); 
-            min-height: 220px; transition: 0.4s; border-bottom: 2px solid var(--border);
+        /* TOUT EAT */
+        .eat-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
+        .eat-item { 
+            background: var(--card); padding: 15px 20px; border-radius: 18px; 
+            display: flex; align-items: center; border: 1px solid var(--border);
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.02);
         }
-        .quadrant.drag-over { border-style: dashed; background: #f8f8f0; transform: scale(1.02); }
-        .q-both { border-color: var(--urgent-both); } 
-        .q-important { border-color: #6c5ce7; } 
-        .q-urgent { border-color: var(--urgent-only); } 
-        .q-none { border-color: #bdc3c7; }
-        .q-s-urg { border-color: var(--s-urgence); }
-        .q-s-imp { border-color: var(--s-impact); }
-        .q-s-fac { border-color: var(--s-facile); }
-        .quadrant h3 { margin-top: 0; font-size: 0.9rem; text-transform: uppercase; color: var(--secondary); margin-bottom: 20px; letter-spacing: 1.5px; font-weight: 800; }
-        
-        .matrix-item { background: #fff; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; width: 100%; box-shadow: 2px 2px 8px rgba(0,0,0,0.02); cursor: grab; }
-        .matrix-item-content { flex: 1; padding-right: 15px; word-wrap: break-word; overflow: hidden; pointer-events: none; }
-        .matrix-item-content strong { display: block; font-size: 0.95rem; color: var(--text); }
-        .matrix-item-content small { font-weight: 600; font-size: 0.75rem; }
+        .eat-item span { flex: 1; font-weight: 600; font-size: 1.1rem; margin-left: 10px; }
+        .eat-item input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--info); }
 
-        /* OH WOW (ARCHIVES) */
-        .archive-toggle { 
+        /* QUADRANTS */
+        .quadrant { background: var(--card); padding: 25px; border-radius: 25px; border-top: 8px solid #ccc; min-height: 220px; box-shadow: 4px 4px 15px rgba(139, 126, 116, 0.04); }
+        .q-both { border-top-color: var(--urgent-both); } 
+        .q-important { border-top-color: #6c5ce7; } 
+        .q-urgent { border-top-color: var(--urgent-only); } 
+        .q-none { border-top-color: #bdc3c7; }
+        .q-s-urg { border-top-color: var(--s-urgence); }
+        .q-s-imp { border-top-color: var(--s-impact); }
+        .q-s-fac { border-top-color: var(--s-facile); }
+        .quadrant h3 { margin-top: 0; font-size: 0.85rem; text-transform: uppercase; color: var(--secondary); margin-bottom: 15px; letter-spacing: 1px; font-weight: 800; }
+
+        /* ITEMS MATRICE (REPRISE DU STYLE INDEX.HTML POUR ALIGNEMENT) */
+        .matrix-item { 
+            background: #fff; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; 
             display: flex; justify-content: space-between; align-items: center; 
-            background: var(--card); padding: 20px 25px; border-radius: 20px; 
-            border: 1px solid var(--border); cursor: pointer; margin-bottom: 60px;
-            transition: background-color 0.4s, border-color 0.4s;
+            border: 1px solid #eee; width: 100%; box-shadow: 2px 2px 8px rgba(0,0,0,0.02); 
+            cursor: grab; 
         }
-        .archive-toggle:hover { background-color: #fafaf5; }
-        .archive-toggle.is-open { background-color: #f5f0e6; border-color: var(--important-only); }
-        .archive-content { display: none; margin-bottom: 60px; }
-        .archive-today-bg { background-color: #f2f9f2 !important; opacity: 1 !important; border-color: #e2ede2 !important; }
+        .matrix-item-content { flex: 1; padding-right: 15px; word-wrap: break-word; overflow: hidden; pointer-events: none; }
+        .matrix-item-content strong { display: block; font-size: 0.95rem; color: var(--text); line-height: 1.2; }
+        .matrix-item-content small { font-weight: 600; font-size: 0.75rem; }
+        .matrix-item input[type="checkbox"] { width: 20px; height: 20px; flex-shrink: 0; cursor: pointer; }
 
-        /* --- MOBILE VERSION 3 NIVEAUX --- */
+        /* BADGES */
+        .badge { padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; display: inline-block; text-transform: uppercase; }
+        .b-both { background: #ffeaa7; color: #d35400; } .b-urgent { background: #dff2e1; color: #4e6e5d; } .b-important { background: #fdf5e6; color: #8b6d3f; } .b-none { background: #f7f1e3; color: #84817a; }
+        .s-urg { background: #fceae8; color: var(--s-urgence); } .s-imp { background: #e8f1f7; color: var(--s-impact); } .s-fac { background: #edf5ed; color: var(--s-facile); }
+
+        .cat-separator { display: flex; align-items: center; margin: 40px 0 20px; }
+        .cat-separator::before, .cat-separator::after { content: ''; flex: 1; border-bottom: 1.5px solid #d4cdc1; margin: 0 40px; }
+        .cat-icon { font-size: 2.2rem; filter: opacity(0.6); }
+
+        /* NAVIGATION DOTS COLORES */
+        .matrix-nav { display:flex; justify-content:center; gap:15px; margin-bottom:25px; }
+        .nav-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; transition: 0.3s; opacity: 0.25; background: #ccc; border: 2px solid transparent; }
+        #dot0.active { background-color: var(--urgent-both); opacity: 1; border-color: #fff; box-shadow: 0 0 10px var(--urgent-both); transform: scale(1.2); }
+        #dot1.active { background-color: var(--s-impact); opacity: 1; border-color: #fff; box-shadow: 0 0 10px var(--s-impact); transform: scale(1.2); }
+
+        .matrix-window { width: 100%; overflow: hidden; margin-bottom: 50px; }
+        .matrix-track-inner { display: flex; transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1); width: 200%; }
+        .matrix-view-inner { width: 50%; }
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 5px; }
+        .matrix-grid-triple { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; padding: 5px; }
+
+        /* ARCHIVES */
+        .archive-toggle { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 18px 25px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 50px; transition: 0.3s; }
+        .archive-toggle.is-open { background-color: var(--archive-open); border-color: var(--important-only); }
+        .archive-content { display: none; margin-bottom: 50px; }
+
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .mobile-sort-bar { display: flex; }
+            h1 { font-size: 2.3rem; }
             thead { display: none; }
             table, tbody, tr, td { display: block; width: 100% !important; }
-            tr { 
-                background: white; border-radius: 22px; padding: 20px; 
-                margin-bottom: 15px; box-shadow: 0 4px 15px rgba(139, 126, 116, 0.06); 
-                position: relative; border: 1px solid var(--border);
-            }
+            tr { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; position: relative; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
             td { border: none !important; padding: 0 !important; background: transparent !important; }
-            td.col-check { position: absolute; top: 20px; right: 20px; width: 25px !important; }
-            td.col-task { padding-right: 45px !important; font-size: 1.25rem; font-weight: bold; font-family: 'Playfair Display', serif; margin-bottom: 6px; color: var(--text); }
-            td.col-project { display: block !important; margin-bottom: 10px; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.5px; }
-            td.col-priority, td.col-status, td.col-date { display: inline-block !important; width: auto !important; font-size: 0.75rem; color: var(--secondary); font-weight: 600; }
-            td.col-priority:after { content: " / "; margin: 0 8px; color: #dcd7cc; font-weight: 400; }
-            td.col-status:not(:empty):after { content: " / "; margin: 0 8px; color: #dcd7cc; font-weight: 400; }
-            td:before { content: none !important; }
+            td.col-task { width: calc(100% - 35px) !important; font-size: 1.05rem; font-weight: 700; font-family: 'Playfair Display', serif; margin-bottom: 6px; line-height: 1.2; }
+            td.col-check { position: absolute; top: 15px; right: 15px; width: 25px !important; }
+            td.col-project, td.col-priority, td.col-status { display: inline-block !important; width: auto !important; font-size: 0.75rem; color: var(--secondary); font-weight: 600; }
+            td.col-project { margin-right: 8px; font-weight: 800; }
+            td.col-priority:before { content: "• "; margin: 0 4px; color: #dcd7cc; }
+            td.col-status:not(:empty):before { content: " / "; margin: 0 4px; color: #dcd7cc; }
             .matrix-grid, .matrix-grid-triple { grid-template-columns: 1fr; }
         }
     </style>
@@ -192,110 +181,76 @@
     <div class="sync-bar">
         <div style="display:flex; align-items:center; gap:12px">
             <span id="statusLight" class="status-light"></span>
-            <span style="font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">GitHub Sync</span>
+            <span style="font-size: 0.7rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Sync</span>
         </div>
-        <div style="display:flex; gap:12px">
+        <div style="display:flex; gap:10px">
             <button class="sync-btn load" onclick="githubPull()">📥 Charger</button>
             <button class="sync-btn" onclick="githubPush()">📤 Sauver</button>
-            <button onclick="configGitHub()" style="background:none; border:none; color:#fdfaf1; font-size:1.4rem; cursor:pointer; opacity: 0.8">⚙︎</button>
+            <button onclick="configGitHub()" style="background:none; border:none; color:#fdfaf1; font-size:1.3rem; cursor:pointer;">⚙︎</button>
         </div>
     </div>
 
-    <h1>TOUT DOUX</h1>
+    <h1 id="mainTitle" onclick="toggleMainView()">TOUT DOUX</h1>
 
-    <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
-        <div class="form-group">
-            <label>Note</label>
-            <input type="text" id="taskTitle" placeholder="Écrire une petite note...">
-        </div>
-        <div class="form-group small">
-            <label>Projet</label>
-            <input type="text" id="taskProject" placeholder="☕︎" oninput="this.value = this.value.toUpperCase()">
-        </div>
-        <div class="form-group small">
-            <label>Priorité</label>
-            <select id="taskPriority">
-                <option value="both">☀️ Urgent & Imp.</option>
-                <option value="urgent">🌬️ Urgent</option>
-                <option value="important">🌱 Important</option>
-                <option value="none" selected>🍃 Aucun</option>
-            </select>
-        </div>
-        <div class="form-group small">
-            <label>État</label>
-            <select id="taskStatus">
-                <option value="NONE" selected>-</option>
-                <option value="URGENCE">🚨 Urgence</option>
-                <option value="IMPACT">🎯 Impact</option>
-                <option value="FACILE">✨ Facile</option>
-            </select>
-        </div>
-        <div class="form-group small">
-            <label>Temps</label>
-            <input type="date" id="taskDate">
-        </div>
-        <button class="add-btn" onclick="addTask()">Ajouter</button>
-    </div>
+    <div class="main-viewport">
+        <div class="main-track" id="mainTrack">
+            
+            <div class="main-view">
+                <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
+                    <div class="form-group"><label>Note</label><input type="text" id="taskTitle" placeholder="Écrire une petite note..."></div>
+                    <div class="form-group small"><label>Projet</label><input type="text" id="taskProject" placeholder="☕︎" oninput="this.value = this.value.toUpperCase()"></div>
+                    <div class="form-group small"><label>Priorité</label><select id="taskPriority"><option value="both">☀️ Urgent & Imp.</option><option value="urgent">🌬️ Urgent</option><option value="important">🌱 Important</option><option value="none" selected>🍃 Aucun</option></select></div>
+                    <div class="form-group small"><label>État</label><select id="taskStatus"><option value="NONE" selected>-</option><option value="URGENCE">🚨 Urgence</option><option value="IMPACT">🎯 Impact</option><option value="FACILE">✨ Facile</option></select></div>
+                    <button class="add-btn" onclick="addTask()">Ajouter</button>
+                </div>
 
-    <div class="mobile-sort-bar">
-        <div class="sort-pill" id="pill-createdAt" onclick="sortTable('createdAt')">Note ↕</div>
-        <div class="sort-pill" id="pill-project" onclick="sortTable('project')">Projet ↕</div>
-        <div class="sort-pill" id="pill-priority" onclick="sortTable('priority')">Priorité ↕</div>
-        <div class="sort-pill" id="pill-status" onclick="sortTable('status')">État ↕</div>
-        <div class="sort-pill" id="pill-date" onclick="sortTable('date')">Temps ↕</div>
-    </div>
+                <div class="card-table"><table><tbody id="todoBody"></tbody></table></div>
 
-    <div class="card-table">
-        <table>
-            <thead>
-                <tr>
-                    <th class="col-check">✔</th>
-                    <th class="col-task" onclick="sortTable('createdAt')">Note ↕</th>
-                    <th class="col-project" onclick="sortTable('project')">Projet ↕</th>
-                    <th class="col-priority" onclick="sortTable('priority')">Priorité ↕</th>
-                    <th class="col-status" onclick="sortTable('status')">État ↕</th>
-                    <th class="col-date" onclick="sortTable('date')">Temps ↕</th>
-                </tr>
-            </thead>
-            <tbody id="todoBody"></tbody>
-        </table>
-    </div>
+                <div class="cat-separator"><span class="cat-icon">𓃠</span></div>
 
-    <div class="cat-separator"><span class="cat-icon">𓃠</span></div>
+                <div class="matrix-nav">
+                    <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0"></div>
+                    <div class="nav-dot" onclick="switchMatrix(1)" id="dot1"></div>
+                </div>
 
-    <div class="matrix-nav">
-        <div class="nav-dot active" onclick="switchView(0)" id="dot0"></div>
-        <div class="nav-dot" onclick="switchView(1)" id="dot1"></div>
-    </div>
+                <div class="matrix-window">
+                    <div class="matrix-track-inner" id="matrixTrackInner">
+                        <div class="matrix-view-inner">
+                            <div class="matrix-grid">
+                                <div class="quadrant q-both" id="drop-p-both" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>☀️ FAIRE</h3><div id="m-p-both"></div></div>
+                                <div class="quadrant q-important" id="drop-p-important" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🌱 PLANIFIER</h3><div id="m-p-important"></div></div>
+                                <div class="quadrant q-urgent" id="drop-p-urgent" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🌬️ DÉLÉGUER</h3><div id="m-p-urgent"></div></div>
+                                <div class="quadrant q-none" id="drop-p-none" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🍃 ÉLIMINER</h3><div id="m-p-none"></div></div>
+                            </div>
+                        </div>
+                        <div class="matrix-view-inner">
+                            <div class="matrix-grid-triple">
+                                <div class="quadrant q-s-urg" id="drop-s-URGENCE" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🚨 URGENCE</h3><div id="m-s-URGENCE"></div></div>
+                                <div class="quadrant q-s-imp" id="drop-s-IMPACT" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🎯 IMPACT</h3><div id="m-s-IMPACT"></div></div>
+                                <div class="quadrant q-s-fac" id="drop-s-FACILE" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>✨ FACILE</h3><div id="m-s-FACILE"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="matrix-window">
-        <div class="matrix-track" id="matrixTrack">
-            <div class="matrix-view">
-                <div class="matrix-grid">
-                    <div class="quadrant q-both" id="drop-p-both" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>☀️ FAIRE</h3><div id="m-p-both"></div></div>
-                    <div class="quadrant q-important" id="drop-p-important" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🌱 PLANIFIER</h3><div id="m-p-important"></div></div>
-                    <div class="quadrant q-urgent" id="drop-p-urgent" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🌬️ DÉLÉGUER</h3><div id="m-p-urgent"></div></div>
-                    <div class="quadrant q-none" id="drop-p-none" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🍃 ÉLIMINER</h3><div id="m-p-none"></div></div>
+                <div class="archive-toggle" id="toggleDoux" onclick="toggleArchive('Doux')"><span style="font-weight:700; font-family:'Playfair Display'">⛩️ ... OH WOW !</span><span id="archiveChevronDoux">▼</span></div>
+                <div class="archive-content" id="archiveContentDoux">
+                    <button class="clean-btn" onclick="cleanArchives('Doux')">🧹 Nettoyer +14j</button>
+                    <div class="card-table"><table><tbody id="archiveBodyDoux"></tbody></table></div>
                 </div>
             </div>
-            <div class="matrix-view">
-                <div class="matrix-grid-triple">
-                    <div class="quadrant q-s-urg" id="drop-s-URGENCE" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🚨 URGENCE</h3><div id="m-s-URGENCE"></div></div>
-                    <div class="quadrant q-s-imp" id="drop-s-IMPACT" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>🎯 IMPACT</h3><div id="m-s-IMPACT"></div></div>
-                    <div class="quadrant q-s-fac" id="drop-s-FACILE" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"><h3>✨ FACILE</h3><div id="m-s-FACILE"></div></div>
+
+            <!-- VUE 2 : TOUT EAT -->
+            <div class="main-view">
+                <div class="task-form" onkeydown="if(event.key==='Enter') addEatItem()"><div class="form-group"><input type="text" id="eatInput" placeholder="Il me faut..."></div><button class="add-btn" style="background:var(--info); box-shadow:0 4px 0px #76a2a6" onclick="addEatItem()">Ajouter</button></div>
+                <div class="eat-list" id="eatList"></div>
+                <div class="cat-separator"><span class="cat-icon">🍙</span></div>
+                <div class="archive-toggle" id="toggleEat" onclick="toggleArchive('Eat')"><span style="font-weight:700; font-family:'Playfair Display'">🥷 ... C'EST FAIT !</span><span id="archiveChevronEat">▼</span></div>
+                <div class="archive-content" id="archiveContentEat">
+                    <button class="clean-btn" onclick="cleanArchives('Eat')">🧹 Aller hop, poubelle !</button>
+                    <div class="card-table"><table><tbody id="archiveBodyEat"></tbody></table></div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="archive-toggle" onclick="toggleArchive()">
-        <span style="font-weight: 700; color: var(--secondary); font-family: 'Playfair Display', serif;">⛩️ ... OH WOW !</span>
-        <span id="archiveChevron" style="transition:0.3s">▼</span>
-    </div>
-    <div class="archive-content" id="archiveContent">
-        <button class="add-btn" style="background:#d6cec3; box-shadow: 0 4px 0px #b8afa4; color: #766d64; margin-bottom:20px; width:auto" onclick="cleanArchives()">🧹 Nettoyer +14j</button>
-        <div class="card-table">
-            <table><tbody id="archiveBody"></tbody></table>
         </div>
     </div>
 </div>
@@ -303,181 +258,125 @@
 <script>
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let archives = JSON.parse(localStorage.getItem('archives')) || [];
-    let ghToken = localStorage.getItem('gh_token');
-    let ghRepo = localStorage.getItem('gh_repo'); 
-    let currentSort = { key: 'createdAt', desc: true };
+    let groceries = JSON.parse(localStorage.getItem('groceries')) || [];
+    let groceriesDone = JSON.parse(localStorage.getItem('groceriesDone')) || [];
+    let ghToken = localStorage.getItem('gh_token'), ghRepo = localStorage.getItem('gh_repo');
+    let currentMainView = 0;
 
-    const PRIORITY_MAP = {
-        both: { label: '☀️ Urgent & Imp.', weight: 3, class: 'b-both' },
-        urgent: { label: '🌬️ Urgent', weight: 2, class: 'b-urgent' },
-        important: { label: '🌱 Important', weight: 1, class: 'b-important' },
-        none: { label: '🍃 Aucun', weight: 0, class: 'b-none' }
-    };
-
-    const STATUS_MAP = {
-        'NONE': { label: '', class: '' },
-        'URGENCE': { label: '🚨 Urgence', class: 's-urg' },
-        'IMPACT': { label: '🎯 Impact', class: 's-imp' },
-        'FACILE': { label: '✨ Facile', class: 's-fac' }
-    };
-
-    // Palette Ghibli pour les projets (Sombre pour lisibilité sur blanc)
+    const PRIORITY_MAP = { both: { label: '☀️ Urgent & Imp.', weight: 3, class: 'b-both' }, urgent: { label: '🌬️ Urgent', weight: 2, class: 'b-urgent' }, important: { label: '🌱 Important', weight: 1, class: 'b-important' }, none: { label: '🍃 Aucun', weight: 0, class: 'b-none' } };
+    const STATUS_MAP = { 'NONE': { label: '', class: '' }, 'URGENCE': { label: '🚨 Urgence', class: 's-urg' }, 'IMPACT': { label: '🎯 Impact', class: 's-imp' }, 'FACILE': { label: '✨ Facile', class: 's-fac' } };
     const GHIBLI_PALETTE = ['#2c3e50', '#a64435', '#2d5a27', '#6d4c7d', '#7e4a35', '#22577a'];
 
-    const saveLocally = () => {
+    function updateAndSave(pushToGithub = true) {
         localStorage.setItem('tasks', JSON.stringify(tasks));
         localStorage.setItem('archives', JSON.stringify(archives));
+        localStorage.setItem('groceries', JSON.stringify(groceries));
+        localStorage.setItem('groceriesDone', JSON.stringify(groceriesDone));
         updateUI();
-    };
+        if (pushToGithub) githubPush();
+    }
 
-    const capitalize = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
+    function toggleMainView() {
+        currentMainView = currentMainView === 0 ? 1 : 0;
+        document.getElementById('mainTrack').style.transform = `translateX(-${currentMainView * 50}%)`;
+        const title = document.getElementById('mainTitle');
+        title.textContent = currentMainView === 0 ? "TOUT DOUX" : "TOUT EAT";
+        title.style.color = currentMainView === 0 ? "var(--accent)" : "var(--info)";
+    }
 
-    function switchView(idx) {
-        document.getElementById('matrixTrack').style.transform = `translateX(-${idx * 50}%)`;
+    function switchMatrix(idx) {
+        document.getElementById('matrixTrackInner').style.transform = `translateX(-${idx * 50}%)`;
         document.getElementById('dot0').classList.toggle('active', idx === 0);
         document.getElementById('dot1').classList.toggle('active', idx === 1);
     }
 
     async function githubPush() {
-        if(!ghToken || !ghRepo) return configGitHub();
-        const light = document.getElementById('statusLight');
-        light.classList.remove('status-on');
+        if(!ghToken || !ghRepo) return;
+        const light = document.getElementById('statusLight'); light.classList.remove('status-on');
         try {
-            const getRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, {
-                headers: { 'Authorization': `token ${ghToken}` }
-            });
-            const fileData = await getRes.json();
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify({ tasks, archives }))));
+            const resFile = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, { headers: { 'Authorization': `token ${ghToken}` } });
+            const fileData = await resFile.json();
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify({ tasks, archives, groceries, groceriesDone }))));
             const putRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, {
-                method: 'PUT',
-                headers: { 'Authorization': `token ${ghToken}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: "Sync", content, sha: fileData.sha })
+                method: 'PUT', headers: { 'Authorization': `token ${ghToken}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: "Auto-Sync", content, sha: fileData.sha })
             });
             if(putRes.ok) light.classList.add('status-on');
-        } catch (e) { console.error(e); }
+        } catch (e) {}
     }
 
     async function githubPull() {
         if(!ghToken || !ghRepo) return;
         const light = document.getElementById('statusLight');
         try {
-            const res = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json?t=${Date.now()}`, {
-                headers: { 'Authorization': `token ${ghToken}` }
-            });
+            const res = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json?t=${Date.now()}`, { headers: { 'Authorization': `token ${ghToken}` } });
             if(res.ok) {
                 const data = await res.json();
                 const decoded = JSON.parse(decodeURIComponent(escape(atob(data.content))));
                 tasks = decoded.tasks || []; archives = decoded.archives || [];
-                saveLocally(); light.classList.add('status-on');
+                groceries = decoded.groceries || []; groceriesDone = decoded.groceriesDone || [];
+                updateAndSave(false);
+                light.classList.add('status-on');
             }
-        } catch (e) { console.error("Pull failed"); }
+        } catch (e) {}
     }
 
     function configGitHub() {
-        ghToken = prompt("Token GitHub :", ghToken || "");
-        ghRepo = prompt("Repo (pseudo/repo) :", ghRepo || "");
-        if(ghToken && ghRepo) {
-            localStorage.setItem('gh_token', ghToken);
-            localStorage.setItem('gh_repo', ghRepo);
-            githubPull();
-        }
-    }
-
-    function addTask() {
-        const titleVal = document.getElementById('taskTitle').value.trim();
-        if (!titleVal) return;
-        tasks.push({
-            id: Date.now(),
-            title: capitalize(titleVal),
-            project: document.getElementById('taskProject').value.trim().toUpperCase() || '☕︎',
-            status: document.getElementById('taskStatus').value,
-            priority: document.getElementById('taskPriority').value,
-            date: document.getElementById('taskDate').value,
-            createdAt: Date.now()
-        });
-        document.getElementById('taskTitle').value = ''; 
-        document.getElementById('taskProject').value = ''; 
-        document.getElementById('taskStatus').value = 'NONE';
-        saveLocally();
-    }
-
-    function toggleComplete(id) {
-        const idx = tasks.findIndex(t => t.id === id);
-        if (idx > -1) {
-            const task = tasks.splice(idx, 1)[0];
-            task.completedAt = Date.now();
-            archives.push(task); saveLocally();
-        }
-    }
-
-    function restoreTask(id) {
-        const idx = archives.findIndex(t => t.id === id);
-        if (idx > -1) { tasks.push(archives.splice(idx, 1)[0]); saveLocally(); }
-    }
-
-    function cleanArchives() {
-        const limit = Date.now() - (14 * 24 * 60 * 60 * 1000);
-        archives = archives.filter(t => t.completedAt >= limit); saveLocally();
+        ghToken = prompt("Token GitHub :", ghToken || ""); ghRepo = prompt("Repo (pseudo/repo) :", ghRepo || "");
+        if(ghToken && ghRepo) { localStorage.setItem('gh_token', ghToken); localStorage.setItem('gh_repo', ghRepo); githubPull(); }
     }
 
     function startEdit(element, taskId, field, type) {
         if (element.querySelector('input, select')) return;
         const task = tasks.find(t => t.id === taskId);
-        const originalValue = task[field];
         const input = document.createElement(type === 'select' ? 'select' : 'input');
-        if (type !== 'select') input.type = type;
-        input.value = originalValue;
+        input.value = task[field];
         if (type === 'select') {
             const map = (field === 'priority') ? PRIORITY_MAP : STATUS_MAP;
-            Object.entries(map).forEach(([val, opt]) => {
-                input.add(new Option(opt.label || '-', val, val === originalValue, val === originalValue));
-            });
+            Object.entries(map).forEach(([val, opt]) => { input.add(new Option(opt.label || '-', val, val === task[field], val === task[field])); });
         }
         element.innerHTML = ''; element.appendChild(input); input.focus();
-        const finish = () => {
-            let v = input.value;
-            if (field === 'project') v = v.toUpperCase() || '☕︎';
-            if (field === 'title') v = capitalize(v);
-            task[field] = v || originalValue; saveLocally();
-        };
-        input.onblur = finish;
+        input.onblur = () => { task[field] = (field === 'project') ? input.value.toUpperCase() : input.value; updateAndSave(); };
         input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); };
     }
 
-    function sortTable(key) {
-        currentSort.desc = (currentSort.key === key) ? !currentSort.desc : false;
-        currentSort.key = key;
-        tasks.sort((a, b) => {
-            let vA = (key === 'priority') ? PRIORITY_MAP[a.priority].weight : (a[key] || "");
-            let vB = (key === 'priority') ? PRIORITY_MAP[b.priority].weight : (b[key] || "");
-            return currentSort.desc ? (vA < vB ? 1 : -1) : (vA > vB ? 1 : -1);
-        });
-        updateUI();
+    function addTask() {
+        const titleVal = document.getElementById('taskTitle').value.trim();
+        if (!titleVal) return;
+        tasks.unshift({ id: Date.now(), title: titleVal, project: document.getElementById('taskProject').value.toUpperCase() || '☕︎', status: document.getElementById('taskStatus').value, priority: document.getElementById('taskPriority').value, createdAt: Date.now() });
+        document.getElementById('taskTitle').value = ''; document.getElementById('taskProject').value = ''; updateAndSave();
     }
 
-    function drag(ev) { ev.dataTransfer.setData("taskId", ev.target.dataset.id); }
-    function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
-    function dragLeave(ev) { ev.currentTarget.classList.remove('drag-over'); }
-    function drop(ev) {
-        ev.preventDefault();
-        ev.currentTarget.classList.remove('drag-over');
-        const taskId = parseInt(ev.dataTransfer.getData("taskId"));
-        const targetId = ev.currentTarget.id; 
-        const task = tasks.find(t => t.id === taskId);
-        if (task) {
-            if (targetId.startsWith('drop-p-')) {
-                task.priority = targetId.replace('drop-p-', '');
-            } else if (targetId.startsWith('drop-s-')) {
-                task.status = targetId.replace('drop-s-', '');
-            }
-            saveLocally();
-        }
+    function toggleComplete(id) {
+        const idx = tasks.findIndex(t => t.id === id);
+        if (idx > -1) { const t = tasks.splice(idx, 1)[0]; t.completedAt = Date.now(); archives.push(t); updateAndSave(); }
     }
 
-    function toggleArchive() {
-        const toggle = document.querySelector('.archive-toggle');
-        const content = document.getElementById('archiveContent');
-        const chevron = document.getElementById('archiveChevron');
+    function addEatItem() {
+        const val = document.getElementById('eatInput').value.trim();
+        if(!val) return;
+        groceries.unshift({ id: Date.now(), title: val });
+        document.getElementById('eatInput').value = ''; updateAndSave();
+    }
+
+    function toggleEatDone(id) {
+        const idx = groceries.findIndex(g => g.id === id);
+        if (idx > -1) { const item = groceries.splice(idx, 1)[0]; item.completedAt = Date.now(); groceriesDone.push(item); updateAndSave(); }
+    }
+
+    function restoreTask(id) { const idx = archives.findIndex(t => t.id === id); if (idx > -1) { tasks.unshift(archives.splice(idx, 1)[0]); updateAndSave(); } }
+    function restoreEat(id) { const idx = groceriesDone.findIndex(g => g.id === id); if (idx > -1) { groceries.unshift(groceriesDone.splice(idx, 1)[0]); updateAndSave(); } }
+
+    function cleanArchives(type) {
+        if(type === 'Doux') archives = archives.filter(t => t.completedAt >= Date.now() - (14 * 24 * 60 * 60 * 1000));
+        else groceriesDone = [];
+        updateAndSave();
+    }
+
+    function toggleArchive(type) {
+        const toggle = document.getElementById(`toggle${type}`);
+        const content = document.getElementById(`archiveContent${type}`);
+        const chevron = document.getElementById(`archiveChevron${type}`);
         const isHidden = content.style.display === 'none' || content.style.display === '';
         content.style.display = isHidden ? 'block' : 'none';
         chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
@@ -485,88 +384,62 @@
     }
 
     function updateUI() {
-        const todoBody = document.getElementById('todoBody');
-        const archiveBody = document.getElementById('archiveBody');
-        todoBody.innerHTML = ''; archiveBody.innerHTML = '';
-        
-        ['both', 'important', 'urgent', 'none'].forEach(p => { if(document.getElementById(`m-p-${p}`)) document.getElementById(`m-p-${p}`).innerHTML = ''; });
-        ['URGENCE', 'IMPACT', 'FACILE'].forEach(s => { if(document.getElementById(`m-s-${s}`)) document.getElementById(`m-s-${s}`).innerHTML = ''; });
-        
-        document.querySelectorAll('.sort-pill').forEach(pill => { pill.classList.toggle('active', pill.id === `pill-${currentSort.key}`); });
+        const todoBody = document.getElementById('todoBody'), archiveBodyDoux = document.getElementById('archiveBodyDoux'), eatList = document.getElementById('eatList'), archiveBodyEat = document.getElementById('archiveBodyEat');
+        todoBody.innerHTML = ''; archiveBodyDoux.innerHTML = ''; eatList.innerHTML = ''; archiveBodyEat.innerHTML = '';
+        ['both', 'important', 'urgent', 'none'].forEach(p => document.getElementById(`m-p-${p}`).innerHTML = '');
+        ['URGENCE', 'IMPACT', 'FACILE'].forEach(s => document.getElementById(`m-s-${s}`).innerHTML = '');
 
-        // Calcul des couleurs de projet pour les tâches actives
-        const activeProjects = [...new Set(tasks.map(t => t.project))].filter(p => p !== '☕︎').sort();
+        tasks.sort((a,b) => b.createdAt - a.createdAt);
         const projectColorMap = {};
-        activeProjects.forEach((p, i) => { projectColorMap[p] = GHIBLI_PALETTE[i % GHIBLI_PALETTE.length]; });
-
-        const getProjColor = (p) => (p === '☕︎') ? 'var(--accent)' : (projectColorMap[p] || 'var(--accent)');
-
-        const now = new Date();
-        const startOfWorkDay = new Date(now);
-        if (now.getHours() < 5) startOfWorkDay.setDate(now.getDate() - 1);
-        startOfWorkDay.setHours(5, 0, 0, 0);
-        const workDayThreshold = startOfWorkDay.getTime();
+        [...new Set(tasks.map(t => t.project))].filter(p => p !== '☕︎').sort().forEach((p, i) => { projectColorMap[p] = GHIBLI_PALETTE[i % GHIBLI_PALETTE.length]; });
 
         tasks.forEach(task => {
+            const s = STATUS_MAP[task.status] || STATUS_MAP['NONE'], p = PRIORITY_MAP[task.priority] || PRIORITY_MAP['none'], color = (task.project === '☕︎') ? 'var(--accent)' : (projectColorMap[task.project] || 'var(--accent)');
             const row = document.createElement('tr');
-            const s = STATUS_MAP[task.status] || STATUS_MAP['NONE'];
-            const p = PRIORITY_MAP[task.priority] || PRIORITY_MAP['none'];
-            const color = getProjColor(task.project);
-
-            row.innerHTML = `
-                <td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td>
-                <td class="col-task editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong></strong></td>
-                <td class="col-project editable" onclick="startEdit(this, ${task.id}, 'project', 'text')"></td>
-                <td class="col-priority editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"><span class="badge ${p.class}">${p.label}</span></td>
-                <td class="col-status editable" onclick="startEdit(this, ${task.id}, 'status', 'select')"></td>
-                <td class="col-date editable" onclick="startEdit(this, ${task.id}, 'date', 'date')"></td>
-            `;
-            row.querySelector('strong').textContent = task.title;
-            row.cells[2].textContent = task.project;
-            row.cells[2].style.color = color;
-            if(s.label) row.cells[4].innerHTML = `<span class="badge ${s.class}">${s.label}</span>`;
-            row.cells[5].textContent = task.date || '-';
+            row.innerHTML = `<td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td><td class="col-task editable" onclick="startEdit(this, ${task.id}, 'title', 'text')"><strong>${task.title}</strong></td><td class="col-project editable" onclick="startEdit(this, ${task.id}, 'project', 'text')" style="color:${color}">${task.project}</td><td class="col-priority editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')"><span class="badge ${p.class}">${p.label}</span></td><td class="col-status editable" onclick="startEdit(this, ${task.id}, 'status', 'select')">${s.label ? `<span class="badge ${s.class}">${s.label}</span>` : ''}</td>`;
             todoBody.appendChild(row);
 
-            const createMatrixItem = () => {
-                const mItem = document.createElement('div');
-                mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; mItem.ondragstart = drag;
-                mItem.innerHTML = `<div class="matrix-item-content"><strong></strong><small></small></div><input type="checkbox" onclick="toggleComplete(${task.id})">`;
-                mItem.querySelector('strong').textContent = task.title;
-                const sm = mItem.querySelector('small');
-                sm.textContent = task.project;
-                sm.style.color = color;
-                return mItem;
-            };
-
-            const pCont = document.getElementById(`m-p-${task.priority}`);
-            if(pCont) pCont.appendChild(createMatrixItem());
+            const mItem = document.createElement('div'); mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; 
+            mItem.ondragstart = (ev) => ev.dataTransfer.setData("taskId", ev.target.dataset.id);
+            mItem.innerHTML = `<div class="matrix-item-content"><strong>${task.title}</strong><small style="color:${color}">${task.project}</small></div><input type="checkbox" onclick="toggleComplete(${task.id})">`;
+            document.getElementById(`m-p-${task.priority}`).appendChild(mItem);
             if(task.status !== 'NONE') {
-                const sCont = document.getElementById(`m-s-${task.status}`);
-                if(sCont) sCont.appendChild(createMatrixItem());
+                const mItemClone = mItem.cloneNode(true);
+                mItemClone.querySelector('input').onclick = () => toggleComplete(task.id);
+                document.getElementById(`m-s-${task.status}`).appendChild(mItemClone);
             }
         });
 
-        archives.sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
-        archives.forEach(task => {
-            const row = document.createElement('tr'); 
-            const isToday = task.completedAt >= workDayThreshold;
-            if (isToday) row.className = 'archive-today-bg'; else row.style.opacity = '0.5';
+        archives.forEach(t => {
+            const row = document.createElement('tr'); row.innerHTML = `<td class="col-check">✅</td><td colspan="3" style="text-decoration:line-through">${t.title} <small>(${t.project})</small></td><td style="text-align:right"><button onclick="restoreTask(${t.id})" style="font-size:0.7rem; padding:5px; background:white; border:1px solid #ccc; border-radius:5px">Restaurer</button></td>`;
+            archiveBodyDoux.appendChild(row);
+        });
 
-            row.innerHTML = `
-                <td class="col-check">✅</td>
-                <td colspan="4" style="text-decoration:line-through"><span class="at"></span> <small class="ap"></small></td>
-                <td style="text-align:right">
-                    <button onclick="restoreTask(${task.id})" style="font-size:0.7rem; padding: 5px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: white;">Restaurer</button>
-                </td>
-            `;
-            row.querySelector('.at').textContent = task.title;
-            row.querySelector('.ap').textContent = `(${task.project})`;
-            archiveBody.appendChild(row);
+        groceries.forEach(item => {
+            const div = document.createElement('div'); div.className = 'eat-item'; div.innerHTML = `<span>${item.title}</span><input type="checkbox" onclick="toggleEatDone(${item.id})">`;
+            eatList.appendChild(div);
+        });
+
+        groceriesDone.forEach(item => {
+            const row = document.createElement('tr'); row.innerHTML = `<td class="col-check">✅</td><td style="text-decoration:line-through">${item.title}</td><td style="text-align:right"><button onclick="restoreEat(${item.id})" style="font-size:0.7rem; padding:5px; background:white; border:1px solid #ccc; border-radius:5px">Restaurer</button></td>`;
+            archiveBodyEat.appendChild(row);
         });
     }
 
-    if(ghToken && ghRepo) githubPull();
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drop(ev) {
+        ev.preventDefault();
+        const taskId = parseInt(ev.dataTransfer.getData("taskId"));
+        const targetId = ev.currentTarget.id;
+        const task = tasks.find(t => t.id === taskId);
+        if (task) {
+            if (targetId.startsWith('drop-p-')) task.priority = targetId.replace('drop-p-', '');
+            if (targetId.startsWith('drop-s-')) task.status = targetId.replace('drop-s-', '');
+            updateAndSave();
+        }
+    }
+
+    window.onload = githubPull;
     updateUI();
 </script>
 </body>

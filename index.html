@@ -17,7 +17,7 @@
             --card: #ffffff;
             --text: #4a453f;
             --secondary: #8c7b6f;
-            --accent: #6b8e6b; /* Le Vert Ghibli */
+            --accent: #6b8e6b; /* Vert Ghibli */
             --border: #e8e2d6;
             --header-bg: #ebf0f5; 
             --s-urgence: #d65a4a;
@@ -97,18 +97,8 @@
 
         /* BOUTONS NETTOYER */
         .clean-btn { 
-            background: #fdfaf1; 
-            color: var(--secondary); 
-            border: 1.5px solid var(--border); 
-            padding: 10px 20px; 
-            border-radius: 20px; 
-            cursor: pointer;
-            font-weight: 700; 
-            font-size: 0.85rem; 
-            transition: all 0.3s; 
-            margin-bottom: 25px;
-            display: inline-flex; align-items: center; gap: 8px;
-            box-shadow: 0 4px 0px var(--border);
+            background: #fdfaf1; color: var(--secondary); border: 1.5px solid var(--border); padding: 10px 20px; border-radius: 20px; cursor: pointer;
+            font-weight: 700; font-size: 0.85rem; transition: all 0.3s; margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 0px var(--border);
         }
         .clean-btn:hover { background: #ebf0f5; color: var(--accent); border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 0px var(--border); }
 
@@ -124,121 +114,48 @@
         .col-priority { width: 140px; }
         .col-status { width: 120px; border-right: 1px solid var(--border); border-top-right-radius: 18px; border-bottom-right-radius: 18px; }
 
-        /* PROJET HIGHLIGHT PASTEL */
-        .project-tag {
-            display: inline-block; padding: 4px 12px; border-radius: 12px;
-            font-size: 0.7rem; font-weight: 800; border: 1px solid transparent;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        /* PROJET TAG */
+        .project-tag { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; border: 1px solid transparent; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* BARRE DE FILTRE & TRI (SMOOTH ANIMATION) */
+        /* BARRE DE FILTRE & TRI */
         .mobile-sort-bar, .filter-bar {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            max-height: 0;
-            opacity: 0;
-            margin-bottom: 0;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
+            display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; max-height: 0; opacity: 0; margin-bottom: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
         }
-        .mobile-sort-bar.open, .filter-bar.open { 
-            max-height: 80px; 
-            opacity: 1; 
-            margin-bottom: 15px;
-            padding: 5px 0 10px;
-            pointer-events: auto;
-        }
-
+        .mobile-sort-bar.open, .filter-bar.open { max-height: 80px; opacity: 1; margin-bottom: 15px; padding: 5px 0 10px; pointer-events: auto; }
         .mobile-sort-bar::-webkit-scrollbar, .filter-bar::-webkit-scrollbar { display: none; }
-        .sort-pill, .filter-pill {
-            background: white; border: 1.5px solid var(--border); padding: 6px 14px;
-            border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: var(--secondary);
-            white-space: nowrap; cursor: pointer; transition: 0.2s;
-        }
-        /* Tri et Filtre en VERT quand actif */
+        .sort-pill, .filter-pill { background: white; border: 1.5px solid var(--border); padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: var(--secondary); white-space: nowrap; cursor: pointer; transition: 0.2s; }
         .sort-pill.active, .filter-pill.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-        /* TOUT EAT & ALIGNEMENT CHECKBOX */
+        /* TOUT EAT ALIGNEMENT */
         .eat-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
-        .eat-item { 
-            background: var(--card); padding: 15px 20px; border-radius: 18px; 
-            display: flex; align-items: center; justify-content: space-between;
-            border: 1px solid var(--border); box-shadow: 4px 4px 12px rgba(0,0,0,0.02);
-        }
+        .eat-item { background: var(--card); padding: 15px 20px; border-radius: 18px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); box-shadow: 4px 4px 12px rgba(0,0,0,0.02); }
         .eat-item span { font-weight: 600; font-size: 1.1rem; color: var(--text); }
         .eat-item input[type="checkbox"], .matrix-item input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent); }
 
-        /* SÉPARATEURS CRAYON INTERACTIFS */
-        .cat-separator { 
-            display: flex; 
-            align-items: center; 
-            text-align: center; 
-            margin: 60px 0 30px; 
-        }
-        .cat-line { 
-            flex: 1; 
-            height: 30px; 
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        .cat-line::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1.5px solid #d4cdc1; 
-            margin: 0 40px; 
-            transition: 0.3s;
-        }
-        /* Couleur verte pour le trait gauche quand actif */
+        /* SÉPARATEURS CRAYON */
+        .cat-separator { display: flex; align-items: center; text-align: center; margin: 60px 0 30px; }
+        .cat-line { flex: 1; height: 30px; display: flex; align-items: center; cursor: pointer; position: relative; }
+        .cat-line::after { content: ''; flex: 1; border-bottom: 1.5px solid #d4cdc1; margin: 0 40px; transition: 0.3s; }
         .cat-line.active::after { border-color: var(--accent); border-bottom-width: 2.5px; }
 
-        .cat-icon { 
-            font-size: 2.5rem; color: var(--text); filter: opacity(0.6); cursor: pointer; 
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-block;
-            padding: 0 15px;
-        }
-        .cat-icon:hover { transform: scale(1.2); opacity: 1; }
+        .cat-icon { font-size: 2.5rem; color: var(--text); filter: opacity(0.6); cursor: pointer; transition: 0.5s; display: inline-block; padding: 0 10px; }
         .cat-icon.filtered { color: var(--important-only); transform: scaleX(-1); filter: opacity(1); }
 
-        /* Eisenhower */
+        /* EISENHOWER */
         .quadrant { background: var(--card); padding: 25px; border-radius: 25px; border-top: 8px solid #ccc; min-height: 220px; box-shadow: 4px 4px 15px rgba(139, 126, 116, 0.04); }
         .q-both { border-top-color: var(--urgent-both); } .q-important { border-top-color: #6c5ce7; } .q-urgent { border-top-color: var(--urgent-only); } .q-none { border-top-color: #bdc3c7; }
-        .q-s-urg { border-top-color: var(--s-urgence); background-color: #fdf5f4; } 
-        .q-s-imp { border-top-color: var(--s-impact); background-color: #f4f8fb; } 
-        .q-s-fac { border-top-color: var(--s-facile); background-color: #f5f9f5; }
+        .q-s-urg { border-top-color: var(--s-urgence); background-color: #fdf5f4; } .q-s-imp { border-top-color: var(--s-impact); background-color: #f4f8fb; } .q-s-fac { border-top-color: var(--s-facile); background-color: #f5f9f5; }
 
-        .quadrant h3 { margin-top: 0; font-size: 0.8rem; text-transform: uppercase; color: var(--secondary); margin-bottom: 15px; letter-spacing: 1px; font-weight: 800; }
-
-        .matrix-item { 
-            background: #fff; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            border: 1px solid #eee; width: 100%; box-shadow: 2px 2px 8px rgba(0,0,0,0.02); 
-            cursor: grab; 
-        }
+        .matrix-item { background: #fff; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; width: 100%; box-shadow: 2px 2px 8px rgba(0,0,0,0.02); cursor: grab; }
         .matrix-item-content { flex: 1; padding-right: 15px; pointer-events: none; }
         .matrix-item-content strong { display: block; font-size: 0.85rem; color: var(--text); line-height: 1.2; margin-bottom: 4px; }
         
         /* NAVIGATION DOTS */
-        .matrix-nav { 
-            display:flex; 
-            justify-content:center; 
-            gap:12px; 
-            flex: 1;
-        }
+        .matrix-nav { display:flex; justify-content:center; gap:12px; }
         .nav-dot { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: 0.3s; opacity: 0.25; background: #ccc; border: 2px solid transparent; }
-        #dot0.active { background-color: var(--accent); opacity: 1; transform: scale(1.2); }
-        #dot1.active { background-color: var(--urgent-both); opacity: 1; transform: scale(1.2); }
-        #dot2.active { background-color: var(--s-impact); opacity: 1; transform: scale(1.2); }
+        .nav-dot.active { background-color: var(--accent); opacity: 1; transform: scale(1.2); }
 
-        .matrix-window { 
-            width: 100%; 
-            overflow: hidden; 
-            margin-bottom: 50px; 
-            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .matrix-window { width: 100%; overflow: hidden; margin-bottom: 50px; transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .matrix-track-inner { display: flex; transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1); width: 300%; }
         .matrix-view-inner { width: 33.3333%; height: fit-content; }
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 5px; }
@@ -249,7 +166,6 @@
         .archive-toggle.is-open { background-color: var(--archive-open); border-color: var(--important-only); }
         .archive-content { display: none; margin-bottom: 50px; }
 
-        /* --- MOBILE SPECIFIQUE --- */
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
             .mobile-sort-bar { display: flex; }
@@ -262,20 +178,16 @@
             td.col-project, td.col-priority, td.col-status { display: inline-block !important; width: auto !important; font-size: 0.75rem; color: var(--secondary); font-weight: 600; margin-right: 5px; }
             .matrix-grid, .matrix-grid-triple { grid-template-columns: 1fr; }
             
-            /* Cache le trait droit et affiche les points à la place */
-            #rightTraitDecor { display: none; }
-            .matrix-nav { padding-right: 20px; }
+            /* Cache la nav desktop du bas pour n'utiliser que celle du chat */
+            .matrix-nav-desktop { display: none !important; }
+            .matrix-nav-mobile-container { display: flex; flex: 1; justify-content: center; padding-right: 15px; }
         }
-        
-        /* DESKTOP SPECIFIQUE */
+
         @media (min-width: 769px) {
-            .matrix-nav-desktop { 
-                display: flex; 
-                justify-content: center; 
-                gap: 15px; 
-                margin-bottom: 25px; 
-            }
+            .matrix-nav-desktop { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
             .matrix-nav-mobile-container { display: none; }
+            .cat-line-right { flex: 1; height: 30px; display: flex; align-items: center; }
+            .cat-line-right::after { content: ''; flex: 1; border-bottom: 1.5px solid #d4cdc1; margin: 0 40px; }
         }
     </style>
 </head>
@@ -302,6 +214,7 @@
     <div class="main-viewport">
         <div class="main-track" id="mainTrack">
             
+            <!-- VUE 1 : TOUT DOUX -->
             <div class="main-view">
                 <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
                     <div class="form-group"><label>Note</label><input type="text" id="taskTitle" placeholder="Écrire une petite note..."></div>
@@ -315,23 +228,23 @@
                     <button class="add-btn" onclick="addTask()">Ajouter</button>
                 </div>
 
-                <!-- SÉPARATEUR CHAT + TRAITS INTERACTIFS + NAVIGATION MOBILE -->
+                <!-- SÉPARATEUR CHAT INTERACTIF MOBILE -->
                 <div class="cat-separator">
                     <div class="cat-line" id="leftSortLine" onclick="toggleSortBar()"></div>
                     <span class="cat-icon" id="filterCat" onclick="toggleFilterBar()">𓃠</span>
                     
-                    <!-- Container pour les points de nav (visible sur mobile à la place du trait) -->
+                    <!-- Points de navigation intégrés au trait droit sur mobile -->
                     <div class="matrix-nav matrix-nav-mobile-container">
                         <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0_m"></div>
                         <div class="nav-dot" onclick="switchMatrix(1)" id="dot1_m"></div>
                         <div class="nav-dot" onclick="switchMatrix(2)" id="dot2_m"></div>
                     </div>
                     
-                    <!-- Trait droit classique (visible sur desktop) -->
-                    <div class="cat-line" id="rightTraitDecor"></div>
+                    <!-- Trait droit classique pour Desktop -->
+                    <div class="cat-line-right" id="rightTraitDecor"></div>
                 </div>
 
-                <!-- BARRE DE FILTRE PROJET -->
+                <!-- BARRE DE FILTRE -->
                 <div class="filter-bar" id="projectFilterBar"></div>
 
                 <!-- BARRE DE TRI MOBILE -->
@@ -342,8 +255,8 @@
                     <div class="sort-pill" id="m-pill-status" onclick="sortTable('status')">État ↕</div>
                 </div>
 
-                <!-- NAVIGATION DESKTOP (Cache sur mobile) -->
-                <div class="matrix-nav-desktop">
+                <!-- NAVIGATION DESKTOP -->
+                <div class="matrix-nav-desktop matrix-nav">
                     <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0"></div>
                     <div class="nav-dot" onclick="switchMatrix(1)" id="dot1"></div>
                     <div class="nav-dot" onclick="switchMatrix(2)" id="dot2"></div>
@@ -392,6 +305,7 @@
                 </div>
             </div>
 
+            <!-- VUE 2 : TOUT EAT -->
             <div class="main-view">
                 <div class="task-form" onkeydown="if(event.key==='Enter') addEatItem()"><div class="form-group"><input type="text" id="eatInput" placeholder="Il me faut..."></div><button class="add-btn" style="background:var(--info); box-shadow:0 4px 0px #76a2a6" onclick="addEatItem()">Ajouter</button></div>
                 <div class="eat-list" id="eatList"></div>
@@ -429,7 +343,6 @@
         else bar.classList.add('open');
     }
 
-    // Toggle barre de tri + Trait Vert
     function toggleSortBar() {
         const bar = document.getElementById('mobileSortBar');
         const line = document.getElementById('leftSortLine');
@@ -589,7 +502,6 @@
         filterBar.innerHTML = `<div class="filter-pill ${activeProjectFilter === 'ALL' ? 'active' : ''}" onclick="setFilter('ALL')">Tous</div>`;
         activeProjects.forEach(p => { filterBar.innerHTML += `<div class="filter-pill ${activeProjectFilter === p ? 'active' : ''}" onclick="setFilter('${p}')">${p}</div>`; });
 
-        // Update pills de tri actifs (en Vert)
         document.querySelectorAll('.sort-pill').forEach(pill => {
             pill.classList.toggle('active', pill.id === `m-pill-${currentSort.key}`);
         });

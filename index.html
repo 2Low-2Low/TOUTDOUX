@@ -274,9 +274,8 @@
                     <div class="nav-dot" onclick="switchMatrix(2)" id="dot2"></div>
                 </div>
 
-                <!-- Barre de tri mobile ajoutée ici -->
+                <!-- Barre de tri mobile mise à jour : bouton Création supprimé -->
                 <div class="mobile-sort-bar">
-                    <div class="sort-pill" id="m-pill-createdAt" onclick="sortTable('createdAt')">Création ↕</div>
                     <div class="sort-pill" id="m-pill-title" onclick="sortTable('title')">Note ↕</div>
                     <div class="sort-pill" id="m-pill-project" onclick="sortTable('project')">Projet ↕</div>
                     <div class="sort-pill" id="m-pill-priority" onclick="sortTable('priority')">Priorité ↕</div>
@@ -532,7 +531,6 @@
         datalist.innerHTML = '';
         activeProjects.forEach(p => { const opt = document.createElement('option'); opt.value = p; datalist.appendChild(opt); });
 
-        // Update mobile sorting pills active state
         document.querySelectorAll('.sort-pill').forEach(pill => {
             pill.classList.toggle('active', pill.id === `m-pill-${currentSort.key}`);
         });

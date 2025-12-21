@@ -133,16 +133,31 @@
         }
 
         /* BARRE DE FILTRE & TRI */
-        .mobile-sort-bar, .filter-bar {
+        .mobile-sort-bar {
             display: none;
             gap: 8px;
             overflow-x: auto;
             padding: 5px 0 15px;
             scrollbar-width: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .filter-bar.open { display: flex; animation: slideIn 0.4s ease; }
-        @keyframes slideIn { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
+        
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        .filter-bar.open { 
+            max-height: 80px; 
+            opacity: 1; 
+            margin-bottom: 15px;
+            pointer-events: auto;
+        }
 
         .mobile-sort-bar::-webkit-scrollbar, .filter-bar::-webkit-scrollbar { display: none; }
         .sort-pill, .filter-pill {
@@ -177,11 +192,10 @@
         }
         .cat-icon { 
             font-size: 2.5rem; color: var(--text); filter: opacity(0.6); cursor: pointer; 
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: inline-block;
         }
         .cat-icon:hover { transform: scale(1.2); opacity: 1; }
-        /* Style quand filtré */
         .cat-icon.filtered { color: var(--important-only); transform: scaleX(-1); filter: opacity(1); }
 
         /* Eisenhower */
@@ -376,7 +390,7 @@
     let currentMainView = 0;
     let currentSubPage = 0; 
     let currentSort = { key: 'createdAt', desc: true };
-    let activeProjectFilter = "ALL"; // État du filtre
+    let activeProjectFilter = "ALL";
 
     const PRIORITY_MAP = { both: { label: '☀️ Urgent & Imp.', weight: 3, class: 'b-both' }, urgent: { label: '🌬️ Urgent', weight: 2, class: 'b-urgent' }, important: { label: '🌱 Important', weight: 1, class: 'b-important' }, none: { label: '', weight: 0, class: '' } };
     const STATUS_MAP = { 'NONE': { label: '', class: '' }, 'URGENCE': { label: '🚨 Urgence', class: 's-urg' }, 'IMPACT': { label: '🎯 Impact', class: 's-imp' }, 'FACILE': { label: '✨ Facile', class: 's-fac' } };
@@ -395,12 +409,22 @@
         document.getElementById('syncMenu').classList.toggle('open');
     }
 
-    document.addEventListener('click', () => document.getElementById('syncMenu').classList.remove('open'));
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.sync-dropdown')) {
+            document.getElementById('syncMenu').classList.remove('open');
+        }
+    });
 
     // FILTRE PAR PROJET
     function toggleFilterBar() {
         const bar = document.getElementById('projectFilterBar');
-        bar.classList.toggle('open');
+        const isOpen = bar.classList.contains('open');
+        if (isOpen) {
+            setFilter('ALL'); // Recliquer sur le chat enlève tous les filtres
+            bar.classList.remove('open');
+        } else {
+            bar.classList.add('open');
+        }
     }
 
     function setFilter(proj) {
@@ -550,6 +574,7 @@
         content.style.display = isHidden ? 'block' : 'none';
         chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
         if (isHidden) toggle.classList.add('is-open'); else toggle.classList.remove('is-open');
+        updateSliderHeight();
     }
 
     function updateUI() {
@@ -558,7 +583,11 @@
         ['both', 'important', 'urgent', 'none'].forEach(p => document.getElementById(`m-p-${p}`).innerHTML = '');
         ['URGENCE', 'IMPACT', 'FACILE'].forEach(s => document.getElementById(`m-s-${s}`).innerHTML = '');
 
-        const activeProjects = [...new Set(tasks.map(t => t.project))].filter(p => p !== '☕︎').sort();
+        // Tri alphabétique insensible aux accents pour les filtres
+        const activeProjects = [...new Set(tasks.map(t => t.project))]
+            .filter(p => p !== '☕︎')
+            .sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+
         const projectColorMap = {};
         activeProjects.forEach((p, i) => { projectColorMap[p] = GHIBLI_PASTELS[i % GHIBLI_PASTELS.length]; });
 
@@ -578,7 +607,7 @@
             filterBar.innerHTML += `<div class="filter-pill ${activeProjectFilter === p ? 'active' : ''}" onclick="setFilter('${p}')">${p}</div>`;
         });
 
-        // Filtratge des tâches
+        // Filtrage des tâches
         const filteredTasks = tasks.filter(t => activeProjectFilter === "ALL" || t.project === activeProjectFilter);
         const filteredArchives = archives.filter(t => activeProjectFilter === "ALL" || t.project === activeProjectFilter);
 
@@ -594,7 +623,6 @@
             <td class="col-status editable" onclick="startEdit(this, ${task.id}, 'status', 'select')">${s.label ? `<span class="badge ${s.class}">${s.label}</span>` : ''}</td>`;
             todoBody.appendChild(row);
 
-            // Matrix items
             const mItem = document.createElement('div'); mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; 
             mItem.ondragstart = (ev) => ev.dataTransfer.setData("taskId", ev.target.dataset.id);
             mItem.innerHTML = `<div class="matrix-item-content">

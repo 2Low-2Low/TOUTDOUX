@@ -132,21 +132,25 @@
             text-transform: uppercase; letter-spacing: 0.5px;
         }
 
-        /* BARRE DE TRI MOBILE */
-        .mobile-sort-bar {
+        /* BARRE DE FILTRE & TRI */
+        .mobile-sort-bar, .filter-bar {
             display: none;
             gap: 8px;
             overflow-x: auto;
             padding: 5px 0 15px;
             scrollbar-width: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .mobile-sort-bar::-webkit-scrollbar { display: none; }
-        .sort-pill {
-            background: white; border: 1.5px solid var(--border); padding: 6px 12px;
-            border-radius: 20px; font-size: 0.7rem; font-weight: 700; color: var(--secondary);
+        .filter-bar.open { display: flex; animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
+
+        .mobile-sort-bar::-webkit-scrollbar, .filter-bar::-webkit-scrollbar { display: none; }
+        .sort-pill, .filter-pill {
+            background: white; border: 1.5px solid var(--border); padding: 6px 14px;
+            border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: var(--secondary);
             white-space: nowrap; cursor: pointer; transition: 0.2s;
         }
-        .sort-pill.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .sort-pill.active, .filter-pill.active { background: var(--accent); color: white; border-color: var(--accent); }
 
         /* TOUT EAT & ALIGNEMENT CHECKBOX */
         .eat-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
@@ -171,7 +175,14 @@
             border-bottom: 1.5px solid #d4cdc1; 
             margin: 0 40px; 
         }
-        .cat-icon { font-size: 2.5rem; color: var(--text); filter: opacity(0.6); }
+        .cat-icon { 
+            font-size: 2.5rem; color: var(--text); filter: opacity(0.6); cursor: pointer; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+        }
+        .cat-icon:hover { transform: scale(1.2); opacity: 1; }
+        /* Style quand filtré */
+        .cat-icon.filtered { color: var(--important-only); transform: scaleX(-1); filter: opacity(1); }
 
         /* Eisenhower */
         .quadrant { background: var(--card); padding: 25px; border-radius: 25px; border-top: 8px solid #ccc; min-height: 220px; box-shadow: 4px 4px 15px rgba(139, 126, 116, 0.04); }
@@ -266,7 +277,15 @@
                     <button class="add-btn" onclick="addTask()">Ajouter</button>
                 </div>
 
-                <div class="cat-separator"><span class="cat-icon">𓃠</span></div>
+                <!-- SÉPARATEUR CHAT INTERACTIF -->
+                <div class="cat-separator">
+                    <span class="cat-icon" id="filterCat" onclick="toggleFilterBar()">𓃠</span>
+                </div>
+
+                <!-- BARRE DE FILTRE PROJET -->
+                <div class="filter-bar" id="projectFilterBar">
+                    <!-- Généré dynamiquement en JS -->
+                </div>
 
                 <div class="matrix-nav">
                     <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0"></div>
@@ -274,7 +293,7 @@
                     <div class="nav-dot" onclick="switchMatrix(2)" id="dot2"></div>
                 </div>
 
-                <!-- Barre de tri mobile mise à jour : bouton Création supprimé -->
+                <!-- BARRE DE TRI MOBILE -->
                 <div class="mobile-sort-bar">
                     <div class="sort-pill" id="m-pill-title" onclick="sortTable('title')">Note ↕</div>
                     <div class="sort-pill" id="m-pill-project" onclick="sortTable('project')">Projet ↕</div>
@@ -353,9 +372,11 @@
     let groceries = JSON.parse(localStorage.getItem('groceries')) || [];
     let groceriesDone = JSON.parse(localStorage.getItem('groceriesDone')) || [];
     let ghToken = localStorage.getItem('gh_token'), ghRepo = localStorage.getItem('gh_repo');
+    
     let currentMainView = 0;
     let currentSubPage = 0; 
     let currentSort = { key: 'createdAt', desc: true };
+    let activeProjectFilter = "ALL"; // État du filtre
 
     const PRIORITY_MAP = { both: { label: '☀️ Urgent & Imp.', weight: 3, class: 'b-both' }, urgent: { label: '🌬️ Urgent', weight: 2, class: 'b-urgent' }, important: { label: '🌱 Important', weight: 1, class: 'b-important' }, none: { label: '', weight: 0, class: '' } };
     const STATUS_MAP = { 'NONE': { label: '', class: '' }, 'URGENCE': { label: '🚨 Urgence', class: 's-urg' }, 'IMPACT': { label: '🎯 Impact', class: 's-imp' }, 'FACILE': { label: '✨ Facile', class: 's-fac' } };
@@ -375,6 +396,20 @@
     }
 
     document.addEventListener('click', () => document.getElementById('syncMenu').classList.remove('open'));
+
+    // FILTRE PAR PROJET
+    function toggleFilterBar() {
+        const bar = document.getElementById('projectFilterBar');
+        bar.classList.toggle('open');
+    }
+
+    function setFilter(proj) {
+        activeProjectFilter = proj;
+        const cat = document.getElementById('filterCat');
+        if (proj === "ALL") cat.classList.remove('filtered');
+        else cat.classList.add('filtered');
+        updateUI();
+    }
 
     function updateSliderHeight() {
         const windowEl = document.getElementById('matrixWindow');
@@ -531,11 +566,23 @@
         datalist.innerHTML = '';
         activeProjects.forEach(p => { const opt = document.createElement('option'); opt.value = p; datalist.appendChild(opt); });
 
+        // Update Sorting Pills Mobile
         document.querySelectorAll('.sort-pill').forEach(pill => {
             pill.classList.toggle('active', pill.id === `m-pill-${currentSort.key}`);
         });
 
-        tasks.forEach(task => {
+        // UPDATE FILTER BAR
+        const filterBar = document.getElementById('projectFilterBar');
+        filterBar.innerHTML = `<div class="filter-pill ${activeProjectFilter === 'ALL' ? 'active' : ''}" onclick="setFilter('ALL')">Tous</div>`;
+        activeProjects.forEach(p => {
+            filterBar.innerHTML += `<div class="filter-pill ${activeProjectFilter === p ? 'active' : ''}" onclick="setFilter('${p}')">${p}</div>`;
+        });
+
+        // Filtratge des tâches
+        const filteredTasks = tasks.filter(t => activeProjectFilter === "ALL" || t.project === activeProjectFilter);
+        const filteredArchives = archives.filter(t => activeProjectFilter === "ALL" || t.project === activeProjectFilter);
+
+        filteredTasks.forEach(task => {
             const s = STATUS_MAP[task.status] || STATUS_MAP['NONE'], p = PRIORITY_MAP[task.priority] || PRIORITY_MAP['none'];
             const style = (task.project === '☕︎') ? {bg:'#f1f1f1', border:'#ddd', text:'#888'} : (projectColorMap[task.project] || {bg:'#f1f1f1', border:'#ddd', text:'#888'});
             
@@ -547,6 +594,7 @@
             <td class="col-status editable" onclick="startEdit(this, ${task.id}, 'status', 'select')">${s.label ? `<span class="badge ${s.class}">${s.label}</span>` : ''}</td>`;
             todoBody.appendChild(row);
 
+            // Matrix items
             const mItem = document.createElement('div'); mItem.className = 'matrix-item'; mItem.draggable = true; mItem.dataset.id = task.id; 
             mItem.ondragstart = (ev) => ev.dataTransfer.setData("taskId", ev.target.dataset.id);
             mItem.innerHTML = `<div class="matrix-item-content">
@@ -554,15 +602,18 @@
                 <span class="project-tag" style="background:${style.bg}; color:${style.text}; border-color:${style.border}; font-size:0.6rem; padding:2px 8px; margin-top:4px">${task.project}</span>
             </div><input type="checkbox" onclick="toggleComplete(${task.id})">`;
             
-            document.getElementById(`m-p-${task.priority}`).appendChild(mItem);
+            const pCont = document.getElementById(`m-p-${task.priority}`);
+            if(pCont) pCont.appendChild(mItem);
+            
             if(task.status !== 'NONE') {
                 const mItemClone = mItem.cloneNode(true);
                 mItemClone.querySelector('input').onclick = () => toggleComplete(task.id);
-                document.getElementById(`m-s-${task.status}`).appendChild(mItemClone);
+                const sCont = document.getElementById(`m-s-${task.status}`);
+                if(sCont) sCont.appendChild(mItemClone);
             }
         });
 
-        archives.sort((a,b) => b.completedAt - a.completedAt).forEach(t => {
+        filteredArchives.sort((a,b) => b.completedAt - a.completedAt).forEach(t => {
             const row = document.createElement('tr'); row.innerHTML = `<td class="col-check">✅</td><td colspan="3" style="text-decoration:line-through">${t.title} <small>(${t.project})</small></td><td style="text-align:right"><button onclick="restoreTask(${t.id})" style="font-size:0.7rem; padding:5px; background:white; border:1px solid #ccc; border-radius:5px">Restaurer</button></td>`;
             archiveBodyDoux.appendChild(row);
         });

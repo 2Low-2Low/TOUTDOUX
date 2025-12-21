@@ -17,7 +17,7 @@
             --card: #ffffff;
             --text: #4a453f;
             --secondary: #8c7b6f;
-            --accent: #6b8e6b; /* Vert Ghibli */
+            --accent: #6b8e6b;
             --border: #e8e2d6;
             --header-bg: #ebf0f5; 
             --s-urgence: #d65a4a;
@@ -41,7 +41,7 @@
         
         .container { max-width: 1100px; margin: auto; }
 
-        /* BARRE SYNC & MENU SMOOTH */
+        /* BARRE SYNC & MENU DEROULANT */
         .sync-bar { 
             position: fixed; top: 10px; left: 10px; right: 10px; z-index: 1000;
             display: flex; align-items: center; justify-content: space-between; 
@@ -70,6 +70,27 @@
 
         .status-light { width: 10px; height: 10px; border-radius: 50%; background: #636e72; display: inline-block; transition: 0.3s; }
         .status-on { background: #b8e994; box-shadow: 0 0 10px #b8e994; }
+
+        /* MODAL DE CONFIGURATION (SPECIAL NOTION) */
+        .modal-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(74, 69, 63, 0.6); backdrop-filter: blur(4px);
+            z-index: 2000; display: none; align-items: center; justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-card {
+            background: var(--bg); padding: 30px; border-radius: 25px; width: 90%; max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2); border: 2px solid var(--important-only);
+        }
+        .modal-card h2 { margin-top:0; color: var(--accent); font-family: 'Playfair Display', serif; }
+        .modal-card label { display: block; font-weight: bold; margin: 15px 0 5px; font-size: 0.8rem; text-transform: uppercase; color: var(--secondary); }
+        .modal-card input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 10px; font-family: inherit; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .modal-btn.save { background: var(--accent); color: white; }
+        .modal-btn.cancel { background: #dcd7cc; color: var(--text); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         h1 { 
             font-family: "Century Gothic", "Avant Garde", "Avant Garde Gothic", "ITC Avant Garde Gothic", sans-serif;
@@ -117,7 +138,7 @@
         /* PROJET TAG */
         .project-tag { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; border: 1px solid transparent; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* BARRE DE FILTRE & TRI */
+        /* FILTRES & TRI */
         .mobile-sort-bar, .filter-bar {
             display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; max-height: 0; opacity: 0; margin-bottom: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
         }
@@ -150,7 +171,6 @@
         .matrix-item-content { flex: 1; padding-right: 15px; pointer-events: none; }
         .matrix-item-content strong { display: block; font-size: 0.85rem; color: var(--text); line-height: 1.2; margin-bottom: 4px; }
         
-        /* NAVIGATION DOTS */
         .matrix-nav { display:flex; justify-content:center; gap:12px; }
         .nav-dot { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: 0.3s; opacity: 0.25; background: #ccc; border: 2px solid transparent; }
         .nav-dot.active { background-color: var(--accent); opacity: 1; transform: scale(1.2); }
@@ -161,7 +181,6 @@
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 5px; }
         .matrix-grid-triple { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; padding: 5px; }
 
-        /* ARCHIVES */
         .archive-toggle { display: flex; justify-content: space-between; align-items: center; background: var(--card); padding: 18px 25px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; margin-bottom: 50px; transition: 0.3s; }
         .archive-toggle.is-open { background-color: var(--archive-open); border-color: var(--important-only); }
         .archive-content { display: none; margin-bottom: 50px; }
@@ -177,8 +196,6 @@
             td.col-check { position: absolute; top: 15px; right: 15px; width: 25px !important; }
             td.col-project, td.col-priority, td.col-status { display: inline-block !important; width: auto !important; font-size: 0.75rem; color: var(--secondary); font-weight: 600; margin-right: 5px; }
             .matrix-grid, .matrix-grid-triple { grid-template-columns: 1fr; }
-            
-            /* Cache la nav desktop du bas pour n'utiliser que celle du chat */
             .matrix-nav-desktop { display: none !important; }
             .matrix-nav-mobile-container { display: flex; flex: 1; justify-content: center; padding-right: 15px; }
         }
@@ -186,12 +203,28 @@
         @media (min-width: 769px) {
             .matrix-nav-desktop { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
             .matrix-nav-mobile-container { display: none; }
+            .cat-line, .cat-line-right { pointer-events: none !important; cursor: default !important; }
             .cat-line-right { flex: 1; height: 30px; display: flex; align-items: center; }
             .cat-line-right::after { content: ''; flex: 1; border-bottom: 1.5px solid #d4cdc1; margin: 0 40px; }
         }
     </style>
 </head>
 <body>
+
+<div class="modal-overlay" id="modalConfig">
+    <div class="modal-card">
+        <h2>Configuration GitHub</h2>
+        <p style="font-size: 0.8rem; color: #888;">Nécessaire pour synchroniser Notion et Mobile.</p>
+        <label>Token Personnel GitHub</label>
+        <input type="password" id="inputToken" placeholder="ghp_xxxxxxxxx">
+        <label>Dépôt (Pseudo/NomDuRepo)</label>
+        <input type="text" id="inputRepo" placeholder="nom/mon-tout-doux">
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" onclick="closeConfig()">Fermer</button>
+            <button class="modal-btn save" onclick="saveConfig()">Sauvegarder</button>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="sync-bar">
@@ -204,7 +237,7 @@
             <div class="sync-content" id="syncMenu">
                 <button onclick="githubPull()">📥 Charger Données</button>
                 <button onclick="githubPush()">📤 Sauver Données</button>
-                <button onclick="configGitHub()">🔧 Configuration</button>
+                <button onclick="openConfig()">🔧 Configuration</button>
             </div>
         </div>
     </div>
@@ -214,40 +247,27 @@
     <div class="main-viewport">
         <div class="main-track" id="mainTrack">
             
-            <!-- VUE 1 : TOUT DOUX -->
             <div class="main-view">
                 <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
                     <div class="form-group"><label>Note</label><input type="text" id="taskTitle" placeholder="Écrire une petite note..."></div>
-                    <div class="form-group small">
-                        <label>Projet</label>
-                        <input type="text" id="taskProject" placeholder="☕︎" list="projectSuggestions" oninput="this.value = this.value.toUpperCase()">
-                        <datalist id="projectSuggestions"></datalist>
-                    </div>
+                    <div class="form-group small"><label>Projet</label><input type="text" id="taskProject" placeholder="☕︎" list="projectSuggestions" oninput="this.value = this.value.toUpperCase()"><datalist id="projectSuggestions"></datalist></div>
                     <div class="form-group small"><label>Priorité</label><select id="taskPriority"><option value="both">☀️ Urgent & Imp.</option><option value="urgent">🌬️ Urgent</option><option value="important">🌱 Important</option><option value="none" selected>🍃 Aucun</option></select></div>
                     <div class="form-group small"><label>État</label><select id="taskStatus"><option value="NONE" selected>-</option><option value="URGENCE">🚨 Urgence</option><option value="IMPACT">🎯 Impact</option><option value="FACILE">✨ Facile</option></select></div>
                     <button class="add-btn" onclick="addTask()">Ajouter</button>
                 </div>
 
-                <!-- SÉPARATEUR CHAT INTERACTIF MOBILE -->
                 <div class="cat-separator">
                     <div class="cat-line" id="leftSortLine" onclick="toggleSortBar()"></div>
                     <span class="cat-icon" id="filterCat" onclick="toggleFilterBar()">𓃠</span>
-                    
-                    <!-- Points de navigation intégrés au trait droit sur mobile -->
                     <div class="matrix-nav matrix-nav-mobile-container">
                         <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0_m"></div>
                         <div class="nav-dot" onclick="switchMatrix(1)" id="dot1_m"></div>
                         <div class="nav-dot" onclick="switchMatrix(2)" id="dot2_m"></div>
                     </div>
-                    
-                    <!-- Trait droit classique pour Desktop -->
                     <div class="cat-line-right" id="rightTraitDecor"></div>
                 </div>
 
-                <!-- BARRE DE FILTRE -->
                 <div class="filter-bar" id="projectFilterBar"></div>
-
-                <!-- BARRE DE TRI MOBILE -->
                 <div class="mobile-sort-bar" id="mobileSortBar">
                     <div class="sort-pill" id="m-pill-title" onclick="sortTable('title')">Note ↕</div>
                     <div class="sort-pill" id="m-pill-project" onclick="sortTable('project')">Projet ↕</div>
@@ -255,7 +275,6 @@
                     <div class="sort-pill" id="m-pill-status" onclick="sortTable('status')">État ↕</div>
                 </div>
 
-                <!-- NAVIGATION DESKTOP -->
                 <div class="matrix-nav-desktop matrix-nav">
                     <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0"></div>
                     <div class="nav-dot" onclick="switchMatrix(1)" id="dot1"></div>
@@ -264,57 +283,28 @@
 
                 <div class="matrix-window" id="matrixWindow">
                     <div class="matrix-track-inner" id="matrixTrackInner">
-                        <div class="matrix-view-inner">
-                            <div class="card-table">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th class="col-check"></th>
-                                            <th class="col-task" onclick="sortTable('title')">Note ↕</th>
-                                            <th class="col-project" onclick="sortTable('project')">Projet ↕</th>
-                                            <th class="col-priority" onclick="sortTable('priority')">Priorité ↕</th>
-                                            <th class="col-status" onclick="sortTable('status')">État ↕</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="todoBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="matrix-view-inner">
-                            <div class="matrix-grid">
-                                <div class="quadrant q-both" id="drop-p-both" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>☀️ FAIRE</h3><div id="m-p-both"></div></div>
-                                <div class="quadrant q-important" id="drop-p-important" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🌱 PLANIFIER</h3><div id="m-p-important"></div></div>
-                                <div class="quadrant q-urgent" id="drop-p-urgent" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🌬️ DÉLÉGUER</h3><div id="m-p-urgent"></div></div>
-                                <div class="quadrant q-none" id="drop-p-none" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🍃 ÉLIMINER</h3><div id="m-p-none"></div></div>
-                            </div>
-                        </div>
-                        <div class="matrix-view-inner">
-                            <div class="matrix-grid-triple">
-                                <div class="quadrant q-s-urg" id="drop-s-URGENCE" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🚨 URGENCE</h3><div id="m-s-URGENCE"></div></div>
-                                <div class="quadrant q-s-imp" id="drop-s-IMPACT" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🎯 IMPACT</h3><div id="m-s-IMPACT"></div></div>
-                                <div class="quadrant q-s-fac" id="drop-s-FACILE" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>✨ FACILE</h3><div id="m-s-FACILE"></div></div>
-                            </div>
-                        </div>
+                        <div class="matrix-view-inner"><div class="card-table"><table><thead><tr><th class="col-check"></th><th class="col-task" onclick="sortTable('title')">Note ↕</th><th class="col-project" onclick="sortTable('project')">Projet ↕</th><th class="col-priority" onclick="sortTable('priority')">Priorité ↕</th><th class="col-status" onclick="sortTable('status')">État ↕</th></tr></thead><tbody id="todoBody"></tbody></table></div></div>
+                        <div class="matrix-view-inner"><div class="matrix-grid"><div class="quadrant q-both" id="drop-p-both" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>☀️ FAIRE</h3><div id="m-p-both"></div></div><div class="quadrant q-important" id="drop-p-important" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🌱 PLANIFIER</h3><div id="m-p-important"></div></div><div class="quadrant q-urgent" id="drop-p-urgent" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🌬️ DÉLÉGUER</h3><div id="m-p-urgent"></div></div><div class="quadrant q-none" id="drop-p-none" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🍃 ÉLIMINER</h3><div id="m-p-none"></div></div></div></div>
+                        <div class="matrix-view-inner"><div class="matrix-grid-triple"><div class="quadrant q-s-urg" id="drop-s-URGENCE" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🚨 URGENCE</h3><div id="m-s-URGENCE"></div></div><div class="quadrant q-s-imp" id="drop-s-IMPACT" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>🎯 IMPACT</h3><div id="m-s-IMPACT"></div></div><div class="quadrant q-s-fac" id="drop-s-FACILE" ondrop="drop(event)" ondragover="allowDrop(event)"><h3>✨ FACILE</h3><div id="m-s-FACILE"></div></div></div></div>
                     </div>
                 </div>
 
                 <div class="archive-toggle" id="toggleDoux" onclick="toggleArchive('Doux')"><span style="font-weight:700; font-family:'Playfair Display'">⛩️ ... OH WOW !</span><span id="archiveChevronDoux">▼</span></div>
-                <div class="archive-content" id="archiveContentDoux">
-                    <button class="clean-btn" onclick="cleanArchives('Doux')">🧹 Nettoyer +14j</button>
-                    <div class="card-table"><table><tbody id="archiveBodyDoux"></tbody></table></div>
-                </div>
+                <div class="archive-content" id="archiveContentDoux"><button class="clean-btn" onclick="cleanArchives('Doux')">🧹 Nettoyer +14j</button><div class="card-table"><table><tbody id="archiveBodyDoux"></tbody></table></div></div>
             </div>
 
-            <!-- VUE 2 : TOUT EAT -->
             <div class="main-view">
                 <div class="task-form" onkeydown="if(event.key==='Enter') addEatItem()"><div class="form-group"><input type="text" id="eatInput" placeholder="Il me faut..."></div><button class="add-btn" style="background:var(--info); box-shadow:0 4px 0px #76a2a6" onclick="addEatItem()">Ajouter</button></div>
                 <div class="eat-list" id="eatList"></div>
-                <div class="cat-separator"><span class="cat-icon">🍙</span></div>
-                <div class="archive-toggle" id="toggleEat" onclick="toggleArchive('Eat')"><span style="font-weight:700; font-family:'Playfair Display'">🥷 ... C'EST FAIT !</span><span id="archiveChevronEat">▼</span></div>
-                <div class="archive-content" id="archiveContentEat">
-                    <button class="clean-btn" onclick="cleanArchives('Eat')">🧹 Aller hop, poubelle !</button>
-                    <div class="card-table"><table><tbody id="archiveBodyEat"></tbody></table></div>
+                
+                <div class="cat-separator">
+                    <div class="cat-line"></div>
+                    <span class="cat-icon">🍙</span>
+                    <div class="cat-line"></div>
                 </div>
+
+                <div class="archive-toggle" id="toggleEat" onclick="toggleArchive('Eat')"><span style="font-weight:700; font-family:'Playfair Display'">🥷 ... C'EST FAIT !</span><span id="archiveChevronEat">▼</span></div>
+                <div class="archive-content" id="archiveContentEat"><button class="clean-btn" onclick="cleanArchives('Eat')">🧹 Aller hop, poubelle !</button><div class="card-table"><table><tbody id="archiveBodyEat"></tbody></table></div></div>
             </div>
         </div>
     </div>
@@ -327,40 +317,24 @@
     let groceriesDone = JSON.parse(localStorage.getItem('groceriesDone')) || [];
     let ghToken = localStorage.getItem('gh_token'), ghRepo = localStorage.getItem('gh_repo');
     
-    let currentMainView = 0, currentSubPage = 0, activeProjectFilter = "ALL";
-    let currentSort = { key: 'createdAt', desc: true };
+    let currentMainView = 0, currentSubPage = 0, activeProjectFilter = "ALL", currentSort = { key: 'createdAt', desc: true };
 
     const PRIORITY_MAP = { both: { label: '☀️ Urgent & Imp.', weight: 3, class: 'b-both' }, urgent: { label: '🌬️ Urgent', weight: 2, class: 'b-urgent' }, important: { label: '🌱 Important', weight: 1, class: 'b-important' }, none: { label: '', weight: 0, class: '' } };
     const STATUS_MAP = { 'NONE': { label: '', class: '' }, 'URGENCE': { label: '🚨 Urgence', class: 's-urg' }, 'IMPACT': { label: '🎯 Impact', class: 's-imp' }, 'FACILE': { label: '✨ Facile', class: 's-fac' } };
     const GHIBLI_PASTELS = [{bg:'#e8f5e9',border:'#c8e6c9',text:'#2e7d32'},{bg:'#fff3e0',border:'#ffe0b2',text:'#ef6c00'},{bg:'#f3e5f5',border:'#e1bee7',text:'#7b1fa2'},{bg:'#e3f2fd',border:'#bbdefb',text:'#1565c0'},{bg:'#f1f8e9',border:'#dcedc8',text:'#558b2f'},{bg:'#fffde7',border:'#fff9c4',text:'#fbc02d'}];
 
+    function openConfig() { document.getElementById('inputToken').value = ghToken || ""; document.getElementById('inputRepo').value = ghRepo || ""; document.getElementById('modalConfig').style.display = "flex"; }
+    function closeConfig() { document.getElementById('modalConfig').style.display = "none"; }
+    function saveConfig() { ghToken = document.getElementById('inputToken').value.trim(); ghRepo = document.getElementById('inputRepo').value.trim(); if(ghToken && ghRepo) { localStorage.setItem('gh_token', ghToken); localStorage.setItem('gh_repo', ghRepo); closeConfig(); githubPull(); } else { alert("Champs vides."); } }
+
     function toggleSyncMenu(e) { e.stopPropagation(); document.getElementById('syncMenu').classList.toggle('open'); }
     document.addEventListener('click', (e) => { if (!e.target.closest('.sync-dropdown')) document.getElementById('syncMenu').classList.remove('open'); });
 
-    function toggleFilterBar() {
-        const bar = document.getElementById('projectFilterBar');
-        if (bar.classList.contains('open')) { setFilter('ALL'); bar.classList.remove('open'); }
-        else bar.classList.add('open');
-    }
+    function toggleFilterBar() { const bar = document.getElementById('projectFilterBar'); if (bar.classList.contains('open')) { setFilter('ALL'); bar.classList.remove('open'); } else bar.classList.add('open'); }
+    function toggleSortBar() { if (window.innerWidth <= 768) { const bar = document.getElementById('mobileSortBar'); const line = document.getElementById('leftSortLine'); bar.classList.toggle('open'); line.classList.toggle('active'); updateSliderHeight(); } }
+    function setFilter(proj) { activeProjectFilter = proj; document.getElementById('filterCat').classList.toggle('filtered', proj !== "ALL"); updateUI(); }
 
-    function toggleSortBar() {
-        const bar = document.getElementById('mobileSortBar');
-        const line = document.getElementById('leftSortLine');
-        bar.classList.toggle('open');
-        line.classList.toggle('active'); 
-        updateSliderHeight();
-    }
-
-    function setFilter(proj) {
-        activeProjectFilter = proj;
-        document.getElementById('filterCat').classList.toggle('filtered', proj !== "ALL");
-        updateUI();
-    }
-
-    function updateSliderHeight() {
-        const pages = document.querySelectorAll('.matrix-view-inner');
-        if (pages[currentSubPage]) document.getElementById('matrixWindow').style.height = pages[currentSubPage].offsetHeight + "px";
-    }
+    function updateSliderHeight() { const pages = document.querySelectorAll('.matrix-view-inner'); if (pages[currentSubPage]) document.getElementById('matrixWindow').style.height = pages[currentSubPage].offsetHeight + "px"; }
 
     function updateAndSave(pushToGithub = true) {
         localStorage.setItem('tasks', JSON.stringify(tasks)); localStorage.setItem('archives', JSON.stringify(archives));
@@ -391,10 +365,8 @@
         currentSubPage = idx;
         document.getElementById('matrixTrackInner').style.transform = `translateX(-${idx * 33.3333}%)`;
         [0,1,2].forEach(i => {
-            const d = document.getElementById('dot'+i);
-            const dm = document.getElementById('dot'+i+'_m');
-            if(d) d.classList.toggle('active', i === idx);
-            if(dm) dm.classList.toggle('active', i === idx);
+            const d = document.getElementById('dot'+i); const dm = document.getElementById('dot'+i+'_m');
+            if(d) d.classList.toggle('active', i === idx); if(dm) dm.classList.toggle('active', i === idx);
         });
         updateSliderHeight();
     }
@@ -428,11 +400,6 @@
         } catch (e) {}
     }
 
-    function configGitHub() {
-        ghToken = prompt("Token GitHub :", ghToken || ""); ghRepo = prompt("Repo (pseudo/repo) :", ghRepo || "");
-        if(ghToken && ghRepo) { localStorage.setItem('gh_token', ghToken); localStorage.setItem('gh_repo', ghRepo); githubPull(); }
-    }
-
     function startEdit(element, taskId, field, type) {
         if (element.querySelector('input, select')) return;
         const task = tasks.find(t => t.id === taskId);
@@ -453,29 +420,12 @@
         document.getElementById('taskTitle').value = ''; document.getElementById('taskProject').value = ''; updateAndSave();
     }
 
-    function toggleComplete(id) {
-        const idx = tasks.findIndex(t => t.id === id);
-        if (idx > -1) { const t = tasks.splice(idx, 1)[0]; t.completedAt = Date.now(); archives.push(t); updateAndSave(); }
-    }
-
-    function addEatItem() {
-        const val = document.getElementById('eatInput').value.trim(); if(!val) return;
-        groceries.unshift({ id: Date.now(), title: val }); document.getElementById('eatInput').value = ''; updateAndSave();
-    }
-
-    function toggleEatDone(id) {
-        const idx = groceries.findIndex(g => g.id === id);
-        if (idx > -1) { const item = groceries.splice(idx, 1)[0]; item.completedAt = Date.now(); groceriesDone.push(item); updateAndSave(); }
-    }
-
+    function toggleComplete(id) { const idx = tasks.findIndex(t => t.id === id); if (idx > -1) { const t = tasks.splice(idx, 1)[0]; t.completedAt = Date.now(); archives.push(t); updateAndSave(); } }
+    function addEatItem() { const val = document.getElementById('eatInput').value.trim(); if(!val) return; groceries.unshift({ id: Date.now(), title: val }); document.getElementById('eatInput').value = ''; updateAndSave(); }
+    function toggleEatDone(id) { const idx = groceries.findIndex(g => g.id === id); if (idx > -1) { const item = groceries.splice(idx, 1)[0]; item.completedAt = Date.now(); groceriesDone.push(item); updateAndSave(); } }
     function restoreTask(id) { const idx = archives.findIndex(t => t.id === id); if (idx > -1) { tasks.unshift(archives.splice(idx, 1)[0]); updateAndSave(); } }
     function restoreEat(id) { const idx = groceriesDone.findIndex(g => g.id === id); if (idx > -1) { groceries.unshift(groceriesDone.splice(idx, 1)[0]); updateAndSave(); } }
-
-    function cleanArchives(type) {
-        if(type === 'Doux') archives = archives.filter(t => t.completedAt >= Date.now() - (14 * 24 * 60 * 60 * 1000));
-        else groceriesDone = [];
-        updateAndSave();
-    }
+    function cleanArchives(type) { if(type === 'Doux') archives = archives.filter(t => t.completedAt >= Date.now() - (14 * 24 * 60 * 60 * 1000)); else groceriesDone = []; updateAndSave(); }
 
     function toggleArchive(type) {
         const content = document.getElementById(`archiveContent${type}`);
@@ -502,9 +452,7 @@
         filterBar.innerHTML = `<div class="filter-pill ${activeProjectFilter === 'ALL' ? 'active' : ''}" onclick="setFilter('ALL')">Tous</div>`;
         activeProjects.forEach(p => { filterBar.innerHTML += `<div class="filter-pill ${activeProjectFilter === p ? 'active' : ''}" onclick="setFilter('${p}')">${p}</div>`; });
 
-        document.querySelectorAll('.sort-pill').forEach(pill => {
-            pill.classList.toggle('active', pill.id === `m-pill-${currentSort.key}`);
-        });
+        document.querySelectorAll('.sort-pill').forEach(pill => { pill.classList.toggle('active', pill.id === `m-pill-${currentSort.key}`); });
 
         tasks.filter(t => activeProjectFilter === "ALL" || t.project === activeProjectFilter).forEach(task => {
             const s = STATUS_MAP[task.status] || STATUS_MAP['NONE'], p = PRIORITY_MAP[task.priority] || PRIORITY_MAP['none'];
@@ -534,7 +482,7 @@
         if (task) { if (targetId.startsWith('drop-p-')) task.priority = targetId.replace('drop-p-', ''); if (targetId.startsWith('drop-s-')) task.status = targetId.replace('drop-s-', ''); updateAndSave(); }
     }
 
-    window.onload = githubPull; updateUI();
+    window.onload = () => { if(!ghToken || !ghRepo) { setTimeout(openConfig, 1000); } else { githubPull(); } }; updateUI();
 </script>
 </body>
 </html>

@@ -132,6 +132,22 @@
             text-transform: uppercase; letter-spacing: 0.5px;
         }
 
+        /* BARRE DE TRI MOBILE */
+        .mobile-sort-bar {
+            display: none;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 5px 0 15px;
+            scrollbar-width: none;
+        }
+        .mobile-sort-bar::-webkit-scrollbar { display: none; }
+        .sort-pill {
+            background: white; border: 1.5px solid var(--border); padding: 6px 12px;
+            border-radius: 20px; font-size: 0.7rem; font-weight: 700; color: var(--secondary);
+            white-space: nowrap; cursor: pointer; transition: 0.2s;
+        }
+        .sort-pill.active { background: var(--accent); color: white; border-color: var(--accent); }
+
         /* TOUT EAT & ALIGNEMENT CHECKBOX */
         .eat-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
         .eat-item { 
@@ -161,7 +177,6 @@
         .quadrant { background: var(--card); padding: 25px; border-radius: 25px; border-top: 8px solid #ccc; min-height: 220px; box-shadow: 4px 4px 15px rgba(139, 126, 116, 0.04); }
         .q-both { border-top-color: var(--urgent-both); } .q-important { border-top-color: #6c5ce7; } .q-urgent { border-top-color: var(--urgent-only); } .q-none { border-top-color: #bdc3c7; }
         
-        /* Quadrants Impact / Urgence / Facile Pastels */
         .q-s-urg { border-top-color: var(--s-urgence); background-color: #fdf5f4; } 
         .q-s-imp { border-top-color: var(--s-impact); background-color: #f4f8fb; } 
         .q-s-fac { border-top-color: var(--s-facile); background-color: #f5f9f5; }
@@ -189,7 +204,7 @@
             width: 100%; 
             overflow: hidden; 
             margin-bottom: 50px; 
-            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Transition de hauteur */
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .matrix-track-inner { display: flex; transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1); width: 300%; }
         .matrix-view-inner { width: 33.3333%; height: fit-content; }
@@ -203,6 +218,7 @@
 
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
+            .mobile-sort-bar { display: flex; }
             thead { display: none; }
             table, tbody, tr, td { display: block; width: 100% !important; }
             tr { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; position: relative; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
@@ -256,6 +272,15 @@
                     <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0"></div>
                     <div class="nav-dot" onclick="switchMatrix(1)" id="dot1"></div>
                     <div class="nav-dot" onclick="switchMatrix(2)" id="dot2"></div>
+                </div>
+
+                <!-- Barre de tri mobile ajoutée ici -->
+                <div class="mobile-sort-bar">
+                    <div class="sort-pill" id="m-pill-createdAt" onclick="sortTable('createdAt')">Création ↕</div>
+                    <div class="sort-pill" id="m-pill-title" onclick="sortTable('title')">Note ↕</div>
+                    <div class="sort-pill" id="m-pill-project" onclick="sortTable('project')">Projet ↕</div>
+                    <div class="sort-pill" id="m-pill-priority" onclick="sortTable('priority')">Priorité ↕</div>
+                    <div class="sort-pill" id="m-pill-status" onclick="sortTable('status')">État ↕</div>
                 </div>
 
                 <div class="matrix-window" id="matrixWindow">
@@ -330,7 +355,7 @@
     let groceriesDone = JSON.parse(localStorage.getItem('groceriesDone')) || [];
     let ghToken = localStorage.getItem('gh_token'), ghRepo = localStorage.getItem('gh_repo');
     let currentMainView = 0;
-    let currentSubPage = 0; // Suivi de la page active dans le menu défilant
+    let currentSubPage = 0; 
     let currentSort = { key: 'createdAt', desc: true };
 
     const PRIORITY_MAP = { both: { label: '☀️ Urgent & Imp.', weight: 3, class: 'b-both' }, urgent: { label: '🌬️ Urgent', weight: 2, class: 'b-urgent' }, important: { label: '🌱 Important', weight: 1, class: 'b-important' }, none: { label: '', weight: 0, class: '' } };
@@ -352,7 +377,6 @@
 
     document.addEventListener('click', () => document.getElementById('syncMenu').classList.remove('open'));
 
-    // Ajuste la hauteur du conteneur défilant en fonction de la page active
     function updateSliderHeight() {
         const windowEl = document.getElementById('matrixWindow');
         const pages = document.querySelectorAll('.matrix-view-inner');
@@ -396,7 +420,7 @@
         document.getElementById('dot0').classList.toggle('active', idx === 0);
         document.getElementById('dot1').classList.toggle('active', idx === 1);
         document.getElementById('dot2').classList.toggle('active', idx === 2);
-        updateSliderHeight(); // Applique la nouvelle hauteur
+        updateSliderHeight();
     }
 
     async function githubPush() {
@@ -508,6 +532,11 @@
         datalist.innerHTML = '';
         activeProjects.forEach(p => { const opt = document.createElement('option'); opt.value = p; datalist.appendChild(opt); });
 
+        // Update mobile sorting pills active state
+        document.querySelectorAll('.sort-pill').forEach(pill => {
+            pill.classList.toggle('active', pill.id === `m-pill-${currentSort.key}`);
+        });
+
         tasks.forEach(task => {
             const s = STATUS_MAP[task.status] || STATUS_MAP['NONE'], p = PRIORITY_MAP[task.priority] || PRIORITY_MAP['none'];
             const style = (task.project === '☕︎') ? {bg:'#f1f1f1', border:'#ddd', text:'#888'} : (projectColorMap[task.project] || {bg:'#f1f1f1', border:'#ddd', text:'#888'});
@@ -551,7 +580,6 @@
             archiveBodyEat.appendChild(row);
         });
 
-        // Applique l'ajustement de hauteur après que l'UI ait été générée
         setTimeout(updateSliderHeight, 50);
     }
 

@@ -166,6 +166,7 @@
         .archive-toggle.is-open { background-color: var(--archive-open); border-color: var(--important-only); }
         .archive-content { display: none; margin-bottom: 50px; }
 
+        /* --- MOBILE SPECIFIQUE --- */
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
             .mobile-sort-bar { display: flex; }
@@ -177,15 +178,19 @@
             td.col-check { position: absolute; top: 15px; right: 15px; width: 25px !important; }
             td.col-project, td.col-priority, td.col-status { display: inline-block !important; width: auto !important; font-size: 0.75rem; color: var(--secondary); font-weight: 600; margin-right: 5px; }
             .matrix-grid, .matrix-grid-triple { grid-template-columns: 1fr; }
-            
-            /* Cache la nav desktop du bas pour n'utiliser que celle du chat */
             .matrix-nav-desktop { display: none !important; }
             .matrix-nav-mobile-container { display: flex; flex: 1; justify-content: center; padding-right: 15px; }
         }
 
+        /* --- ORDI SPECIFIQUE --- */
         @media (min-width: 769px) {
             .matrix-nav-desktop { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
             .matrix-nav-mobile-container { display: none; }
+            /* Désactive l'interactivité des traits sur Ordi */
+            .cat-line, .cat-line-right { 
+                pointer-events: none !important; 
+                cursor: default !important; 
+            }
             .cat-line-right { flex: 1; height: 30px; display: flex; align-items: center; }
             .cat-line-right::after { content: ''; flex: 1; border-bottom: 1.5px solid #d4cdc1; margin: 0 40px; }
         }
@@ -214,7 +219,6 @@
     <div class="main-viewport">
         <div class="main-track" id="mainTrack">
             
-            <!-- VUE 1 : TOUT DOUX -->
             <div class="main-view">
                 <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
                     <div class="form-group"><label>Note</label><input type="text" id="taskTitle" placeholder="Écrire une petite note..."></div>
@@ -228,26 +232,19 @@
                     <button class="add-btn" onclick="addTask()">Ajouter</button>
                 </div>
 
-                <!-- SÉPARATEUR CHAT INTERACTIF MOBILE -->
                 <div class="cat-separator">
                     <div class="cat-line" id="leftSortLine" onclick="toggleSortBar()"></div>
                     <span class="cat-icon" id="filterCat" onclick="toggleFilterBar()">𓃠</span>
-                    
-                    <!-- Points de navigation intégrés au trait droit sur mobile -->
                     <div class="matrix-nav matrix-nav-mobile-container">
                         <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0_m"></div>
                         <div class="nav-dot" onclick="switchMatrix(1)" id="dot1_m"></div>
                         <div class="nav-dot" onclick="switchMatrix(2)" id="dot2_m"></div>
                     </div>
-                    
-                    <!-- Trait droit classique pour Desktop -->
                     <div class="cat-line-right" id="rightTraitDecor"></div>
                 </div>
 
-                <!-- BARRE DE FILTRE -->
                 <div class="filter-bar" id="projectFilterBar"></div>
 
-                <!-- BARRE DE TRI MOBILE -->
                 <div class="mobile-sort-bar" id="mobileSortBar">
                     <div class="sort-pill" id="m-pill-title" onclick="sortTable('title')">Note ↕</div>
                     <div class="sort-pill" id="m-pill-project" onclick="sortTable('project')">Projet ↕</div>
@@ -255,7 +252,6 @@
                     <div class="sort-pill" id="m-pill-status" onclick="sortTable('status')">État ↕</div>
                 </div>
 
-                <!-- NAVIGATION DESKTOP -->
                 <div class="matrix-nav-desktop matrix-nav">
                     <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0"></div>
                     <div class="nav-dot" onclick="switchMatrix(1)" id="dot1"></div>
@@ -305,7 +301,6 @@
                 </div>
             </div>
 
-            <!-- VUE 2 : TOUT EAT -->
             <div class="main-view">
                 <div class="task-form" onkeydown="if(event.key==='Enter') addEatItem()"><div class="form-group"><input type="text" id="eatInput" placeholder="Il me faut..."></div><button class="add-btn" style="background:var(--info); box-shadow:0 4px 0px #76a2a6" onclick="addEatItem()">Ajouter</button></div>
                 <div class="eat-list" id="eatList"></div>
@@ -344,11 +339,14 @@
     }
 
     function toggleSortBar() {
-        const bar = document.getElementById('mobileSortBar');
-        const line = document.getElementById('leftSortLine');
-        bar.classList.toggle('open');
-        line.classList.toggle('active'); 
-        updateSliderHeight();
+        // Uniquement si on est sur mobile (précaution JS en plus du CSS)
+        if (window.innerWidth <= 768) {
+            const bar = document.getElementById('mobileSortBar');
+            const line = document.getElementById('leftSortLine');
+            bar.classList.toggle('open');
+            line.classList.toggle('active'); 
+            updateSliderHeight();
+        }
     }
 
     function setFilter(proj) {

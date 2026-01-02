@@ -52,7 +52,7 @@
         .env-nav { display: flex; align-items: center; gap: 12px; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; }
         .env-btn { cursor: pointer; opacity: 0.4; transition: 0.3s; padding: 2px 8px; border-radius: 6px; }
         .env-btn.active { opacity: 1; background: rgba(255,255,255,0.15); }
-        .status-light { width: 8px; height: 8px; border-radius: 50%; background: #636e72; display: inline-block; transition: 0.3s; }
+        .status-light { width: 8px; height: 8px; border-radius: 50%; background: #636e72; display: inline-block; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }
         .status-on { background: #b8e994; box-shadow: 0 0 10px #b8e994; }
 
         /* --- SLIDERS --- */
@@ -72,7 +72,7 @@
         .form-group.small { flex: 0.25; min-width: 100px; }
         .form-group label { font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; color: var(--secondary); text-transform: uppercase; }
         input, select { padding: 12px 15px; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; background: #fff; width: 100%; transition: 0.3s; color: var(--text); outline: none; }
-        .add-btn { background: var(--urgent-both); color: white; border: none; height: 50px; padding: 0 30px; border-radius: 15px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 0px #c45643; }
+        .add-btn { background: var(--urgent-both); color: white; border: none; height: 50px; padding: 0 30px; border-radius: 15px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 0px #c45643; }
 
         .clean-btn { 
             background:#d6cec3; box-shadow: 0 4px 0px #b8afa4; color: #766d64; 
@@ -81,7 +81,6 @@
         }
         .clean-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0px #b8afa4; }
 
-        /* --- TABLEAUX --- */
         table { width: 100%; border-collapse: separate; border-spacing: 0 12px; table-layout: fixed; }
         thead th { text-align: left; padding: 0 15px; font-size: 0.7rem; color: var(--secondary); cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
         td { background: var(--card); padding: 15px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); vertical-align: middle; word-wrap: break-word; }
@@ -107,23 +106,6 @@
         .cat-icon { font-size: 2.5rem; color: var(--text); filter: opacity(0.6); cursor: pointer; transition: 0.5s; display: inline-block; padding: 0 10px; }
         .cat-icon.filtered { color: var(--important-only); transform: scaleX(-1); filter: opacity(1); }
 
-        /* --- FILTRES (REPRISE EXACTE INDEX 3) --- */
-        .filter-bar {
-            display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
-            max-height: 0; opacity: 0; margin-bottom: 0;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-        }
-        .filter-bar.open { 
-            max-height: 80px; opacity: 1; margin-bottom: 15px; pointer-events: auto; 
-        }
-        .filter-pill { 
-            background: white; border: 1.5px solid var(--border); padding: 6px 14px; border-radius: 20px; 
-            font-size: 0.75rem; font-weight: 700; color: var(--secondary); white-space: nowrap; cursor: pointer; transition: 0.2s; 
-        }
-        .filter-pill.active { background: var(--accent); color: white; border-color: var(--accent); }
-
-        /* --- MATRICE --- */
         .matrix-nav { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
         .nav-dot { width: 12px; height: 12px; border-radius: 50%; background: #d4cdc1; cursor: pointer; transition: 0.3s; border: 2px solid transparent; }
         .nav-dot.active { background-color: var(--accent); opacity: 1; transform: scale(1.2); }
@@ -150,18 +132,31 @@
         .archive-toggle.is-open { background-color: var(--archive-open); border-color: var(--important-only); }
         .archive-content { display: none; margin-bottom: 50px; }
 
-        .mobile-sort-bar { display: none; gap: 8px; overflow-x: auto; scrollbar-width: none; max-height: 0; opacity: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
-        .mobile-sort-bar.open { max-height: 80px !important; opacity: 1 !important; margin-bottom: 15px !important; pointer-events: auto !important; }
+        .filter-bar, .mobile-sort-bar { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; max-height: 0; opacity: 0; margin-bottom: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
+        .open { max-height: 80px !important; opacity: 1 !important; margin-bottom: 15px !important; pointer-events: auto !important; }
 
-        /* --- MODAL CONFIG SMOOTH --- */
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(74,69,63,0.6); backdrop-filter: blur(4px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .modal-overlay.open { opacity: 1; visibility: visible; }
         .modal-card { background: var(--bg); padding: 30px; border-radius: 25px; border: 2px solid var(--important-only); width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); transform: scale(0.9) translateY(20px); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .modal-overlay.open .modal-card { transform: scale(1) translateY(0); }
 
+        /* --- WORK SPACE --- */
+        .work-breadcrumb { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; font-weight: 800; font-size: 0.8rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+        .work-breadcrumb span { cursor: pointer; opacity: 0.6; transition: 0.3s; }
+        .work-breadcrumb span:hover { opacity: 1; color: var(--accent); }
+        .work-breadcrumb b { color: var(--text); opacity: 1; }
+        .work-view-container { display: none; opacity: 0; transform: translateY(10px); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .work-view-container.active-view { display: block; opacity: 1; transform: translateY(0); }
+        .work-layout { display: flex; flex-direction: column; gap: 20px; }
+        .work-card { background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid var(--border); box-shadow: 4px 4px 15px rgba(0,0,0,0.02); }
+        .work-card h3 { margin-top: 0; font-family: 'Playfair Display', serif; color: var(--secondary); display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .project-btn, .folder-btn { width: 100%; text-align: left; padding: 18px 20px; border-radius: 15px; border: 1.5px solid var(--border); background: white; cursor: pointer; font-weight: 700; transition: 0.3s; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .res-bubble { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); z-index: 3000; border: 2px solid var(--accent); width: 320px; display: none; }
+        .resource-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-radius: 12px; background: #f9f9f7; border: 1px solid var(--border); margin-bottom: 8px; }
+        .res-icon { width: 22px; height: 22px; }
+
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
-            .mobile-sort-bar { display: flex; }
             thead { display: none; }
             table, tbody, tr, td { display: block; width: 100% !important; }
             tr { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; position: relative; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
@@ -174,7 +169,7 @@
         }
 
         @media (min-width: 769px) {
-            .matrix-nav-desktop { display: center; justify-content: center; gap: 15px; margin-bottom: 25px; }
+            .matrix-nav-desktop { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
             .matrix-nav-mobile-container { display: none !important; }
             .cat-line, .cat-line-right { pointer-events: none !important; cursor: default !important; }
             .cat-line-right { flex: 1; height: 30px; display: flex; align-items: center; }
@@ -192,7 +187,7 @@
             <button class="add-btn" style="flex:1; height:40px; box-shadow:none;" onclick="githubPush()">📤 Sauver</button>
         </div>
         <hr style="border:none; border-top:1px solid var(--border);">
-        <label>Token Personnel GitHub</label><input type="password" id="inputToken">
+        <label>Token Personnel GitHub</label><input type="password" id="inputToken" placeholder="ghp_xxxxxx">
         <label>Dépôt (pseudo/repo)</label><input type="text" id="inputRepo" placeholder="pseudo/repo">
         <label>ID Calendrier Google (Public)</label><input type="text" id="inputCal">
         <div style="display:flex; gap:10px; margin-top:20px">
@@ -200,6 +195,13 @@
             <button class="add-btn" style="flex:1" onclick="saveConfig()">Sauvegarder</button>
         </div>
     </div>
+</div>
+
+<div class="res-bubble" id="resBubble">
+    <h3>Ajouter une ressource</h3>
+    <input type="text" id="resName" placeholder="Nom">
+    <input type="text" id="resUrl" placeholder="Lien">
+    <button class="add-btn" style="width:100%" onclick="confirmResource()">✅ Ajouter</button>
 </div>
 
 <div class="sync-bar">
@@ -217,13 +219,11 @@
 <div class="global-viewport">
     <div class="global-track" id="globalTrack">
         
-        <!-- --- PAGE 1 : TOUT --- -->
         <div class="env-view" id="env-tout">
             <div class="container">
                 <h1 id="mainTitle" onclick="toggleMainView()">TOUT DOUX</h1>
                 <div class="main-viewport">
                     <div class="main-track" id="mainTrack">
-                        
                         <div class="main-view">
                             <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
                                 <div class="form-group"><label>Note</label><input type="text" id="taskTitle" placeholder="Écrire une petite note..."></div>
@@ -232,7 +232,6 @@
                                 <div class="form-group small"><label>État</label><select id="taskStatus"><option value="NONE" selected>-</option><option value="URGENCE">🚨 Urgence</option><option value="IMPACT">🎯 Impact</option><option value="FACILE">✨ Facile</option></select></div>
                                 <button class="add-btn" onclick="addTask()">Ajouter</button>
                             </div>
-
                             <div class="cat-separator">
                                 <div class="cat-line" id="leftSortLine" onclick="toggleSortBar()"></div>
                                 <span class="cat-icon" id="filterCat" onclick="toggleFilterBar()">𓃠</span>
@@ -241,9 +240,8 @@
                                     <div class="nav-dot" onclick="switchMatrix(1)" id="dot1_m"></div>
                                     <div class="nav-dot" onclick="switchMatrix(2)" id="dot2_m"></div>
                                 </div>
-                                <div class="cat-line-right" id="rightTraitDecor"></div>
+                                <div class="cat-line" style="pointer-events:none"></div>
                             </div>
-
                             <div class="filter-bar" id="projectFilterBar"></div>
                             <div class="mobile-sort-bar" id="mobileSortBar">
                                 <div class="sort-pill" id="m-pill-title" onclick="sortTable('title')">Note ↕</div>
@@ -251,13 +249,11 @@
                                 <div class="sort-pill" id="m-pill-priority" onclick="sortTable('priority')">Priorité ↕</div>
                                 <div class="sort-pill" id="m-pill-status" onclick="sortTable('status')">État ↕</div>
                             </div>
-
                             <div class="matrix-nav-desktop matrix-nav">
                                 <div class="nav-dot active" onclick="switchMatrix(0)" id="dot0"></div>
                                 <div class="nav-dot" onclick="switchMatrix(1)" id="dot1"></div>
                                 <div class="nav-dot" onclick="switchMatrix(2)" id="dot2"></div>
                             </div>
-
                             <div class="matrix-window" id="matrixWindow">
                                 <div class="matrix-track-inner" id="matrixTrackInner">
                                     <div class="matrix-view-inner"><div class="card-table"><table><thead><tr><th class="col-check"></th><th class="col-task" onclick="sortTable('title')">Note ↕</th><th class="col-project" onclick="sortTable('project')">Projet ↕</th><th class="col-priority" onclick="sortTable('priority')">Priorité ↕</th><th class="col-status" onclick="sortTable('status')">État ↕</th></tr></thead><tbody id="todoBody"></tbody></table></div></div>
@@ -268,7 +264,6 @@
                             <div class="archive-toggle" id="toggleDoux" onclick="toggleArchive('Doux')"><span style="font-weight:700; font-family:'Playfair Display'">⛩️ ... OH WOW !</span><span id="archiveChevronDoux">▼</span></div>
                             <div class="archive-content" id="archiveContentDoux"><button class="clean-btn" onclick="cleanArchives('Doux')">🧹 Nettoyer +14j</button><div class="card-table"><table><tbody id="archiveBodyDoux"></tbody></table></div></div>
                         </div>
-
                         <div class="main-view">
                             <div class="task-form" onkeydown="if(event.key==='Enter') addEatItem()"><div class="form-group"><input type="text" id="eatInput" placeholder="Il me faut..."></div><button class="add-btn" style="background:var(--info); box-shadow:0 4px 0px #76a2a6" onclick="addEatItem()">Ajouter</button></div>
                             <div class="eat-list" id="eatList"></div>
@@ -283,11 +278,34 @@
 
         <div class="env-view" id="env-work">
             <div class="container">
-                <h1>WORK SPACE</h1>
-                <p style="text-align: center; color: var(--secondary);">En attente de vos instructions pour cet univers...</p>
+                <div class="work-breadcrumb" id="workBreadcrumb"></div>
+                <div id="workView-dashboard" class="work-view-container active-view">
+                    <div class="work-layout">
+                        <div class="work-card"><h3>✅ TD Work in progress</h3><div class="card-table"><table><tbody id="workTodayTasks"></tbody></table></div></div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px" class="grid-mobile-1">
+                            <div class="work-card"><h3>📅 TOUT DAY</h3><div id="calendarContainer" style="height:300px; border-radius:15px; background:#fafaf8; overflow:hidden;"></div></div>
+                            <div class="work-card"><h3>🚀 PROJETS</h3><div id="workProjectList"></div></div>
+                        </div>
+                        <div class="work-card"><h3>⛩️ ... OH WOW ! (Global)</h3><div class="card-table"><table><tbody id="workDashboardArchives"></tbody></table></div></div>
+                    </div>
+                </div>
+                <div id="workView-project" class="work-view-container">
+                    <div class="work-layout">
+                        <div class="work-card"><h3 id="projectTitleWork">✅ TD du projet</h3><div class="card-table"><table><tbody id="workProjectTasks"></tbody></table></div></div>
+                        <div class="work-card"><h3>📂 DOSSIERS</h3><button class="add-btn" style="width:100%; height:40px; margin-bottom:15px;" onclick="addFolder()">+ Créer un dossier</button><div id="workFolderList"></div></div>
+                        <div class="work-card"><h3 id="projectArchiveTitle">⛩️ ... OH WOW !</h3><div class="card-table"><table><tbody id="workProjectArchives"></tbody></table></div></div>
+                    </div>
+                </div>
+                <div id="workView-folder" class="work-view-container">
+                    <div class="work-layout">
+                        <div class="work-card"><h3 id="folderTitleWork">✅ TD du dossier</h3><div class="card-table"><table><tbody id="workFolderTasks"></tbody></table></div></div>
+                        <div id="folderDynamicLists"></div>
+                        <div class="work-card"><h3>📎 Liens & Fichiers</h3><div style="display:flex; gap:10px; margin-bottom:15px"><button class="clean-btn" style="flex:1; margin-bottom:0" onclick="openResourceBubble()">+ Lien / Fichier</button><button class="clean-btn" style="flex:1; margin-bottom:0; background:var(--info)" onclick="addDynamicList()">+ Liste</button></div><div id="workResourceList"></div></div>
+                        <div class="work-card"><h3 id="folderArchiveTitle">⛩️ ... OH WOW !</h3><div class="card-table"><table><tbody id="workFolderArchives"></tbody></table></div></div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -296,136 +314,120 @@
     let archives = JSON.parse(localStorage.getItem('archives')) || [];
     let groceries = JSON.parse(localStorage.getItem('groceries')) || [];
     let groceriesDone = JSON.parse(localStorage.getItem('groceriesDone')) || [];
-    let ghToken = localStorage.getItem('gh_token'), ghRepo = localStorage.getItem('gh_repo'), calUrl = localStorage.getItem('cal_url');
+    let folders = JSON.parse(localStorage.getItem('folders')) || [];
+    let resources = JSON.parse(localStorage.getItem('resources')) || [];
+    let folderLists = JSON.parse(localStorage.getItem('folderLists')) || [];
+    let ghToken = (localStorage.getItem('gh_token') || "").trim();
+    let ghRepo = (localStorage.getItem('gh_repo') || "").trim();
+    let calUrl = (localStorage.getItem('cal_url') || "").trim();
     
-    let currentMainView = 0, currentSubPage = 0, activeProjectFilter = "ALL", currentSort = { key: 'createdAt', desc: true }, currentEnv = 'TOUT';
+    let currentMainView = 0, currentSubPage = 0, activeProjectFilter = "ALL", currentSort = { key: 'createdAt', desc: true }, currentEnv = 'TOUT', workState = { view: 'dashboard', projectId: null, folderId: null };
 
     const PRIORITY_MAP = { both: { label: '☀️ Urgent & Imp.', weight: 3, class: 'b-both' }, urgent: { label: '🌬️ Urgent', weight: 2, class: 'b-urgent' }, important: { label: '🌱 Important', weight: 1, class: 'b-important' }, none: { label: '', weight: 0, class: '' } };
     const STATUS_MAP = { 'NONE': { label: '', class: '' }, 'URGENCE': { label: '🚨 Urgence', class: 's-urg' }, 'IMPACT': { label: '🎯 Impact', class: 's-imp' }, 'FACILE': { label: '✨ Facile', class: 's-fac' } };
-    const GHIBLI_PASTELS = [{bg:'#e8f5e9',border:'#c8e6c9',text:'#2e7d32'},{bg:'#fff3e0',border:'#ffe0b2',text:'#ef6c00'},{bg:'#f3e5f5',border:'#e1bee7',text:'#7b1fa2'},{bg:'#e3f2fd',border:'#bbdefb',text:'#1565c0'},{bg:'#f1f8e9',border:'#dcedc8',text:'#558b2f'},{bg:'#fffde7',border:'#fff9c4',text:'#fbc02d'}];
+    const GHIBLI_PASTELS = [{bg:'#e8f5e9',text:'#2e7d32'},{bg:'#fff3e0',text:'#ef6c00'},{bg:'#f3e5f5',text:'#7b1fa2'},{bg:'#e3f2fd',text:'#1565c0'},{bg:'#f1f8e9',text:'#558b2f'},{bg:'#fffde7',text:'#fbc02d'}];
 
-    const ICON_DICT = {
-        'pomme': 'apple', 'poire': 'pear', 'banane': 'banana', 'orange': 'orange', 'clementine': 'tangerine', 'mandarine': 'tangerine', 'citron vert': 'lime', 'citron': 'lemon', 'pamplemousse': 'grapefruit', 'fraise': 'strawberry', 'framboise': 'strawberry', 'myrtille': 'blueberries', 'mure': 'blackberry', 'raisin': 'grapes', 'kiwi': 'kiwi-fruit', 'mangue': 'mango', 'ananas': 'pineapple', 'pasteque': 'watermelon', 'melon': 'melon', 'peche': 'peach', 'nectarine': 'peach', 'abricot': 'apricot', 'cerise': 'cherry', 'figue': 'fig', 'avocat': 'avocado', 'noix de coco': 'coconut',
-        'carotte': 'carrot', 'pomme de terre': 'potato', 'patate douce': 'sweet-potato', 'oignon': 'onion', 'ail': 'garlic', 'echalote': 'shallot', 'poireau': 'leek', 'courgette': 'zucchini', 'aubergine': 'eggplant', 'tomate': 'tomato', 'concombre': 'cucumber', 'poivron': 'paprika', 'piment': 'chili-pepper', 'brocoli': 'broccoli', 'chou': 'cabbage', 'salade': 'salad', 'epinard': 'spinach', 'petit pois': 'peas', 'mais': 'corn', 'asperge': 'asparagus', 'champignon': 'mushroom', 'radis': 'radish', 'betterave': 'beetroot', 'fenouil': 'fennel', 'courge': 'pumpkin', 'artichaut': 'artichoke', 'gingembre': 'ginger', 'soja': 'soy',
-        'pain': 'bread', 'baguette': 'baguette', 'brioche': 'brioche', 'croissant': 'croissant', 'farine': 'flour-bag', 'riz': 'rice-bowl', 'pate': 'spaghetti', 'spaghetti': 'spaghetti', 'lasagne': 'lasagna', 'gnocchi': 'gnocchi', 'quinoa': 'porridge', 'avoine': 'granola', 'muesli': 'granola',
-        'lait': 'milk-bottle', 'beurre': 'butter', 'creme': 'cream-canister', 'yaourt': 'yogurt', 'oeuf': 'eggs', 'fromage': 'cheese', 'mozzarella': 'mozzarella', 'parmesan': 'cheese', 'camembert': 'cheese', 'chevre': 'cheese', 'feta': 'cheese', 'ricotta': 'cottage-cheese', 'mascarpone': 'cottage-cheese',
-        'poulet': 'chicken', 'dinde': 'turkey', 'boeuf': 'steak', 'steak': 'steak', 'porc': 'pork-leg', 'lardons': 'bacon', 'jambon': 'ham', 'saucisse': 'sausage', 'bacon': 'bacon',
-        'saumon': 'salmon', 'thon': 'fish-food', 'poisson': 'fish', 'crevette': 'prawn', 'moule': 'mussel', 'huitre': 'oyster',
-        'huile': 'olive-oil', 'vinaigre': 'vinegar', 'sel': 'salt-shaker', 'poivre': 'pepper-shaker', 'moutarde': 'mustard', 'ketchup': 'ketchup', 'mayonnaise': 'mayonnaise', 'pesto': 'pesto',
-        'sucre': 'sugar-cube', 'miel': 'honey', 'confiture': 'jam', 'chocolat': 'chocolate-bar', 'biscuit': 'cookie', 'gateau': 'cake', 'bonbon': 'candy',
-        'basilic': 'leaf', 'persil': 'leaf', 'menthe': 'leaf', 'eau': 'water-bottle', 'jus': 'juice-bottle', 'soda': 'cola', 'the': 'tea', 'cafe': 'coffee-beans',
-        'papier toilette': 'toilet-paper', 'essuie-tout': 'paper-towel', 'savon': 'soap', 'gel douche': 'shower-gel', 'shampoing': 'shampoo-bottle', 'dentifrice': 'toothpaste', 'lessive': 'washing-powder', 'liquide vaisselle': 'dishwasher-gel', 'eponge': 'sponge', 'sac poubelle': 'trash-can'
-    };
-
-    const FOOD_KEYWORDS = ['manger', 'boire', 'cuisine', 'recette', 'viande', 'fruit', 'legume', 'oeuf', 'creme', 'pate', 'riz', 'fromage', 'fraiche', 'sauce', 'huile', 'sel', 'sucre'];
+    const ICON_DICT = { 'pomme': 'apple', 'citron vert': 'lime', 'citron': 'lemon', 'oeuf': 'eggs', 'lait': 'milk-bottle', 'fromage': 'cheese', 'pain': 'bread', 'pate': 'spaghetti', 'viande': 'steak', 'creme': 'cream-canister', 'mascarpone': 'cheese' };
+    const FOOD_KEYWORDS = ['manger', 'boire', 'cuisine', 'recette', 'viande', 'fruit', 'legume', 'oeuf', 'creme', 'pate', 'riz', 'fromage', 'fraiche'];
 
     function getGroceryIcon(name) {
         let normalized = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        let clean = normalized.replace(/[0-9]|\b(g|kg|ml|cl|l|mg|gr)\b|[()]/gi, '').trim().toLowerCase();
+        let clean = normalized.replace(/[0-9]|\b(g|kg|ml|cl|l|mg)\b|[()]/gi, '').trim().toLowerCase();
         for (let k in ICON_DICT) { if (clean.includes(k)) return `https://img.icons8.com/color/96/${ICON_DICT[k]}.png`; }
         if (FOOD_KEYWORDS.some(k => clean.includes(k))) return 'https://img.icons8.com/color/96/shopping-basket-2.png';
         return 'https://img.icons8.com/color/96/shopping-bag.png';
     }
 
-    // --- NAVIGATION ---
-    function switchEnv(env) {
-        currentEnv = env;
-        document.getElementById('globalTrack').style.transform = (env === 'TOUT') ? 'translateX(0%)' : 'translateX(-50%)';
-        document.getElementById('env-tout-btn').classList.toggle('active', env === 'TOUT');
-        document.getElementById('env-work-btn').classList.toggle('active', env === 'WORK');
-        updateSliderHeight();
+    // --- SYNC CORE ---
+    function updateAndSave(push = true) {
+        localStorage.setItem('tasks', JSON.stringify(tasks)); localStorage.setItem('archives', JSON.stringify(archives));
+        localStorage.setItem('groceries', JSON.stringify(groceries)); localStorage.setItem('groceriesDone', JSON.stringify(groceriesDone));
+        localStorage.setItem('folders', JSON.stringify(folders)); localStorage.setItem('resources', JSON.stringify(resources));
+        localStorage.setItem('folderLists', JSON.stringify(folderLists)); localStorage.setItem('cal_url', calUrl);
+        updateUI(); if(push) githubPush();
     }
+
+    async function githubPush() {
+        if(!ghToken || !ghRepo) return;
+        const light = document.getElementById('statusLight'); light.style.backgroundColor = "orange";
+        try {
+            const cleanToken = ghToken.replace(/\s+/g, '');
+            const cleanRepo = ghRepo.replace(/\s+/g, '').replace('https://github.com/', '');
+            const resFile = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/data.json`, { headers: { 'Authorization': `token ${cleanToken}`, 'Cache-Control': 'no-cache' } });
+            let sha = ""; if(resFile.ok) { const fd = await resFile.json(); sha = fd.sha; }
+            const payload = { tasks, archives, groceries, groceriesDone, folders, resources, folderLists };
+            const jsonStr = JSON.stringify(payload);
+            const utf8Bytes = new TextEncoder().encode(jsonStr);
+            const base64 = btoa(String.fromCharCode(...utf8Bytes));
+            const putRes = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/data.json`, { method: 'PUT', headers: { 'Authorization': `token ${cleanToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: "Sync OS", content: base64, sha: sha || undefined }) });
+            if(putRes.ok) { light.style.backgroundColor = "#b8e994"; light.classList.add('status-on'); } else { light.style.backgroundColor = "red"; }
+        } catch (e) { light.style.backgroundColor = "red"; }
+    }
+
+    async function githubPull() {
+        if(!ghToken || !ghRepo) return;
+        try {
+            const cleanToken = ghToken.replace(/\s+/g, '');
+            const cleanRepo = ghRepo.replace(/\s+/g, '').replace('https://github.com/', '');
+            const res = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/data.json?t=${Date.now()}`, { headers: { 'Authorization': `token ${cleanToken}` } });
+            if(res.ok) {
+                const data = await res.json();
+                const binStr = atob(data.content.replace(/\s/g, ''));
+                const bytes = Uint8Array.from(binStr, (m) => m.charCodeAt(0));
+                const decoded = JSON.parse(new TextDecoder().decode(bytes));
+                tasks = decoded.tasks || []; archives = decoded.archives || []; groceries = decoded.groceries || []; groceriesDone = decoded.groceriesDone || []; folders = decoded.folders || []; resources = decoded.resources || []; folderLists = decoded.folderLists || [];
+                updateAndSave(false); document.getElementById('statusLight').classList.add('status-on');
+            }
+        } catch (e) { document.getElementById('statusLight').style.backgroundColor = "red"; }
+    }
+
+    // --- NAVIGATION ---
+    function switchEnv(env) { currentEnv = env; document.getElementById('globalTrack').style.transform = (env === 'TOUT') ? 'translateX(0%)' : 'translateX(-50%)'; document.getElementById('env-tout-btn').classList.toggle('active', env === 'TOUT'); document.getElementById('env-work-btn').classList.toggle('active', env === 'WORK'); updateUI(); }
     function toggleMainView() { currentMainView = currentMainView === 0 ? 1 : 0; document.getElementById('mainTrack').style.transform = `translateX(-${currentMainView * 50}%)`; const title = document.getElementById('mainTitle'); title.textContent = currentMainView === 0 ? "TOUT DOUX" : "TOUT EAT"; title.style.color = currentMainView === 0 ? "var(--accent)" : "var(--info)"; updateSliderHeight(); }
-    function switchMatrix(idx) { currentSubPage = idx; document.getElementById('matrixTrackInner').style.transform = `translateX(-${idx * 33.3333}%)`; [0,1,2].forEach(i => { const d = document.getElementById('dot'+i); const dm = document.getElementById('dot'+i+'_m'); if(d) d.classList.toggle('active', i === idx); if(dm) dm.classList.toggle('active', i === idx); }); updateSliderHeight(); }
+    function switchMatrix(idx) { currentSubPage = idx; document.getElementById('matrixTrackInner').style.transform = `translateX(-${idx * 33.3333}%)`; [0,1,2].forEach(i => { if(document.getElementById('dot'+i)) document.getElementById('dot'+i).classList.toggle('active', i === idx); if(document.getElementById('dot'+i+'_m')) document.getElementById('dot'+i+'_m').classList.toggle('active', i === idx); }); updateSliderHeight(); }
     function updateSliderHeight() { if(currentEnv !== 'TOUT') { document.getElementById('matrixWindow').style.height = "auto"; return; } const pages = document.querySelectorAll('.matrix-view-inner'); if (pages[currentSubPage]) document.getElementById('matrixWindow').style.height = (pages[currentSubPage].offsetHeight + 20) + "px"; }
     function openConfig() { document.getElementById('modalConfig').classList.add('open'); }
     function closeConfig() { document.getElementById('modalConfig').classList.remove('open'); }
     function saveConfig() { ghToken = document.getElementById('inputToken').value.trim(); ghRepo = document.getElementById('inputRepo').value.trim(); calUrl = document.getElementById('inputCal').value.trim(); localStorage.setItem('gh_token', ghToken); localStorage.setItem('gh_repo', ghRepo); localStorage.setItem('cal_url', calUrl); updateAndSave(); closeConfig(); githubPull(); }
+    function toggleSyncMenu(e) { e.stopPropagation(); document.getElementById('syncMenu').classList.toggle('open'); }
+    function toggleFilterBar() { const bar = document.getElementById('projectFilterBar'); if (bar.classList.contains('open')) { setFilter('ALL'); bar.classList.remove('open'); } else { bar.classList.add('open'); } }
+    function setFilter(proj) { activeProjectFilter = proj; document.getElementById('filterCat').classList.toggle('filtered', proj !== "ALL"); updateUI(); }
+    function toggleSortBar() { if (window.innerWidth <= 768) { const bar = document.getElementById('mobileSortBar'); const line = document.getElementById('leftSortLine'); bar.classList.toggle('open'); line.classList.toggle('active'); updateSliderHeight(); } }
+    function toggleArchive(type) { const content = document.getElementById(`archiveContent${type}`); const isHidden = content.style.display === 'none' || content.style.display === ''; content.style.display = isHidden ? 'block' : 'none'; document.getElementById(`archiveChevron${type}`).style.transform = isHidden ? 'rotate(180deg)' : ''; updateSliderHeight(); }
 
-    // --- FILTRES DU CHAT (LOGIQUE IDENTIQUE INDEX 3) ---
-    function toggleFilterBar() {
-        const bar = document.getElementById('projectFilterBar');
-        if (bar.classList.contains('open')) {
-            setFilter('ALL');
-            bar.classList.remove('open');
-        } else {
-            bar.classList.add('open');
-        }
-    }
-    function setFilter(proj) {
-        activeProjectFilter = proj;
-        document.getElementById('filterCat').classList.toggle('filtered', proj !== "ALL");
-        updateUI();
-    }
+    // --- WORK ENGINE ---
+    function navigateWork(view, projectId = null, folderId = null) { workState = { view, projectId, folderId }; document.querySelectorAll('.work-view-container').forEach(el => el.classList.remove('active-view')); document.getElementById(`workView-${view}`).classList.add('active-view'); updateUI(); }
+    function addFolder() { const name = prompt("Dossier ?"); if(name) { folders.push({ id: Date.now(), name, projectId: workState.projectId }); updateAndSave(); } }
+    function openResourceBubble() { document.getElementById('resBubble').style.display = 'block'; }
+    function confirmResource() { const n = document.getElementById('resName').value, u = document.getElementById('resUrl').value; if(n && u) { resources.push({ id: Date.now(), folderId: workState.folderId, name: n, url: u }); document.getElementById('resBubble').style.display = 'none'; updateAndSave(); } }
+    function addDynamicList() { const name = prompt("Titre ?"); if(name) { folderLists.push({ id: Date.now(), folderId: workState.folderId, name, items: [] }); updateAndSave(); } }
+    function addListItem(lId) { const t = prompt("Element ?"); if(t) { folderLists.find(l => l.id == lId).items.push({ id: Date.now(), title: t, done: false }); updateAndSave(); } }
+    function toggleListItem(lId, iId) { const l = folderLists.find(l => l.id == lId); const i = l.items.find(it => it.id == iId); i.done = !i.done; updateAndSave(); }
+    function deleteRes(id) { resources = resources.filter(r => r.id !== id); updateAndSave(); }
+    function moveTaskToFolder(id) { const task = tasks.find(t => t.id == id); const pF = folders.filter(f => f.projectId === task.project); const choice = prompt(`Classer ?\n${pF.map((f, i) => `${i+1}. ${f.name}`).join("\n")}`); if(!choice) return; let sel = pF.find(f => f.name.toLowerCase() === choice.toLowerCase()) || pF[parseInt(choice)-1]; if(!sel && choice) { if(confirm(`Créer ${choice.toUpperCase()} ?`)) { sel = { id: Date.now(), name: choice.toUpperCase(), projectId: task.project }; folders.push(sel); } } if(sel) { task.folderId = sel.id; updateAndSave(); } }
 
-    // --- SYNC ---
-    async function githubPush() {
-        if(!ghToken || !ghRepo) return;
-        const light = document.getElementById('statusLight'); light.classList.remove('status-on');
-        try {
-            const resFile = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, { headers: { 'Authorization': `token ${ghToken}` } });
-            const fileData = await resFile.json();
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify({ tasks, archives, groceries, groceriesDone }))));
-            await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json`, { method: 'PUT', headers: { 'Authorization': `token ${ghToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: "OS-Sync", content, sha: fileData.sha }) });
-            light.classList.add('status-on');
-        } catch (e) {}
-    }
-    async function githubPull() {
-        if(!ghToken || !ghRepo) return;
-        try {
-            const res = await fetch(`https://api.github.com/repos/${ghRepo}/contents/data.json?t=${Date.now()}`, { headers: { 'Authorization': `token ${ghToken}` } });
-            if(res.ok) {
-                const data = await res.json();
-                const decoded = JSON.parse(decodeURIComponent(escape(atob(data.content))));
-                tasks = decoded.tasks || []; archives = decoded.archives || []; groceries = decoded.groceries || []; groceriesDone = decoded.groceriesDone || [];
-                updateAndSave(false);
-            }
-        } catch (e) {}
-    }
-    function updateAndSave(push = true) {
-        localStorage.setItem('tasks', JSON.stringify(tasks)); localStorage.setItem('archives', JSON.stringify(archives));
-        localStorage.setItem('groceries', JSON.stringify(groceries)); localStorage.setItem('groceriesDone', JSON.stringify(groceriesDone));
-        updateUI(); if (push) githubPush();
-    }
-
-    function sortTable(key) {
-        if (currentSort.key === key) currentSort.desc = !currentSort.desc; else { currentSort.key = key; currentSort.desc = true; }
-        tasks.sort((a, b) => {
-            let valA = (key === 'priority') ? PRIORITY_MAP[a.priority].weight : (a[key] || "");
-            let valB = (key === 'priority') ? PRIORITY_MAP[b.priority].weight : (b[key] || "");
-            return currentSort.desc ? (valA < valB ? 1 : -1) : (valA > valB ? 1 : -1);
-        });
-        updateAndSave(false);
-    }
-
-    function startEdit(element, taskId, field, type) {
-        if (element.querySelector('input, select')) return;
-        const task = tasks.find(t => t.id === taskId);
-        const input = document.createElement(type === 'select' ? 'select' : 'input');
-        input.value = task[field];
-        if (type === 'select') {
-            const map = (field === 'priority') ? PRIORITY_MAP : STATUS_MAP;
-            Object.entries(map).forEach(([val, opt]) => { if (opt.label || val === 'none') input.add(new Option(opt.label || '🍃 Aucun', val, val === task[field], val === task[field])); });
-        }
-        element.innerHTML = ''; element.appendChild(input); input.focus();
-        input.onblur = () => { task[field] = (field === 'project') ? input.value.toUpperCase() : input.value; updateAndSave(); };
-        input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); };
-    }
-
-    function addTask() {
-        const titleVal = document.getElementById('taskTitle').value.trim(); if (!titleVal) return;
-        tasks.unshift({ id: Date.now(), title: titleVal, project: document.getElementById('taskProject').value.toUpperCase() || '☕︎', status: document.getElementById('taskStatus').value, priority: document.getElementById('taskPriority').value, createdAt: Date.now() });
-        document.getElementById('taskTitle').value = ''; document.getElementById('taskProject').value = ''; updateAndSave();
-    }
-
+    // --- ACTIONS ---
+    function sortTable(key) { if (currentSort.key === key) currentSort.desc = !currentSort.desc; else { currentSort.key = key; currentSort.desc = true; } tasks.sort((a, b) => { let vA = (key === 'priority') ? PRIORITY_MAP[a.priority].weight : (a[key] || ""); let vB = (key === 'priority') ? PRIORITY_MAP[b.priority].weight : (b[key] || ""); return currentSort.desc ? (valA < valB ? 1 : -1) : (valA > valB ? 1 : -1); }); updateAndSave(false); }
+    function addTask() { const titleVal = document.getElementById('taskTitle').value.trim(); if (!titleVal) return; tasks.unshift({ id: Date.now(), title: titleVal, project: document.getElementById('taskProject').value.toUpperCase() || '☕︎', status: document.getElementById('taskStatus').value, priority: document.getElementById('taskPriority').value, folderId: null, createdAt: Date.now() }); document.getElementById('taskTitle').value = ''; document.getElementById('taskProject').value = ''; updateAndSave(); }
     function toggleComplete(id) { const idx = tasks.findIndex(t => t.id == id); if (idx > -1) { const t = tasks.splice(idx, 1)[0]; t.completedAt = Date.now(); archives.push(t); updateAndSave(); } }
     function restoreTask(id) { const idx = archives.findIndex(t => t.id == id); if (idx > -1) { tasks.unshift(archives.splice(idx, 1)[0]); updateAndSave(); } }
-    function addEatItem() { const val = document.getElementById('eatInput').value.trim(); if(!val) return; groceries.unshift({ id: Date.now(), title: val }); document.getElementById('eatInput').value = ''; updateAndSave(); }
+    function addEatItem() { const el = document.getElementById('eatInput'); if(!el.value.trim()) return; groceries.unshift({ id: Date.now(), title: el.value.trim() }); el.value = ""; updateAndSave(); }
     function toggleEatDone(id) { const idx = groceries.findIndex(g => g.id === id); if (idx > -1) { groceriesDone.push(groceries.splice(idx, 1)[0]); updateAndSave(); } }
     function restoreEat(id) { const idx = groceriesDone.findIndex(g => g.id === id); if (idx > -1) { groceries.unshift(groceriesDone.splice(idx, 1)[0]); updateAndSave(); } }
     function cleanArchives(type) { if(type === 'Doux') archives = archives.filter(t => t.completedAt >= Date.now() - (14 * 24 * 60 * 60 * 1000)); else groceriesDone = []; updateAndSave(); }
-    function toggleArchive(type) { const content = document.getElementById(`archiveContent${type}`); const isHidden = content.style.display === 'none' || content.style.display === ''; content.style.display = isHidden ? 'block' : 'none'; document.getElementById(`archiveChevron${type}`).style.transform = isHidden ? 'rotate(180deg)' : ''; updateSliderHeight(); }
-    function toggleSortBar() { if (window.innerWidth <= 768) { const bar = document.getElementById('mobileSortBar'); const line = document.getElementById('leftSortLine'); bar.classList.toggle('open'); line.classList.toggle('active'); updateSliderHeight(); } }
+    function startEdit(element, taskId, field, type) { if (element.querySelector('input, select')) return; const task = tasks.find(t => t.id == taskId); const input = document.createElement(type === 'select' ? 'select' : 'input'); input.value = task[field]; if (type === 'select') { const map = (field === 'priority') ? PRIORITY_MAP : STATUS_MAP; Object.entries(map).forEach(([val, opt]) => { if (opt.label || val === 'none') input.add(new Option(opt.label || '🍃 Aucun', val, val === task[field], val === task[field])); }); } element.innerHTML = ''; element.appendChild(input); input.focus(); input.onblur = () => { task[field] = (field === 'project') ? input.value.toUpperCase() : input.value; updateAndSave(); }; }
+
+    function renderWorkTasksUI(containerId, filteredTasks, canClassify = false) {
+        const cont = document.getElementById(containerId); cont.innerHTML = '';
+        filteredTasks.forEach(t => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td class="col-check"><input type="checkbox" onclick="toggleComplete(${t.id})"></td><td class="col-task"><strong></strong></td>${canClassify ? `<td style="text-align:right"><button onclick="moveTaskToFolder(${t.id})" style="font-size:0.6rem; padding:4px; border-radius:5px; border:1px solid #ccc; background:#fff; cursor:pointer;">📁 Classer</button></td>` : ''}`;
+            const strong = row.querySelector('strong'); strong.textContent = t.title;
+            strong.onclick = () => { strong.classList.toggle('expanded'); setTimeout(updateSliderHeight, 410); };
+            strong.ondblclick = () => startEdit(row.querySelector('.col-task'), t.id, 'title', 'text');
+            cont.appendChild(row);
+        });
+    }
 
     function updateUI() {
         const todoBody = document.getElementById('todoBody'), archiveBodyDoux = document.getElementById('archiveBodyDoux'), eatList = document.getElementById('eatList'), archiveBodyEat = document.getElementById('archiveBodyEat');
@@ -433,15 +435,11 @@
         ['both', 'important', 'urgent', 'none'].forEach(p => { if(document.getElementById(`m-p-${p}`)) document.getElementById(`m-p-${p}`).innerHTML = ''; });
         ['URGENCE', 'IMPACT', 'FACILE'].forEach(s => { if(document.getElementById(`m-s-${s}`)) document.getElementById(`m-s-${s}`).innerHTML = ''; });
 
-        const activeProjects = [...new Set(tasks.map(t => t.project))].filter(p => p !== '☕︎').sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+        const activeProjects = [...new Set([...tasks.map(t => t.project), ...folders.map(f => f.projectId)])].filter(p => p !== '☕︎').sort((a,b) => a.localeCompare(b, 'fr', {sensitivity:'base'}));
         const projectColorMap = {}; activeProjects.forEach((p, i) => { projectColorMap[p] = GHIBLI_PASTELS[i % GHIBLI_PASTELS.length]; });
         const datalist = document.getElementById('projectSuggestions'); datalist.innerHTML = ''; activeProjects.forEach(p => datalist.innerHTML += `<option value="${p}">`);
-
-        const filterBar = document.getElementById('projectFilterBar');
-        filterBar.innerHTML = `<div class="filter-pill ${activeProjectFilter === 'ALL' ? 'active' : ''}" onclick="setFilter('ALL')">Tous</div>`;
-        activeProjects.forEach(p => { filterBar.innerHTML += `<div class="filter-pill ${activeProjectFilter === p ? 'active' : ''}" onclick="setFilter('${p}')">${p}</div>`; });
-
-        document.querySelectorAll('.sort-pill').forEach(pill => { pill.classList.toggle('active', pill.id === `m-pill-${currentSort.key}`); });
+        const filterBar = document.getElementById('projectFilterBar'); filterBar.innerHTML = `<div class="filter-pill ${activeProjectFilter === 'ALL' ? 'active' : ''}" onclick="setFilter('ALL')">Tous</div>`;
+        activeProjects.forEach(p => filterBar.innerHTML += `<div class="filter-pill ${activeProjectFilter === p ? 'active' : ''}" onclick="setFilter('${p}')">${p}</div>`);
 
         tasks.filter(t => activeProjectFilter === "ALL" || t.project === activeProjectFilter).forEach(task => {
             const s = STATUS_MAP[task.status] || STATUS_MAP['NONE'], p = PRIORITY_MAP[task.priority] || PRIORITY_MAP['none'];
@@ -450,16 +448,13 @@
             row.innerHTML = `<td class="col-check"><input type="checkbox" onclick="toggleComplete(${task.id})"></td><td class="col-task"><strong></strong></td><td class="col-project editable" onclick="startEdit(this, ${task.id}, 'project', 'text')"><span class="project-tag" style="background:${style.bg}; color:${style.text}">${task.project}</span></td><td class="col-priority editable" onclick="startEdit(this, ${task.id}, 'priority', 'select')">${p.label ? `<span class="badge ${p.class}">${p.label}</span>` : ''}</td><td class="col-status editable" onclick="startEdit(this, ${task.id}, 'status', 'select')">${s.label ? `<span class="badge ${s.class}">${s.label}</span>` : ''}</td>`;
             const strong = row.querySelector('strong'); strong.textContent = task.title;
             strong.onclick = (e) => { e.stopPropagation(); strong.classList.toggle('expanded'); setTimeout(updateSliderHeight, 410); };
-            strong.ondblclick = (e) => { e.stopPropagation(); startEdit(row.querySelector('.col-task'), task.id, 'title', 'text'); };
+            strong.ondblclick = () => startEdit(row.querySelector('.col-task'), task.id, 'title', 'text');
             todoBody.appendChild(row);
-
-            const mItem = document.createElement('div'); mItem.className = 'matrix-item'; 
-            mItem.innerHTML = `<div class="matrix-item-content"><strong></strong><span class="project-tag" style="background:${style.bg}; color:${style.text}; font-size:0.6rem; padding:2px 8px; margin-top:4px">${task.project}</span></div><input type="checkbox" onclick="toggleComplete(${task.id})">`;
-            const strongM = mItem.querySelector('strong'); strongM.textContent = task.title;
-            strongM.onclick = (e) => { e.stopPropagation(); strongM.classList.toggle('expanded'); setTimeout(updateSliderHeight, 410); };
-            strongM.ondblclick = (e) => { e.stopPropagation(); startEdit(mItem.querySelector('.matrix-item-content'), task.id, 'title', 'text'); };
+            const mItem = document.createElement('div'); mItem.className = 'matrix-item'; mItem.innerHTML = `<div class="matrix-item-content"><strong></strong><span class="project-tag" style="background:${style.bg}; color:${style.text}; font-size:0.6rem; padding:2px 8px; margin-top:4px">${task.project}</span></div><input type="checkbox" onclick="toggleComplete(${task.id})">`;
+            const sM = mItem.querySelector('strong'); sM.textContent = task.title; sM.onclick = (e) => { e.stopPropagation(); sM.classList.toggle('expanded'); setTimeout(updateSliderHeight, 410); };
+            sM.ondblclick = () => startEdit(mItem.querySelector('.matrix-item-content'), task.id, 'title', 'text');
             if(document.getElementById(`m-p-${task.priority}`)) document.getElementById(`m-p-${task.priority}`).appendChild(mItem);
-            if(task.status !== 'NONE') { const mClone = mItem.cloneNode(true); mClone.querySelector('input').onclick = () => toggleComplete(task.id); const sMClone = mClone.querySelector('strong'); sMClone.onclick = (e) => { e.stopPropagation(); sMClone.classList.toggle('expanded'); setTimeout(updateSliderHeight, 410); }; sMClone.ondblclick = (e) => { e.stopPropagation(); startEdit(mClone.querySelector('.matrix-item-content'), task.id, 'title', 'text'); }; if(document.getElementById(`m-s-${task.status}`)) document.getElementById(`m-s-${task.status}`).appendChild(mClone); }
+            if(task.status !== 'NONE') { const mClone = mItem.cloneNode(true); mClone.querySelector('input').onclick = () => toggleComplete(task.id); const sMC = mClone.querySelector('strong'); sMC.onclick = (e) => { e.stopPropagation(); sMC.classList.toggle('expanded'); setTimeout(updateSliderHeight, 410); }; sMC.ondblclick = () => startEdit(mClone.querySelector('.matrix-item-content'), task.id, 'title', 'text'); if(document.getElementById(`m-s-${task.status}`)) document.getElementById(`m-s-${task.status}`).appendChild(mClone); }
         });
 
         archives.filter(t => activeProjectFilter === "ALL" || t.project === activeProjectFilter).sort((a,b) => b.completedAt - a.completedAt).forEach(t => {
@@ -469,16 +464,53 @@
 
         groceries.forEach(item => { const div = document.createElement('div'); div.className = 'eat-item'; const icon = getGroceryIcon(item.title); div.innerHTML = `<span>${item.title}</span><div style="display:flex; align-items:center; gap:10px;"><img src="${icon}" class="eat-img" onerror="this.src='https://img.icons8.com/color/96/shopping-basket-2.png'"><input type="checkbox" onclick="toggleEatDone(${item.id})"></div>`; eatList.appendChild(div); });
         groceriesDone.sort((a,b) => b.completedAt - a.completedAt).forEach(item => { const row = document.createElement('tr'); row.innerHTML = `<td class="col-check">✅</td><td style="text-decoration:line-through">${item.title}</td><td style="text-align:right"><button onclick="restoreEat(${item.id})" style="font-size:0.7rem; padding:4px; background:white; border:1px solid #ccc; border-radius:5px">Restaurer</button></td>`; archiveBodyEat.appendChild(row); });
+
+        if(currentEnv === 'WORK') {
+            const b = document.getElementById('workBreadcrumb'); b.innerHTML = `<span onclick="navigateWork('dashboard')">WORK</span>`;
+            if(workState.projectId) b.innerHTML += ` 〉 <span onclick="navigateWork('project', '${workState.projectId}')">${workState.projectId}</span>`;
+            if(workState.folderId) b.innerHTML += ` 〉 <b>${folders.find(f => f.id == workState.folderId).name}</b>`;
+            if(workState.view === 'dashboard') {
+                renderWorkTasksUI('workTodayTasks', tasks.filter(t => t.priority === 'both'));
+                if(calUrl) document.getElementById('calendarContainer').innerHTML = `<iframe src="https://calendar.google.com/calendar/embed?src=${encodeURIComponent(calUrl)}&ctz=Europe%2FParis&mode=AGENDA" style="border: 0" width="100%" height="300" frameborder="0" scrolling="no"></iframe>`;
+                const pList = document.getElementById('workProjectList'); pList.innerHTML = ''; activeProjects.forEach(p => pList.innerHTML += `<button class="project-btn" onclick="navigateWork('project', '${p}')">${p} <span>〉</span></button>`);
+                const archBody = document.getElementById('workDashboardArchives'); archBody.innerHTML = ''; archives.filter(t => t.priority === 'both').slice(0, 10).forEach(t => archBody.innerHTML += `<tr><td class="col-check">✅</td><td style="text-decoration:line-through; font-size:0.8rem; opacity:0.6;">${t.title}</td></tr>`);
+            }
+            if(workState.view === 'project') {
+                renderWorkTasksUI('workProjectTasks', tasks.filter(t => t.project === workState.projectId), true);
+                document.getElementById('projectArchiveTitle').textContent = `⛩️ ... OH WOW ! (${workState.projectId})`;
+                const archBody = document.getElementById('workProjectArchives'); archBody.innerHTML = ''; archives.filter(t => t.project === workState.projectId).slice(0, 10).forEach(t => archBody.innerHTML += `<tr><td class="col-check">✅</td><td style="text-decoration:line-through; font-size:0.8rem; opacity:0.6;">${t.title}</td></tr>`);
+                const fList = document.getElementById('workFolderList'); fList.innerHTML = ''; folders.filter(f => f.projectId === workState.projectId).forEach(f => fList.innerHTML += `<button class="folder-btn" onclick="navigateWork('folder', '${workState.projectId}', ${f.id})">📁 ${f.name} <span>〉</span></button>`);
+            }
+            if(workState.view === 'folder') {
+                const f = folders.find(f => f.id == workState.folderId);
+                document.getElementById('folderTitleWork').textContent = `✅ TD ${f.name}`;
+                document.getElementById('folderArchiveTitle').textContent = `⛩️ ... OH WOW ! (${f.name})`;
+                renderWorkTasksUI('workFolderTasks', tasks.filter(t => t.folderId == workState.folderId));
+                const archBody = document.getElementById('workFolderArchives'); archBody.innerHTML = ''; 
+                archives.filter(t => t.folderId == workState.folderId).slice(0, 10).forEach(t => archBody.innerHTML += `<tr><td class="col-check">✅</td><td style="text-decoration:line-through; font-size:0.8rem; opacity:0.6;">${t.title}</td></tr>`);
+                const rList = document.getElementById('workResourceList'); rList.innerHTML = ''; resources.filter(r => r.folderId == workState.folderId).forEach(r => {
+                    let icon = "https://img.icons8.com/color/48/internet.png";
+                    if(r.url.includes('document')) icon = "https://img.icons8.com/color/48/google-docs--v1.png";
+                    if(r.url.includes('spreadsheets')) icon = "https://img.icons8.com/color/48/google-sheets.png";
+                    rList.innerHTML += `<div class="resource-item"><a href="${r.url}" target="_blank" class="res-link"><img src="${icon}" class="res-icon">${r.name}</a><button onclick="deleteRes(${r.id})" style="background:none; border:none; color:red; cursor:pointer">✕</button></div>`;
+                });
+                const dList = document.getElementById('folderDynamicLists'); dList.innerHTML = '';
+                folderLists.filter(l => l.folderId == workState.folderId).forEach(l => {
+                    let h = `<div class="work-card dynamic-list-card"><h3>${l.name}</h3>`;
+                    l.items.forEach(i => h += `<div class="list-item"><input type="checkbox" ${i.done?'checked':''} onclick="toggleListItem(${l.id}, ${i.id})"><span>${i.title}</span></div>`);
+                    h += `<button class="clean-btn" style="margin-top:10px; margin-bottom:0;" onclick="addListItem(${l.id})">+ Elément</button></div>`;
+                    dList.innerHTML += h;
+                });
+            }
+        }
         setTimeout(updateSliderHeight, 50);
     }
 
     function allowDrop(ev) { ev.preventDefault(); }
-    function drop(ev) {
-        ev.preventDefault(); const taskId = parseInt(ev.dataTransfer.getData("taskId")); const targetId = ev.currentTarget.id; const task = tasks.find(t => t.id == taskId);
-        if (task) { if (targetId.startsWith('drop-p-')) task.priority = targetId.replace('drop-p-', ''); if (targetId.startsWith('drop-s-')) task.status = targetId.replace('drop-s-', ''); updateAndSave(); }
-    }
+    function drop(ev) { ev.preventDefault(); const taskId = parseInt(ev.dataTransfer.getData("taskId")); const targetId = ev.currentTarget.id; const task = tasks.find(t => t.id == taskId); if (task) { if (targetId.startsWith('drop-p-')) task.priority = targetId.replace('drop-p-', ''); if (targetId.startsWith('drop-s-')) task.status = targetId.replace('drop-s-', ''); updateAndSave(); } }
 
-    window.onload = githubPull; updateUI();
+    window.onload = githubPull;
+    updateUI();
 </script>
 </body>
 </html>

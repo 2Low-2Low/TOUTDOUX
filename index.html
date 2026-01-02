@@ -52,7 +52,7 @@
         .env-nav { display: flex; align-items: center; gap: 12px; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; }
         .env-btn { cursor: pointer; opacity: 0.4; transition: 0.3s; padding: 2px 8px; border-radius: 6px; }
         .env-btn.active { opacity: 1; background: rgba(255,255,255,0.15); }
-        .status-light { width: 8px; height: 8px; border-radius: 50%; background: #636e72; display: inline-block; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }
+        .status-light { width: 10px; height: 10px; border-radius: 50%; background: #636e72; display: inline-block; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }
         .status-on { background: #b8e994; box-shadow: 0 0 10px #b8e994; }
 
         /* --- SLIDERS --- */
@@ -116,9 +116,6 @@
         .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 5px; }
         .matrix-grid-triple { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; padding: 5px; }
         .quadrant { background: var(--card); padding: 25px; border-radius: 25px; border-top: 8px solid #ccc; min-height: 220px; box-shadow: 4px 4px 15px rgba(139, 126, 116, 0.04); }
-        .q-both { border-top-color: var(--urgent-both); } .q-important { border-top-color: #6c5ce7; } .q-urgent { border-top-color: var(--urgent-only); } .q-none { border-top-color: #bdc3c7; }
-        .q-s-urg { border-top-color: var(--s-urgence); background-color: #fdf5f4; } .q-s-imp { border-top-color: var(--s-impact); background-color: #f4f8fb; } .q-s-fac { border-top-color: var(--s-facile); background-color: #f5f9f5; }
-        
         .matrix-item { background: #fff; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; width: 100%; }
         .matrix-item-content { flex: 1; padding-right: 15px; pointer-events: none; }
         .matrix-item-content strong { pointer-events: auto; }
@@ -135,25 +132,40 @@
         .filter-bar, .mobile-sort-bar { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; max-height: 0; opacity: 0; margin-bottom: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
         .open { max-height: 80px !important; opacity: 1 !important; margin-bottom: 15px !important; pointer-events: auto !important; }
 
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(74,69,63,0.6); backdrop-filter: blur(4px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* --- MODAL CONFIG MOBILE FIXED --- */
+        .modal-overlay { 
+            position: fixed; top:0; left:0; width:100%; height:100%; 
+            background: rgba(74,69,63,0.6); backdrop-filter: blur(4px); 
+            z-index: 2000; 
+            display: flex; align-items: center; justify-content: center; /* Flex pour centrage mobile */
+            opacity: 0; visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         .modal-overlay.open { opacity: 1; visibility: visible; }
-        .modal-card { background: var(--bg); padding: 30px; border-radius: 25px; border: 2px solid var(--important-only); width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); transform: scale(0.9) translateY(20px); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        
+        .modal-card { 
+            background: var(--bg); padding: 25px; border-radius: 25px; 
+            border: 2px solid var(--important-only); 
+            width: 92%; max-width: 450px; 
+            max-height: 85vh; /* Empêche de dépasser sur petit écran */
+            overflow-y: auto; /* Active le défilement si trop de contenu */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
         .modal-overlay.open .modal-card { transform: scale(1) translateY(0); }
 
         /* --- WORK SPACE --- */
         .work-breadcrumb { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; font-weight: 800; font-size: 0.8rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
         .work-breadcrumb span { cursor: pointer; opacity: 0.6; transition: 0.3s; }
-        .work-breadcrumb span:hover { opacity: 1; color: var(--accent); }
         .work-breadcrumb b { color: var(--text); opacity: 1; }
         .work-view-container { display: none; opacity: 0; transform: translateY(10px); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .work-view-container.active-view { display: block; opacity: 1; transform: translateY(0); }
         .work-layout { display: flex; flex-direction: column; gap: 20px; }
         .work-card { background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid var(--border); box-shadow: 4px 4px 15px rgba(0,0,0,0.02); }
-        .work-card h3 { margin-top: 0; font-family: 'Playfair Display', serif; color: var(--secondary); display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
         .project-btn, .folder-btn { width: 100%; text-align: left; padding: 18px 20px; border-radius: 15px; border: 1.5px solid var(--border); background: white; cursor: pointer; font-weight: 700; transition: 0.3s; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .res-bubble { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); z-index: 3000; border: 2px solid var(--accent); width: 320px; display: none; }
         .resource-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-radius: 12px; background: #f9f9f7; border: 1px solid var(--border); margin-bottom: 8px; }
-        .res-icon { width: 22px; height: 22px; }
 
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
@@ -181,13 +193,13 @@
 
 <div class="modal-overlay" id="modalConfig">
     <div class="modal-card">
-        <h2>Paramètres & Sync</h2>
+        <h2 style="margin-top:0">Paramètres & Sync</h2>
         <div style="display:flex; gap:10px; margin-bottom:20px;">
             <button class="add-btn" style="flex:1; background:var(--info); height:40px; box-shadow:none;" onclick="githubPull()">📥 Charger</button>
             <button class="add-btn" style="flex:1; height:40px; box-shadow:none;" onclick="githubPush()">📤 Sauver</button>
         </div>
         <hr style="border:none; border-top:1px solid var(--border);">
-        <label>Token Personnel GitHub</label><input type="password" id="inputToken" placeholder="ghp_xxxxxx">
+        <label>Token Personnel GitHub</label><input type="password" id="inputToken" placeholder="ghp_...">
         <label>Dépôt (pseudo/repo)</label><input type="text" id="inputRepo" placeholder="pseudo/repo">
         <label>ID Calendrier Google (Public)</label><input type="text" id="inputCal">
         <div style="display:flex; gap:10px; margin-top:20px">
@@ -224,6 +236,7 @@
                 <h1 id="mainTitle" onclick="toggleMainView()">TOUT DOUX</h1>
                 <div class="main-viewport">
                     <div class="main-track" id="mainTrack">
+                        
                         <div class="main-view">
                             <div class="task-form" onkeydown="if(event.key==='Enter') addTask()">
                                 <div class="form-group"><label>Note</label><input type="text" id="taskTitle" placeholder="Écrire une petite note..."></div>
@@ -300,7 +313,7 @@
                     <div class="work-layout">
                         <div class="work-card"><h3 id="folderTitleWork">✅ TD du dossier</h3><div class="card-table"><table><tbody id="workFolderTasks"></tbody></table></div></div>
                         <div id="folderDynamicLists"></div>
-                        <div class="work-card"><h3>📎 Liens & Fichiers</h3><div style="display:flex; gap:10px; margin-bottom:15px"><button class="clean-btn" style="flex:1; margin-bottom:0" onclick="openResourceBubble()">+ Lien / Fichier</button><button class="clean-btn" style="flex:1; margin-bottom:0; background:var(--info)" onclick="addDynamicList()">+ Liste</button></div><div id="workResourceList"></div></div>
+                        <div class="work-card"><h3>📎 Liens & Fichiers</h3><div style="display:flex; gap:10px; margin-bottom:15px"><button class="add-btn" style="flex:1; height:35px; box-shadow:none" onclick="openResourceBubble()">+ Lien / Fichier</button><button class="add-btn" style="flex:1; height:35px; background:var(--info); box-shadow:none" onclick="addDynamicList()">+ Liste</button></div><div id="workResourceList"></div></div>
                         <div class="work-card"><h3 id="folderArchiveTitle">⛩️ ... OH WOW !</h3><div class="card-table"><table><tbody id="workFolderArchives"></tbody></table></div></div>
                     </div>
                 </div>
@@ -317,9 +330,7 @@
     let folders = JSON.parse(localStorage.getItem('folders')) || [];
     let resources = JSON.parse(localStorage.getItem('resources')) || [];
     let folderLists = JSON.parse(localStorage.getItem('folderLists')) || [];
-    let ghToken = (localStorage.getItem('gh_token') || "").trim();
-    let ghRepo = (localStorage.getItem('gh_repo') || "").trim();
-    let calUrl = (localStorage.getItem('cal_url') || "").trim();
+    let ghToken = (localStorage.getItem('gh_token') || "").trim(), ghRepo = (localStorage.getItem('gh_repo') || "").trim(), calUrl = (localStorage.getItem('cal_url') || "").trim();
     
     let currentMainView = 0, currentSubPage = 0, activeProjectFilter = "ALL", currentSort = { key: 'createdAt', desc: true }, currentEnv = 'TOUT', workState = { view: 'dashboard', projectId: null, folderId: null };
 
@@ -327,18 +338,17 @@
     const STATUS_MAP = { 'NONE': { label: '', class: '' }, 'URGENCE': { label: '🚨 Urgence', class: 's-urg' }, 'IMPACT': { label: '🎯 Impact', class: 's-imp' }, 'FACILE': { label: '✨ Facile', class: 's-fac' } };
     const GHIBLI_PASTELS = [{bg:'#e8f5e9',text:'#2e7d32'},{bg:'#fff3e0',text:'#ef6c00'},{bg:'#f3e5f5',text:'#7b1fa2'},{bg:'#e3f2fd',text:'#1565c0'},{bg:'#f1f8e9',text:'#558b2f'},{bg:'#fffde7',text:'#fbc02d'}];
 
-    const ICON_DICT = { 'pomme': 'apple', 'citron vert': 'lime', 'citron': 'lemon', 'oeuf': 'eggs', 'lait': 'milk-bottle', 'fromage': 'cheese', 'pain': 'bread', 'pate': 'spaghetti', 'viande': 'steak', 'creme': 'cream-canister', 'mascarpone': 'cheese' };
-    const FOOD_KEYWORDS = ['manger', 'boire', 'cuisine', 'recette', 'viande', 'fruit', 'legume', 'oeuf', 'creme', 'pate', 'riz', 'fromage', 'fraiche'];
+    const ICON_DICT = { 'pomme': 'apple', 'citron': 'lemon', 'oeuf': 'eggs', 'lait': 'milk-bottle', 'fromage': 'cheese', 'pain': 'bread', 'pate': 'spaghetti', 'viande': 'steak' };
+    const FOOD_KEYWORDS = ['manger', 'boire', 'cuisine', 'recette', 'viande', 'fruit', 'legume', 'oeuf', 'creme', 'pate', 'fromage'];
 
     function getGroceryIcon(name) {
-        let normalized = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        let clean = normalized.replace(/[0-9]|\b(g|kg|ml|cl|l|mg)\b|[()]/gi, '').trim().toLowerCase();
+        let clean = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[0-9]|\b(g|kg|ml|cl|l|mg)\b|[()]/gi, '').trim().toLowerCase();
         for (let k in ICON_DICT) { if (clean.includes(k)) return `https://img.icons8.com/color/96/${ICON_DICT[k]}.png`; }
         if (FOOD_KEYWORDS.some(k => clean.includes(k))) return 'https://img.icons8.com/color/96/shopping-basket-2.png';
         return 'https://img.icons8.com/color/96/shopping-bag.png';
     }
 
-    // --- SYNC CORE ---
+    // --- SYSTEM ENGINE ---
     function updateAndSave(push = true) {
         localStorage.setItem('tasks', JSON.stringify(tasks)); localStorage.setItem('archives', JSON.stringify(archives));
         localStorage.setItem('groceries', JSON.stringify(groceries)); localStorage.setItem('groceriesDone', JSON.stringify(groceriesDone));
@@ -351,15 +361,15 @@
         if(!ghToken || !ghRepo) return;
         const light = document.getElementById('statusLight'); light.style.backgroundColor = "orange";
         try {
-            const cleanToken = ghToken.replace(/\s+/g, '');
-            const cleanRepo = ghRepo.replace(/\s+/g, '').replace('https://github.com/', '');
-            const resFile = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/data.json`, { headers: { 'Authorization': `token ${cleanToken}`, 'Cache-Control': 'no-cache' } });
+            const cleanToken = ghToken.trim();
+            const cleanRepo = ghRepo.trim().replace('https://github.com/', '');
+            const resFile = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/data.json?t=${Date.now()}`, { headers: { 'Authorization': `token ${cleanToken}`, 'Cache-Control': 'no-cache' } });
             let sha = ""; if(resFile.ok) { const fd = await resFile.json(); sha = fd.sha; }
             const payload = { tasks, archives, groceries, groceriesDone, folders, resources, folderLists };
             const jsonStr = JSON.stringify(payload);
             const utf8Bytes = new TextEncoder().encode(jsonStr);
             const base64 = btoa(String.fromCharCode(...utf8Bytes));
-            const putRes = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/data.json`, { method: 'PUT', headers: { 'Authorization': `token ${cleanToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: "Sync OS", content: base64, sha: sha || undefined }) });
+            const putRes = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/data.json`, { method: 'PUT', headers: { 'Authorization': `token ${cleanToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: "Sync", content: base64, sha: sha || undefined }) });
             if(putRes.ok) { light.style.backgroundColor = "#b8e994"; light.classList.add('status-on'); } else { light.style.backgroundColor = "red"; }
         } catch (e) { light.style.backgroundColor = "red"; }
     }
@@ -367,8 +377,8 @@
     async function githubPull() {
         if(!ghToken || !ghRepo) return;
         try {
-            const cleanToken = ghToken.replace(/\s+/g, '');
-            const cleanRepo = ghRepo.replace(/\s+/g, '').replace('https://github.com/', '');
+            const cleanToken = ghToken.trim();
+            const cleanRepo = ghRepo.trim().replace('https://github.com/', '');
             const res = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/data.json?t=${Date.now()}`, { headers: { 'Authorization': `token ${cleanToken}` } });
             if(res.ok) {
                 const data = await res.json();
@@ -384,7 +394,7 @@
     // --- NAVIGATION ---
     function switchEnv(env) { currentEnv = env; document.getElementById('globalTrack').style.transform = (env === 'TOUT') ? 'translateX(0%)' : 'translateX(-50%)'; document.getElementById('env-tout-btn').classList.toggle('active', env === 'TOUT'); document.getElementById('env-work-btn').classList.toggle('active', env === 'WORK'); updateUI(); }
     function toggleMainView() { currentMainView = currentMainView === 0 ? 1 : 0; document.getElementById('mainTrack').style.transform = `translateX(-${currentMainView * 50}%)`; const title = document.getElementById('mainTitle'); title.textContent = currentMainView === 0 ? "TOUT DOUX" : "TOUT EAT"; title.style.color = currentMainView === 0 ? "var(--accent)" : "var(--info)"; updateSliderHeight(); }
-    function switchMatrix(idx) { currentSubPage = idx; document.getElementById('matrixTrackInner').style.transform = `translateX(-${idx * 33.3333}%)`; [0,1,2].forEach(i => { if(document.getElementById('dot'+i)) document.getElementById('dot'+i).classList.toggle('active', i === idx); if(document.getElementById('dot'+i+'_m')) document.getElementById('dot'+i+'_m').classList.toggle('active', i === idx); }); updateSliderHeight(); }
+    function switchMatrix(idx) { currentSubPage = idx; document.getElementById('matrixTrackInner').style.transform = `translateX(-${idx * 33.3333}%)`; [0,1,2].forEach(i => { const d = document.getElementById('dot'+i); const dm = document.getElementById('dot'+i+'_m'); if(d) d.classList.toggle('active', i === idx); if(dm) dm.classList.toggle('active', i === idx); }); updateSliderHeight(); }
     function updateSliderHeight() { if(currentEnv !== 'TOUT') { document.getElementById('matrixWindow').style.height = "auto"; return; } const pages = document.querySelectorAll('.matrix-view-inner'); if (pages[currentSubPage]) document.getElementById('matrixWindow').style.height = (pages[currentSubPage].offsetHeight + 20) + "px"; }
     function openConfig() { document.getElementById('modalConfig').classList.add('open'); }
     function closeConfig() { document.getElementById('modalConfig').classList.remove('open'); }
@@ -395,19 +405,19 @@
     function toggleSortBar() { if (window.innerWidth <= 768) { const bar = document.getElementById('mobileSortBar'); const line = document.getElementById('leftSortLine'); bar.classList.toggle('open'); line.classList.toggle('active'); updateSliderHeight(); } }
     function toggleArchive(type) { const content = document.getElementById(`archiveContent${type}`); const isHidden = content.style.display === 'none' || content.style.display === ''; content.style.display = isHidden ? 'block' : 'none'; document.getElementById(`archiveChevron${type}`).style.transform = isHidden ? 'rotate(180deg)' : ''; updateSliderHeight(); }
 
-    // --- WORK ENGINE ---
+    // --- WORK FUNCTIONS ---
     function navigateWork(view, projectId = null, folderId = null) { workState = { view, projectId, folderId }; document.querySelectorAll('.work-view-container').forEach(el => el.classList.remove('active-view')); document.getElementById(`workView-${view}`).classList.add('active-view'); updateUI(); }
     function addFolder() { const name = prompt("Dossier ?"); if(name) { folders.push({ id: Date.now(), name, projectId: workState.projectId }); updateAndSave(); } }
     function openResourceBubble() { document.getElementById('resBubble').style.display = 'block'; }
-    function confirmResource() { const n = document.getElementById('resName').value, u = document.getElementById('resUrl').value; if(n && u) { resources.push({ id: Date.now(), folderId: workState.folderId, name: n, url: u }); document.getElementById('resBubble').style.display = 'none'; updateAndSave(); } }
+    function confirmResource() { const n = document.getElementById('resName').value, u = document.getElementById('resUrl').value; if(n && u) { resources.push({ id: Date.now(), folderId: workState.folderId, name: n, url: u }); document.getElementById('resBubble').style.display = 'none'; document.getElementById('resName').value=""; document.getElementById('resUrl').value=""; updateAndSave(); } }
     function addDynamicList() { const name = prompt("Titre ?"); if(name) { folderLists.push({ id: Date.now(), folderId: workState.folderId, name, items: [] }); updateAndSave(); } }
     function addListItem(lId) { const t = prompt("Element ?"); if(t) { folderLists.find(l => l.id == lId).items.push({ id: Date.now(), title: t, done: false }); updateAndSave(); } }
     function toggleListItem(lId, iId) { const l = folderLists.find(l => l.id == lId); const i = l.items.find(it => it.id == iId); i.done = !i.done; updateAndSave(); }
     function deleteRes(id) { resources = resources.filter(r => r.id !== id); updateAndSave(); }
-    function moveTaskToFolder(id) { const task = tasks.find(t => t.id == id); const pF = folders.filter(f => f.projectId === task.project); const choice = prompt(`Classer ?\n${pF.map((f, i) => `${i+1}. ${f.name}`).join("\n")}`); if(!choice) return; let sel = pF.find(f => f.name.toLowerCase() === choice.toLowerCase()) || pF[parseInt(choice)-1]; if(!sel && choice) { if(confirm(`Créer ${choice.toUpperCase()} ?`)) { sel = { id: Date.now(), name: choice.toUpperCase(), projectId: task.project }; folders.push(sel); } } if(sel) { task.folderId = sel.id; updateAndSave(); } }
+    function moveTaskToFolder(taskId) { const task = tasks.find(t => t.id == taskId); const pF = folders.filter(f => f.projectId === task.project); const choice = prompt(`Classer ?\n${pF.map((f, i) => `${i+1}. ${f.name}`).join("\n")}`); if(!choice) return; let sel = pF.find(f => f.name.toLowerCase() === choice.toLowerCase()) || pF[parseInt(choice)-1]; if(!sel && choice) { if(confirm(`Créer ${choice.toUpperCase()} ?`)) { sel = { id: Date.now(), name: choice.toUpperCase(), projectId: task.project }; folders.push(sel); } } if(sel) { task.folderId = sel.id; updateAndSave(); } }
 
-    // --- ACTIONS ---
-    function sortTable(key) { if (currentSort.key === key) currentSort.desc = !currentSort.desc; else { currentSort.key = key; currentSort.desc = true; } tasks.sort((a, b) => { let vA = (key === 'priority') ? PRIORITY_MAP[a.priority].weight : (a[key] || ""); let vB = (key === 'priority') ? PRIORITY_MAP[b.priority].weight : (b[key] || ""); return currentSort.desc ? (valA < valB ? 1 : -1) : (valA > valB ? 1 : -1); }); updateAndSave(false); }
+    // --- TODO ACTIONS ---
+    function sortTable(key) { if (currentSort.key === key) currentSort.desc = !currentSort.desc; else { currentSort.key = key; currentSort.desc = true; } tasks.sort((a, b) => { let vA = (key === 'priority') ? PRIORITY_MAP[a.priority].weight : (a[key] || ""); let vB = (key === 'priority') ? PRIORITY_MAP[b.priority].weight : (b[key] || ""); return currentSort.desc ? (vA < vB ? 1 : -1) : (vA > vB ? 1 : -1); }); updateAndSave(false); }
     function addTask() { const titleVal = document.getElementById('taskTitle').value.trim(); if (!titleVal) return; tasks.unshift({ id: Date.now(), title: titleVal, project: document.getElementById('taskProject').value.toUpperCase() || '☕︎', status: document.getElementById('taskStatus').value, priority: document.getElementById('taskPriority').value, folderId: null, createdAt: Date.now() }); document.getElementById('taskTitle').value = ''; document.getElementById('taskProject').value = ''; updateAndSave(); }
     function toggleComplete(id) { const idx = tasks.findIndex(t => t.id == id); if (idx > -1) { const t = tasks.splice(idx, 1)[0]; t.completedAt = Date.now(); archives.push(t); updateAndSave(); } }
     function restoreTask(id) { const idx = archives.findIndex(t => t.id == id); if (idx > -1) { tasks.unshift(archives.splice(idx, 1)[0]); updateAndSave(); } }
@@ -415,7 +425,7 @@
     function toggleEatDone(id) { const idx = groceries.findIndex(g => g.id === id); if (idx > -1) { groceriesDone.push(groceries.splice(idx, 1)[0]); updateAndSave(); } }
     function restoreEat(id) { const idx = groceriesDone.findIndex(g => g.id === id); if (idx > -1) { groceries.unshift(groceriesDone.splice(idx, 1)[0]); updateAndSave(); } }
     function cleanArchives(type) { if(type === 'Doux') archives = archives.filter(t => t.completedAt >= Date.now() - (14 * 24 * 60 * 60 * 1000)); else groceriesDone = []; updateAndSave(); }
-    function startEdit(element, taskId, field, type) { if (element.querySelector('input, select')) return; const task = tasks.find(t => t.id == taskId); const input = document.createElement(type === 'select' ? 'select' : 'input'); input.value = task[field]; if (type === 'select') { const map = (field === 'priority') ? PRIORITY_MAP : STATUS_MAP; Object.entries(map).forEach(([val, opt]) => { if (opt.label || val === 'none') input.add(new Option(opt.label || '🍃 Aucun', val, val === task[field], val === task[field])); }); } element.innerHTML = ''; element.appendChild(input); input.focus(); input.onblur = () => { task[field] = (field === 'project') ? input.value.toUpperCase() : input.value; updateAndSave(); }; }
+    function startEdit(element, taskId, field, type) { if (element.querySelector('input, select')) return; const task = tasks.find(t => t.id === taskId); const input = document.createElement(type === 'select' ? 'select' : 'input'); input.value = task[field]; if (type === 'select') { const map = (field === 'priority') ? PRIORITY_MAP : STATUS_MAP; Object.entries(map).forEach(([val, opt]) => { if (opt.label || val === 'none') input.add(new Option(opt.label || '🍃 Aucun', val, val === task[field], val === task[field])); }); } element.innerHTML = ''; element.appendChild(input); input.focus(); input.onblur = () => { task[field] = (field === 'project') ? input.value.toUpperCase() : input.value; updateAndSave(); }; }
 
     function renderWorkTasksUI(containerId, filteredTasks, canClassify = false) {
         const cont = document.getElementById(containerId); cont.innerHTML = '';
@@ -496,21 +506,18 @@
                 });
                 const dList = document.getElementById('folderDynamicLists'); dList.innerHTML = '';
                 folderLists.filter(l => l.folderId == workState.folderId).forEach(l => {
-                    let h = `<div class="work-card dynamic-list-card"><h3>${l.name}</h3>`;
-                    l.items.forEach(i => h += `<div class="list-item"><input type="checkbox" ${i.done?'checked':''} onclick="toggleListItem(${l.id}, ${i.id})"><span>${i.title}</span></div>`);
-                    h += `<button class="clean-btn" style="margin-top:10px; margin-bottom:0;" onclick="addListItem(${l.id})">+ Elément</button></div>`;
-                    dList.innerHTML += h;
+                    let html = `<div class="work-card dynamic-list-card"><h3>${l.name}</h3>`;
+                    l.items.forEach(i => html += `<div class="list-item"><input type="checkbox" ${i.done?'checked':''} onclick="toggleListItem(${l.id}, ${i.id})"><span>${i.title}</span></div>`);
+                    html += `<button class="clean-btn" style="margin-top:10px; margin-bottom:0;" onclick="addListItem(${l.id})">+ Element</button></div>`;
+                    dList.innerHTML += html;
                 });
             }
         }
         setTimeout(updateSliderHeight, 50);
     }
-
     function allowDrop(ev) { ev.preventDefault(); }
     function drop(ev) { ev.preventDefault(); const taskId = parseInt(ev.dataTransfer.getData("taskId")); const targetId = ev.currentTarget.id; const task = tasks.find(t => t.id == taskId); if (task) { if (targetId.startsWith('drop-p-')) task.priority = targetId.replace('drop-p-', ''); if (targetId.startsWith('drop-s-')) task.status = targetId.replace('drop-s-', ''); updateAndSave(); } }
-
-    window.onload = githubPull;
-    updateUI();
+    window.onload = githubPull; updateUI();
 </script>
 </body>
 </html>
